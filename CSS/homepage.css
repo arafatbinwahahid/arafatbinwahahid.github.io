@@ -11,3 +11,6 @@ header {
   display: flex;
   font-family: "Source Code Pro", monospace;
 }
+div {
+  justify-content: center;
+}
