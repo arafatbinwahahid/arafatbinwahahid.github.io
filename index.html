@@ -1,32 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <meta
-      name="google-site-verification"
-      content="IRPi5wetXjaQVFxPGk8jNBpxW65Bpy83i01Ag11GaIM"
-    />
-    <link rel="stylesheet" href="./CSS/homepage.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arafat Bin Wahahid - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
     <header>
-      <div>
-        <a href="#"><p>Arafat Bin Wahahid</p></a>
-        <a href="#"><p>Graphic Designer & Web Developer</p></a>
-      </div>
-      <div>
-        <a href="#"><p>Home</p></a>
-        <a href="#"><p>About</p></a>
-        <a href="#"><p>Service</p></a>
-        <a href="#"><p>Shop</p></a>
-        <a href="#"><p>Learn With Me</p></a>
-        <a href="#"><p>Blog</p></a>
-        <a href="#"><p>LinkTree</p></a>
-        <a href="#"><p>Contact</p></a>
-      </div>
+        <div class="container">
+            <h1>Arafat Bin Wahahid</h1>
+            <p>Software Developer | Creative Thinker | Based in Oman</p>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
-  </body>
+
+    <section id="about" class="section fade-in">
+        <div class="container">
+            <h2>About Me</h2>
+            <img src="your-photo.jpg" alt="Arafat Bin Wahahid" class="profile-photo">
+            <p>Hello! I'm Arafat, a passionate developer with experience in web technologies, AI, and problem-solving. I enjoy building user-friendly applications and exploring new ideas. Follow me on X: <a href="https://x.com/arafatbinwahid">@arafatbinwahid</a>.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="section fade-in">
+        <div class="container">
+            <h2>Skills</h2>
+            <ul class="skills-list">
+                <li>HTML/CSS/JavaScript</li>
+                <li>Python & AI Tools</li>
+                <li>UI/UX Design</li>
+                <li>Problem-Solving & Debugging</li>
+                <!-- Add more skills here -->
+            </ul>
+        </div>
+    </section>
+
+    <section id="projects" class="section fade-in">
+        <div class="container">
+            <h2>Projects</h2>
+            <div class="project">
+                <h3>Project 1: Personal AI Assistant</h3>
+                <p>A chatbot built with Python and Grok API for daily tasks.</p>
+                <a href="https://github.com/your-repo/project1" target="_blank">View on GitHub</a>
+            </div>
+            <div class="project">
+                <h3>Project 2: Web App Demo</h3>
+                <p>A responsive web app showcasing interactive features.</p>
+                <a href="https://your-app-link.com" target="_blank">Live Demo</a>
+            </div>
+            <!-- Add more projects here -->
+        </div>
+    </section>
+
+    <section id="contact" class="section fade-in">
+        <div class="container">
+            <h2>Contact</h2>
+            <form id="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+                
+                <button type="submit">Send Message</button>
+            </form>
+            <p>Or reach me directly:</p>
+            <p>Email: your.email@example.com</p>
+            <p>X: <a href="https://x.com/arafatbinwahid">@arafatbinwahid</a></p>
+            <p>LinkedIn: <a href="https://linkedin.com/in/your-profile">Your Profile</a></p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Arafat Bin Wahahid. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button id="back-to-top" title="Back to Top">↑</button>
+
+    <script src="script.js" defer></script>
+</body>
 </html>
