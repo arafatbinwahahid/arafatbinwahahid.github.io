@@ -1,95 +1,466 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arafat Bin Wahahid - Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arafat Bin — Full-Stack Developer & Graphic Designer</title>
+<meta name="description" content="Portfolio of Arafat Bin — Full-Stack Developer, Graphic Designer based in Cumilla, Bangladesh." />
+
+<!-- Google Fonts: Syne (display) + DM Sans (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---------- Design Tokens ---------- */
+  :root{
+    --bg: #0b0b0d;
+    --bg-soft: #111114;
+    --surface: #15151a;
+    --line: #25252c;
+    --text: #ececee;
+    --muted: #9a9aa3;
+    --accent: #14e0c2;       /* electric teal */
+    --accent-2: #ffb547;     /* amber */
+    --grad: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --font-display: "Syne", serif;
+    --font-body: "DM Sans", system-ui, -apple-system, sans-serif;
+    --maxw: 1200px;
+    --radius: 14px;
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  ::selection{background:var(--accent); color:#0b0b0d;}
+
+  /* ---------- Grain + Background Glow ---------- */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:.5;
+    pointer-events:none;
+    z-index:1000;
+    mix-blend-mode:overlay;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    top:-20%; left:-10%;
+    width:60vw; height:60vw;
+    background: radial-gradient(closest-side, rgba(20,224,194,.15), transparent 70%);
+    filter: blur(40px);
+    z-index:-1;
+    pointer-events:none;
+  }
+
+  /* ---------- Custom Cursor ---------- */
+  .cursor, .cursor-dot{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
+    transform: translate(-50%,-50%);
+  }
+  .cursor{
+    width:32px; height:32px;
+    border:1px solid var(--accent);
+    border-radius:50%;
+    transition: width .25s var(--ease), height .25s var(--ease), background .25s var(--ease);
+  }
+  .cursor-dot{
+    width:5px; height:5px; background:var(--accent); border-radius:50%;
+  }
+  .cursor.grow{ width:56px; height:56px; background:rgba(20,224,194,.1); }
+  @media (max-width: 820px){ body{cursor:auto;} .cursor,.cursor-dot{display:none;} }
+
+  /* ---------- Layout ---------- */
+  .container{ max-width: var(--maxw); margin:0 auto; padding: 0 24px; }
+  section{ padding: 110px 0; position:relative; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    text-transform:uppercase; letter-spacing:.25em; font-size:12px; color:var(--muted);
+    margin-bottom: 18px;
+  }
+  .eyebrow::before{ content:""; width:28px; height:1px; background:var(--accent); }
+  h1,h2,h3,h4{ font-family: var(--font-display); font-weight:700; letter-spacing:-.02em; line-height:1.05; }
+  h2.section-title{ font-size: clamp(2rem, 4.5vw, 3.4rem); margin-bottom: 50px; }
+  h2.section-title .accent{ background: var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    backdrop-filter: blur(12px);
+    background: rgba(11,11,13,.55);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s var(--ease), background .3s var(--ease);
+  }
+  header.nav.scrolled{ border-color: var(--line); background: rgba(11,11,13,.85); }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height:72px;
+  }
+  .logo{ font-family:var(--font-display); font-weight:800; font-size:1.25rem; letter-spacing:.02em; }
+  .logo span{ color: var(--accent); }
+  .nav-links{ display:flex; gap:34px; list-style:none; }
+  .nav-links a{ font-size:.92rem; color:var(--muted); position:relative; transition: color .25s; }
+  .nav-links a:hover{ color: var(--text); }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:-6px; height:1px; width:0;
+    background: var(--accent); transition: width .3s var(--ease);
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .menu-btn{ display:none; background:none; border:0; color:var(--text); cursor:pointer; }
+  @media(max-width:820px){
+    .nav-links{
+      position:fixed; inset: 72px 0 auto 0; background: var(--bg-soft);
+      flex-direction:column; align-items:center; padding: 30px 0;
+      border-bottom:1px solid var(--line);
+      transform: translateY(-110%); transition: transform .35s var(--ease);
+    }
+    .nav-links.open{ transform: translateY(0); }
+    .menu-btn{ display:block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height: 100vh; display:flex; align-items:center;
+    padding-top: 140px; padding-bottom: 80px;
+    position:relative; overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.4fr .9fr; gap: 60px; align-items:center;
+  }
+  @media(max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+  .hero h1{
+    font-size: clamp(2.6rem, 7vw, 5.6rem);
+    margin-bottom: 24px;
+  }
+  .hero h1 .reveal{
+    display:inline-block; overflow:hidden; vertical-align:bottom;
+  }
+  .hero h1 .reveal > span{
+    display:inline-block;
+    transform: translateY(110%);
+    animation: rise .9s var(--ease) forwards;
+  }
+  .hero h1 .reveal:nth-child(2) > span{ animation-delay:.15s; }
+  .hero h1 .reveal:nth-child(3) > span{ animation-delay:.30s; }
+  @keyframes rise{ to{ transform: translateY(0); } }
+
+  .hero h1 .grad{
+    background: var(--grad); -webkit-background-clip: text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{
+    color: var(--muted); font-size: 1.05rem; max-width: 560px; margin-bottom: 34px;
+    opacity:0; transform: translateY(14px); animation: fadeUp .8s .6s var(--ease) forwards;
+  }
+  @keyframes fadeUp{ to{ opacity:1; transform:none; } }
+
+  .hero-actions{
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    opacity:0; transform: translateY(14px); animation: fadeUp .8s .8s var(--ease) forwards;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding: 14px 26px; border-radius: 999px;
+    font-weight:500; font-size:.95rem;
+    border: 1px solid var(--accent);
+    background: var(--accent); color:#0b0b0d;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s;
+  }
+  .btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(20,224,194,.25); }
+  .btn.ghost{ background:transparent; color:var(--text); border-color: var(--line); }
+  .btn.ghost:hover{ border-color: var(--accent); color: var(--accent); box-shadow:none; }
+
+  .icon-btn{
+    width:46px; height:46px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); color:var(--text);
+    transition: all .25s;
+  }
+  .icon-btn:hover{ border-color:var(--accent); color:var(--accent); transform: translateY(-2px); }
+
+  /* Hero visual */
+  .hero-visual{
+    position:relative; aspect-ratio: 1/1; border-radius: 24px;
+    background: linear-gradient(180deg, #1b1b22, #0f0f13);
+    border:1px solid var(--line);
+    overflow:hidden;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .hero-visual::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(60% 60% at 30% 30%, rgba(20,224,194,.25), transparent 60%),
+      radial-gradient(50% 50% at 80% 80%, rgba(255,181,71,.18), transparent 60%);
+  }
+  .hero-visual .badge{
+    position:absolute; bottom:18px; left:18px; right:18px;
+    display:flex; justify-content:space-between; align-items:center;
+    background: rgba(11,11,13,.6); backdrop-filter: blur(10px);
+    border:1px solid var(--line); padding:14px 18px; border-radius: 12px;
+    font-size:.85rem; color:var(--muted);
+  }
+  .hero-visual .badge b{ color: var(--text); font-weight:500; }
+  .pulse{
+    width:8px; height:8px; border-radius:50%; background:var(--accent);
+    box-shadow: 0 0 0 0 rgba(20,224,194,.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(20,224,194,.6); }
+    70%{ box-shadow: 0 0 0 14px rgba(20,224,194,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(20,224,194,0); }
+  }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns: .9fr 1.3fr; gap: 60px; align-items:center; }
+  @media(max-width:900px){ .about-grid{ grid-template-columns: 1fr; } }
+  .photo{
+    aspect-ratio: 4/5; border-radius: 18px; overflow:hidden;
+    background: linear-gradient(135deg, #1c1c22, #0e0e12);
+    border:1px solid var(--line); position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .photo .initial{
+    font-family: var(--font-display); font-size: clamp(5rem, 14vw, 9rem);
+    background: var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .about p{ color: var(--muted); margin-bottom: 18px; font-size:1.02rem; }
+  .about p strong{ color: var(--text); font-weight:500; }
+  .meta-list{ list-style:none; margin-top: 22px; display:grid; gap:10px; }
+  .meta-list li{ display:flex; gap:14px; color:var(--muted); }
+  .meta-list li b{ color: var(--text); font-weight:500; min-width: 110px; }
+
+  /* ---------- Skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media(max-width: 800px){ .skills-grid{ grid-template-columns: 1fr; } }
+  .skill-card{
+    background: var(--surface); border:1px solid var(--line);
+    border-radius: var(--radius); padding: 30px;
+    transition: transform .35s var(--ease), border-color .35s, box-shadow .35s;
+    position:relative; overflow:hidden;
+  }
+  .skill-card::before{
+    content:""; position:absolute; inset:0;
+    background: var(--grad); opacity:0; transition: opacity .35s;
+  }
+  .skill-card:hover{ transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+  .skill-card .icon{
+    width: 48px; height:48px; border-radius:12px; display:grid; place-items:center;
+    background: rgba(20,224,194,.08); color: var(--accent);
+    margin-bottom: 18px; font-family: var(--font-display); font-weight:800;
+  }
+  .skill-card h3{ font-size: 1.4rem; margin-bottom: 8px; }
+  .skill-card p{ color: var(--muted); font-size:.95rem; margin-bottom: 18px; }
+  .progress{ height:6px; background: #1f1f25; border-radius: 999px; overflow:hidden; }
+  .progress > span{ display:block; height:100%; background: var(--grad); border-radius: 999px; width:0; transition: width 1.2s var(--ease); }
+  .skill-card .level{ font-size:.8rem; color: var(--muted); margin-top: 8px; display:flex; justify-content:space-between; }
+
+  /* ---------- Projects ---------- */
+  .projects-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  @media(max-width: 1000px){ .projects-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width: 640px){ .projects-grid{ grid-template-columns: 1fr; } }
+
+  .project{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow:hidden; position:relative;
+    transition: transform .4s var(--ease), border-color .4s;
+    display:flex; flex-direction:column;
+  }
+  .project:hover{ transform: translateY(-6px); border-color: var(--accent); }
+  .project .thumb{
+    aspect-ratio: 16/10; position:relative; overflow:hidden;
+    background: linear-gradient(135deg, #1d1d24, #0f0f13);
+  }
+  .project .thumb::after{
+    content: attr(data-num);
+    position:absolute; top:14px; right:18px;
+    font-family: var(--font-display); font-size: 1.1rem; color: var(--muted);
+  }
+  .project .thumb::before{
+    content:""; position:absolute; inset:0;
+    background: var(--blob, radial-gradient(60% 60% at 30% 40%, rgba(20,224,194,.35), transparent 60%));
+    transition: transform .6s var(--ease);
+  }
+  .project:hover .thumb::before{ transform: scale(1.15); }
+  .project .body{ padding: 22px; display:flex; flex-direction:column; gap:12px; flex:1; }
+  .project h3{ font-size: 1.3rem; }
+  .project p{ color: var(--muted); font-size: .92rem; }
+  .tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; }
+  .tag{
+    font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    padding: 5px 10px; border-radius: 999px;
+    border:1px solid var(--line); color: var(--muted);
+  }
+  .project .footer{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 16px 22px; border-top: 1px solid var(--line);
+  }
+  .project .footer a{ color:var(--accent); font-size:.9rem; display:inline-flex; gap:8px; align-items:center; }
+  .project .footer a:hover{ color: var(--accent-2); }
+
+  /* ---------- Contact ---------- */
+  .contact-card{
+    background: linear-gradient(180deg, var(--surface), #0f0f13);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: clamp(30px, 5vw, 60px);
+    text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .contact-card::before{
+    content:""; position:absolute; top:-50%; left:-20%;
+    width: 60%; height: 200%;
+    background: radial-gradient(closest-side, rgba(20,224,194,.18), transparent 70%);
+    pointer-events:none;
+  }
+  .contact-card h2{ font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 18px; }
+  .contact-card p{ color: var(--muted); max-width: 560px; margin: 0 auto 30px; }
+  .contact-actions{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+
+  /* WhatsApp button */
+  .btn.whatsapp{ background:#25d366; border-color:#25d366; color:#0b0b0d; }
+  .btn.whatsapp:hover{ box-shadow: 0 12px 30px rgba(37,211,102,.3); }
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 70px 0 30px;
+    background: var(--bg-soft);
+  }
+  .foot-grid{
+    display:grid; grid-template-columns: 1.3fr repeat(3, 1fr); gap: 40px;
+    margin-bottom: 50px;
+  }
+  @media(max-width: 800px){ .foot-grid{ grid-template-columns: 1fr 1fr; } }
+  @media(max-width: 480px){ .foot-grid{ grid-template-columns: 1fr; } }
+  .foot-grid h4{
+    font-family: var(--font-body); font-weight:500; font-size:.85rem;
+    text-transform:uppercase; letter-spacing:.2em; color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .foot-grid ul{ list-style:none; display:grid; gap:10px; }
+  .foot-grid a{ color: var(--muted); font-size:.95rem; transition: color .25s; }
+  .foot-grid a:hover{ color: var(--accent); }
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:16px;
+    padding-top: 28px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size:.85rem;
+  }
+  .brand-foot{ font-family: var(--font-display); font-weight:800; font-size:1.6rem; margin-bottom: 12px; }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal-up{ opacity:0; transform: translateY(30px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal-up.in{ opacity:1; transform:none; }
+
+</style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Arafat Bin Wahahid</h1>
-            <p>Software Developer | Creative Thinker | Based in Oman</p>
-            <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <section id="about" class="section fade-in">
-        <div class="container">
-            <h2>About Me</h2>
-            <img src="your-photo.jpg" alt="Arafat Bin Wahahid" class="profile-photo">
-            <p>Hello! I'm Arafat, a passionate developer with experience in web technologies, AI, and problem-solving. I enjoy building user-friendly applications and exploring new ideas. Follow me on X: <a href="https://x.com/arafatbinwahid">@arafatbinwahid</a>.</p>
-        </div>
-    </section>
+<!-- Custom Cursor -->
+<div class="cursor"></div>
+<div class="cursor-dot"></div>
 
-    <section id="skills" class="section fade-in">
-        <div class="container">
-            <h2>Skills</h2>
-            <ul class="skills-list">
-                <li>HTML/CSS/JavaScript</li>
-                <li>Python & AI Tools</li>
-                <li>UI/UX Design</li>
-                <li>Problem-Solving & Debugging</li>
-                <!-- Add more skills here -->
-            </ul>
-        </div>
-    </section>
+<!-- ============= NAV ============= -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#home" class="logo">Arafat<span>.</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About Me</a></li>
+      <li><a href="#projects">View Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
 
-    <section id="projects" class="section fade-in">
-        <div class="container">
-            <h2>Projects</h2>
-            <div class="project">
-                <h3>Project 1: Personal AI Assistant</h3>
-                <p>A chatbot built with Python and Grok API for daily tasks.</p>
-                <a href="https://github.com/your-repo/project1" target="_blank">View on GitHub</a>
-            </div>
-            <div class="project">
-                <h3>Project 2: Web App Demo</h3>
-                <p>A responsive web app showcasing interactive features.</p>
-                <a href="https://your-app-link.com" target="_blank">Live Demo</a>
-            </div>
-            <!-- Add more projects here -->
-        </div>
-    </section>
+<!-- ============= HERO ============= -->
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Portfolio · 2025</span>
+      <h1>
+        <span class="reveal"><span>Crafting digital</span></span><br/>
+        <span class="reveal"><span>experiences with</span></span><br/>
+        <span class="reveal"><span class="grad">code & character.</span></span>
+      </h1>
+      <p class="lead">
+        I'm <b style="color:var(--text); font-weight:500;">Arafat Bin</b> — a Full-Stack Developer, Graphic Designer & Fuel Attendee based in Cumilla, Bangladesh. I build websites for clients from all walks of life.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn">View My Work
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#contact" class="btn ghost">Get in touch</a>
+        <a href="https://linkedin.com/in/arafatbinwahahid" target="_blank" rel="noopener" class="icon-btn" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v14H.22V8zm7.5 0h4.37v1.92h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 7v7.44h-4.55v-6.6c0-1.58-.03-3.6-2.2-3.6-2.2 0-2.54 1.72-2.54 3.49V22H7.72V8z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="badge">
+        <div><b>Available for work</b><br/><span style="font-size:.75rem;">Cumilla, Bangladesh</span></div>
+        <div class="pulse"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section id="contact" class="section fade-in">
-        <div class="container">
-            <h2>Contact</h2>
-            <form id="contact-form">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-                
-                <button type="submit">Send Message</button>
-            </form>
-            <p>Or reach me directly:</p>
-            <p>Email: your.email@example.com</p>
-            <p>X: <a href="https://x.com/arafatbinwahid">@arafatbinwahid</a></p>
-            <p>LinkedIn: <a href="https://linkedin.com/in/your-profile">Your Profile</a></p>
-        </div>
-    </section>
+<!-- ============= ABOUT ============= -->
+<section id="about">
+  <div class="container">
+    <div class="reveal-up">
+      <span class="eyebrow">About Me</span>
+      <h2 class="section-title">A developer who <span class="accent">designs</span>, a designer who ships.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="photo reveal-up">
+        <div class="initial">A</div>
+      </div>
+      <div class="about reveal-up">
+        <p>I'm from <strong>Bangladesh</strong>, but I'm trying to stay as far from Irish weather as possible. I'm currently hiding out in the Bangladeshi highlands, making websites for clients from all walks of life.</p>
+        <p>My work blends clean engineering with editorial-grade design — building products that feel as good as they look. From landing pages to full-stack web apps, I focus on clarity, performance, and personality.</p>
+        <ul class="meta-list">
+          <li><b>Location</b><span>Cumilla, Bangladesh</span></li>
+          <li><b>Role</b><span>Full-Stack Dev · Graphic Designer</span></li>
+          <li><b>Currently</b><span>Open to freelance & remote roles</span></li>
+          <li><b>Email</b><a href="mailto:contact.arafat@icloud.com">contact.arafat@icloud.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Arafat Bin Wahahid. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <button id="back-to-top" title="Back to Top">↑</button>
-
-    <script src="script.js" defer></script>
-</body>
-</html>
+<!-- ============= SKILLS ============= -->
+<section id="skills">
+  <div class="container">
+    <div class="reveal-up">
+      <span class="eyebrow">Skills</span>
+      <h2 class="section-title">Tools of the <span class="accent">trade</span>.</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal-up">
+        <div class="icon">&lt;/&gt;</div>
+        <h3>HTML</h3>
+        <p>Sem
