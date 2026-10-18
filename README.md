@@ -4,11 +4,11 @@
 
 I work in fuel station operations in Rakhyut, Dhofar, Oman. I focus on safe fueling, HSE compliance and leading shifts, and I build Excel dashboards and design graphics on the side.
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-arafatbinwahahid.github.io-0A6DBF?style=for-the-badge&logo=githubpages&logoColor=white)](https://arafatbinwahahid.github.io)
+[![Portfolio](https://img.shields.io/badge/Portfolio-arafatbin.com-0A6DBF?style=for-the-badge&logo=githubpages&logoColor=white)](https://arafatbin.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-arafatbinwahahid-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arafatbinwahahid)
 [![Fiverr](https://img.shields.io/badge/Fiverr-arafatwahahid-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://www.fiverr.com/arafatwahahid)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Message%20me-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/96892130528)
-[![Email](https://img.shields.io/badge/Email-contact.arafat%40icloud.com-333333?style=for-the-badge&logo=icloud&logoColor=white)](mailto:contact.arafat@icloud.com)
+[![Email](https://img.shields.io/badge/Email-contact%40arafatbin.com-333333?style=for-the-badge&logo=maildotru&logoColor=white)](mailto:contact@arafatbin.com)
 
 ---
 
@@ -36,7 +36,7 @@ I work in fuel station operations in Rakhyut, Dhofar, Oman. I focus on safe fuel
 
 **Vector Portrait Art (Adobe Illustrator).** Photos redrawn as 100% vector art, ready for print and web, with unlimited revisions. Available on [Fiverr](https://www.fiverr.com/arafatwahahid).
 
-See more in my [portfolio](https://infoabw.github.io).
+See more in my [portfolio](https://arafatbin.com).
 
 ## Experience
 
@@ -66,5 +66,5 @@ I'm open to Foreman opportunities and freelance design or Excel projects. The qu
 | --- | --- |
 | WhatsApp | +968 9213 0528 |
 | Phone (Bangladesh) | +880 1752 427601 |
-| Email | contact.arafat@icloud.com |
-| Website | [infoabw.github.io](https://infoabw.github.io) |
+| Email | contact@arafatbin.com |
+| Website | [arafatbin.com](https://arafatbin.com) |
