@@ -19,6 +19,7 @@ export const header = read('global/header.json');
 export const footer = read('global/footer.json');
 export const contact = read('global/contact.json');
 export const social = read('global/social.json');
+export const sitemap = read('global/sitemap.json');
 export const icons = read('global/icons.json');
 export const products = read('collections/products.json');
 export const services = read('collections/services.json');

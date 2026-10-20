@@ -1,0 +1,30 @@
+{
+  "_help": "sitemap.xml-এ যে লিংকগুলো থাকবে। নতুন পেইজ, প্রোডাক্ট বা ব্লগ পোস্ট বানালে তার লিংক এখানে যোগ করুন। লিংক ভুল হলে বা কোনো পেইজ বাদ পড়লে build সতর্ক করবে।",
+  "urls": [
+    "https://arafatbin.com/",
+    "https://arafatbin.com/about/",
+    "https://arafatbin.com/blog/",
+    "https://arafatbin.com/contact/",
+    "https://arafatbin.com/credentials/",
+    "https://arafatbin.com/experience/",
+    "https://arafatbin.com/faq/",
+    "https://arafatbin.com/privacy-policy/",
+    "https://arafatbin.com/refund-policy/",
+    "https://arafatbin.com/reviews/",
+    "https://arafatbin.com/services/",
+    "https://arafatbin.com/shop/",
+    "https://arafatbin.com/skills/",
+    "https://arafatbin.com/terms-and-conditions/",
+    "https://arafatbin.com/work/",
+    "https://arafatbin.com/blog/excel-dashboard-tips/",
+    "https://arafatbin.com/blog/life-as-fuel-attendant/",
+    "https://arafatbin.com/services/data-entry/",
+    "https://arafatbin.com/services/excel-dashboard/",
+    "https://arafatbin.com/services/logo-social-design/",
+    "https://arafatbin.com/services/vector-portrait/",
+    "https://arafatbin.com/shop/custom-vector-portrait/",
+    "https://arafatbin.com/shop/sales-dashboard-template/",
+    "https://arafatbin.com/shop/social-media-post-pack/",
+    "https://arafatbin.com/assets/files/Arafat_Bin_Wahahid_CV.pdf"
+  ]
+}

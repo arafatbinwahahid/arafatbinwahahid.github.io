@@ -32,6 +32,7 @@
     │   ├── footer.json      ← ফুটারের লেখা, কলাম, কপিরাইট, নিচের লিংক
     │   ├── contact.json     ← WhatsApp, ফোন, ইমেইল, ঠিকানা, ম্যাপ
     │   ├── social.json      ← সোশ্যাল লিংক ও আইকন
+    │   ├── sitemap.json     ← sitemap.xml-এর সব লিংক
     │   └── icons.json       ← সব আইকন (নাম দিয়ে যেকোনো JSON-এ ব্যবহার করুন)
     │
     ├── pages/               ← প্রতিটি পেইজের লেখা
@@ -58,7 +59,7 @@
         └── blog/*.json      → /blog/<slug>/   (প্রতিটি পোস্ট = একটি ফাইল)
 ```
 
-`sitemap.xml` আর `robots.txt` build করার সময় নিজে থেকে তৈরি হয়।
+`sitemap.xml` তৈরি হয় `data/global/sitemap.json`-এর লিংক থেকে, আর `robots.txt` তৈরি হয় `site.json` থেকে। নতুন পেইজ যোগ করলে তার লিংক `sitemap.json`-এ দিন। ভুলে গেলে বা লিংক ভুল হলে build সতর্ক করবে।
 
 ## কীভাবে এডিট করবেন
 
@@ -74,6 +75,7 @@
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
 | নতুন ছবি | `assets/images/`-এ রাখুন, JSON-এ লিখুন `"/assets/images/নাম.jpg"` |
+| sitemap-এ লিংক যোগ/বাদ | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
 
 **বাটন:** `{ "label": "লেখা", "href": "/contact/", "style": "primary | outline | light", "icon": "wa" }`
