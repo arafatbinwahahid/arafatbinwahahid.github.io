@@ -1,0 +1,19 @@
+{
+  "seo": { "title": "Contact", "description": "Contact Arafat Bin Wahahid by WhatsApp, phone, email or the contact form. Based in Rakhyut, Dhofar, Oman." },
+  "hero": { "title": "Contact", "text": "WhatsApp is the fastest way to reach me." },
+  "detailsTitle": "Contact details",
+  "labels": { "whatsapp": "WhatsApp", "email": "Email", "address": "Address", "hours": "Response time", "cv": "Curriculum vitae (PDF)" },
+  "cv": { "show": true, "label": "Download my CV", "href": "/assets/files/Arafat_Bin_Wahahid_CV.pdf" },
+  "form": {
+    "title": "Send me a message",
+    "text": "Your message goes straight to my inbox. I reply by email or WhatsApp.",
+    "nameLabel": "Your name",
+    "emailLabel": "Your email",
+    "messageLabel": "Message",
+    "submitLabel": "Send message",
+    "whatsappLabel": "Send on WhatsApp",
+    "success": "Thank you! Your message was sent. I will reply soon.",
+    "error": "Could not send. Please message me on WhatsApp or email contact@arafatbin.com.",
+    "note": "I use your details only to reply to you."
+  }
+}

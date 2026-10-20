@@ -1,0 +1,38 @@
+{
+  "name": "Arafat Bin Wahahid",
+  "title": "Arafat Bin Wahahid | Graphic Design, Excel Dashboards & Fuel Station Operations, Oman",
+  "titleSeparator": " | ",
+  "description": "Arafat Bin Wahahid is a fuel attendant at Oman Oil in Dhofar and a freelance graphic designer. Shop Excel templates, order vector portraits, logos and data entry services.",
+  "url": "https://arafatbin.com",
+  "language": "en",
+  "locale": "en-US",
+  "currency": "USD",
+  "defaultImage": "/assets/images/IMAGE08.JPG",
+  "favicon": "/assets/images/IMAGE05.PNG",
+  "homeLabel": "Home",
+  "googleAnalyticsId": "G-0X48X8SNYF",
+  "web3formsAccessKey": "4910d72b-f584-47fe-86b5-78126a74ee9b",
+  "theme": {
+    "primary": "#0A6DBF",
+    "accent": "#9AC81F",
+    "dark": "#0B1A33",
+    "text": "#1B2537",
+    "muted": "#5B6880",
+    "background": "#FFFFFF",
+    "soft": "#F3F6FA",
+    "border": "#E1E7EF",
+    "radius": "14px"
+  },
+  "person": {
+    "jobTitle": "Fuel Attendant and Freelance Graphic Designer",
+    "worksFor": "Oman Oil Marketing Company",
+    "locality": "Salalah",
+    "region": "Dhofar",
+    "country": "OM",
+    "knowsAbout": ["Fuel station operations", "HSE compliance", "Microsoft Excel", "Graphic design", "Adobe Photoshop", "Adobe Illustrator", "Data entry"]
+  },
+  "robots": {
+    "allow": ["/"],
+    "disallow": ["/404.html"]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "about": "Fuel attendant at Oman Oil and freelance designer based in Dhofar, Oman. Excel dashboards, vector portraits, logos and data entry.",
+  "showSocial": true,
+  "columns": [
+    {
+      "title": "Shop & services",
+      "links": [
+        { "label": "Shop", "href": "/shop/" },
+        { "label": "Services", "href": "/services/" },
+        { "label": "Work", "href": "/work/" },
+        { "label": "Reviews", "href": "/reviews/" },
+        { "label": "Blog", "href": "/blog/" }
+      ]
+    },
+    {
+      "title": "About",
+      "links": [
+        { "label": "About me", "href": "/about/" },
+        { "label": "Experience", "href": "/experience/" },
+        { "label": "Skills", "href": "/skills/" },
+        { "label": "Credentials", "href": "/credentials/" },
+        { "label": "FAQ", "href": "/faq/" }
+      ]
+    }
+  ],
+  "contactTitle": "Contact",
+  "copyright": "© {year} Arafat Bin Wahahid. All rights reserved.",
+  "bottomLinks": [
+    { "label": "Terms", "href": "/terms-and-conditions/" },
+    { "label": "Privacy", "href": "/privacy-policy/" },
+    { "label": "Refunds", "href": "/refund-policy/" },
+    { "label": "Sitemap", "href": "/sitemap.xml" }
+  ]
+}

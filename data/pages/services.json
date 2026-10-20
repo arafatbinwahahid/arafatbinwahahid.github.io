@@ -1,0 +1,15 @@
+{
+  "seo": { "title": "Services", "description": "Vector portraits, logo and social media design, Excel dashboards and data entry services by Arafat Bin Wahahid, available remotely." },
+  "hero": { "title": "Services", "text": "Remote design and data work, delivered on time." },
+  "fromLabel": "From",
+  "deliveryLabel": "Delivery",
+  "includesTitle": "What you get",
+  "process": {
+    "title": "How it works",
+    "steps": [
+      { "title": "Message me", "text": "Tell me what you need on WhatsApp or through the contact form." },
+      { "title": "Get a quote", "text": "I confirm the price, the delivery time and what you will receive." },
+      { "title": "Receive your files", "text": "I deliver the work and make revisions until you are happy." }
+    ]
+  }
+}

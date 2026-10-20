@@ -1,0 +1,6 @@
+[
+  { "label": "WhatsApp", "url": "https://wa.me/96892130528", "icon": "wa", "display": "+968 9213 0528" },
+  { "label": "LinkedIn", "url": "https://www.linkedin.com/in/arafatbinwahahid", "icon": "linkedin", "display": "linkedin.com/in/arafatbinwahahid" },
+  { "label": "Fiverr", "url": "https://www.fiverr.com/arafatwahahid", "icon": "globe", "display": "fiverr.com/arafatwahahid" },
+  { "label": "Email", "url": "mailto:contact@arafatbin.com", "icon": "mail", "display": "contact@arafatbin.com" }
+]

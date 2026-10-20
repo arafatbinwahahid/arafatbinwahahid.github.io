@@ -1,0 +1,11 @@
+{
+  "seo": { "title": "Shop", "description": "Excel templates, vector portraits and social media design packs by Arafat Bin Wahahid. Order by WhatsApp or Fiverr." },
+  "hero": { "title": "Shop", "text": "Ready-made templates and design packs. Order through WhatsApp or Fiverr." },
+  "allLabel": "All",
+  "orderLabel": "Order on WhatsApp",
+  "buyLabel": "Buy online",
+  "orderMessage": "Hello Arafat, I want to order: {product} ({price}).",
+  "soldOutLabel": "Sold out",
+  "saleLabel": "Sale",
+  "note": "Payment and delivery are arranged by WhatsApp or email after you order. Please read the refund policy before buying."
+}

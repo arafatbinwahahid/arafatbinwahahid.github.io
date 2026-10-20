@@ -1,0 +1,12 @@
+{
+  "seo": { "title": "Refund and return policy", "description": "Refund and return policy for services and digital products from arafatbin.com." },
+  "hero": { "title": "Refund and return policy", "text": "When and how you can get your money back." },
+  "updatedLabel": "Last updated",
+  "lastUpdated": "2026-10-20",
+  "sections": [
+    { "heading": "1. Services", "paragraphs": ["If I cannot deliver the agreed work, you get a full refund. Once work has started, a partial refund may be given based on the work already done."] },
+    { "heading": "2. Digital products", "paragraphs": ["Digital products such as templates cannot be returned after the files are sent. If a file is broken or not as described, I will fix it, replace it or refund you."] },
+    { "heading": "3. Fiverr orders", "paragraphs": ["Orders placed on Fiverr follow Fiverr's own refund and cancellation rules."] },
+    { "heading": "4. How to ask for a refund", "list": ["Email contact@arafatbin.com or message me on WhatsApp within 7 days of delivery", "Include your order details and the reason", "Approved refunds are sent within 7 working days, using the original payment method where possible"] }
+  ]
+}

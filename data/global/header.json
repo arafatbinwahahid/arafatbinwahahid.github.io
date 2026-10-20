@@ -1,0 +1,46 @@
+{
+  "logo": {
+    "text": "Arafat Bin Wahahid",
+    "image": "",
+    "href": "/"
+  },
+  "links": [
+    { "label": "Home", "href": "/" },
+    { "label": "Shop", "href": "/shop/" },
+    { "label": "Services", "href": "/services/" },
+    { "label": "About", "href": "/about/" },
+    { "label": "Contact", "href": "/contact/" }
+  ],
+  "button": { "label": "WhatsApp", "href": "https://wa.me/96892130528", "icon": "wa", "style": "primary" },
+  "menu": {
+    "buttonLabel": "All pages",
+    "columns": [
+      {
+        "title": "Main",
+        "links": [
+          { "label": "Home", "href": "/", "icon": "home" },
+          { "label": "Shop", "href": "/shop/", "icon": "cart" },
+          { "label": "Services", "href": "/services/", "icon": "briefcase" },
+          { "label": "About", "href": "/about/", "icon": "user" },
+          { "label": "Experience", "href": "/experience/", "icon": "clock" },
+          { "label": "Skills", "href": "/skills/", "icon": "tool" },
+          { "label": "Work", "href": "/work/", "icon": "image" },
+          { "label": "Credentials", "href": "/credentials/", "icon": "award" },
+          { "label": "Reviews", "href": "/reviews/", "icon": "star" }
+        ]
+      },
+      {
+        "title": "Help & info",
+        "links": [
+          { "label": "Contact", "href": "/contact/", "icon": "mail" },
+          { "label": "Blog", "href": "/blog/", "icon": "file" },
+          { "label": "FAQ", "href": "/faq/", "icon": "help" },
+          { "label": "Terms and conditions", "href": "/terms-and-conditions/", "icon": "file" },
+          { "label": "Privacy policy", "href": "/privacy-policy/", "icon": "shield" },
+          { "label": "Refund / Return policy", "href": "/refund-policy/", "icon": "refresh" },
+          { "label": "Sitemap", "href": "/sitemap.xml", "icon": "map" }
+        ]
+      }
+    ]
+  }
+}

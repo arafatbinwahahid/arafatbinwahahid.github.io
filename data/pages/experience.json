@@ -1,0 +1,32 @@
+{
+  "seo": { "title": "Experience", "description": "Work experience of Arafat Bin Wahahid: fuel attendant at Oman Oil Marketing Company and computer operator at NACTAR, Bangladesh." },
+  "hero": { "title": "Experience", "text": "Where I have worked and what I did there." },
+  "currentLabel": "Current",
+  "roles": [
+    {
+      "title": "Fuel attendant",
+      "company": "Oman Oil Marketing Company, Rakhyout New Service Station",
+      "period": "Nov 2023 to present",
+      "type": "Full-time",
+      "current": true,
+      "points": [
+        "Deliver efficient, safe fueling that follows Oman Oil standards and HSE regulations.",
+        "Train and onboard new fuel attendants on operating and safety procedures.",
+        "Handle cash, invoicing and daily station checks."
+      ],
+      "image": { "src": "/assets/images/IMAGE08.JPG", "alt": "Arafat in his blue Oman Oil uniform on duty at a fuel pump", "caption": "On duty, Rakhyout New Service Station" }
+    },
+    {
+      "title": "Computer operator",
+      "company": "National Academy for Computer Training and Research (NACTAR), Bangladesh",
+      "period": "Dec 2021 to Sep 2023",
+      "type": "Internship",
+      "current": false,
+      "points": [
+        "Managed data entry and maintained digital records.",
+        "Supported training operations and helped run the computer lab."
+      ],
+      "image": { "src": "/assets/images/IMAGE07.JPG", "alt": "Arafat with three colleagues in front of a web design training banner in Cumilla", "caption": "Cumilla, Bangladesh" }
+    }
+  ]
+}

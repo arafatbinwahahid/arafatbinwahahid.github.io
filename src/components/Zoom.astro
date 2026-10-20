@@ -1,9 +1,0 @@
----
-// Image that opens in the lightbox when clicked.
-interface Props { src: string; alt: string; caption?: string; width?: number; height?: number; class?: string }
-const { src, alt, caption, width, height, class: cls = 'shot' } = Astro.props;
----
-<figure class={cls} data-zoom={src} data-cap={caption ?? alt} tabindex="0" role="button" aria-label="Enlarge image">
-  <img src={src} alt={alt} loading="lazy" width={width} height={height} />
-  {caption && <figcaption>{caption}</figcaption>}
-</figure>
