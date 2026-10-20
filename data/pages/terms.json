@@ -1,0 +1,16 @@
+{
+  "seo": { "title": "Terms and conditions", "description": "Terms and conditions for using arafatbin.com and ordering services or products." },
+  "hero": { "title": "Terms and conditions", "text": "Please read these terms before using this website or placing an order." },
+  "updatedLabel": "Last updated",
+  "lastUpdated": "2026-10-20",
+  "sections": [
+    { "heading": "1. About these terms", "paragraphs": ["These terms apply to arafatbin.com and to every service or product ordered from Arafat Bin Wahahid. By using the website or placing an order you agree to them."] },
+    { "heading": "2. Orders and quotes", "paragraphs": ["A quote is valid for 7 days. An order is confirmed when both sides agree on the price, the delivery time and what will be delivered."] },
+    { "heading": "3. Payment", "paragraphs": ["Payment terms are agreed for each order. Work may start after an advance payment."] },
+    { "heading": "4. Delivery and revisions", "paragraphs": ["Delivery times start once all information and payment are received. Revisions are limited to what was agreed in the order."] },
+    { "heading": "5. Intellectual property", "paragraphs": ["After full payment you receive the right to use the final files for the agreed purpose. I may show the work in my portfolio unless you ask me not to."], "list": ["Templates bought from the shop are for your own use and may not be resold.", "Content on this website may not be copied without permission."] },
+    { "heading": "6. Liability", "paragraphs": ["I am not responsible for losses caused by how delivered files are used. My total liability is limited to the amount paid for the order."] },
+    { "heading": "7. Changes to these terms", "paragraphs": ["I may update these terms. The date at the top of this page shows the latest version."] },
+    { "heading": "8. Contact", "paragraphs": ["Questions about these terms can be sent to contact@arafatbin.com."] }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "seo": { "title": "Reviews", "description": "Reviews and recommendations for Arafat Bin Wahahid from teammates and clients." },
+  "hero": { "title": "Reviews", "text": "What teammates and clients say about working with me." },
+  "items": [
+    {
+      "name": "Rasel Uddin Jibon",
+      "role": "Teammate, LinkedIn recommendation",
+      "date": "April 2022",
+      "rating": 5,
+      "text": "This men is beautiful friendly behavior and they are nice work.",
+      "link": { "label": "See it on LinkedIn", "href": "https://www.linkedin.com/in/arafatbinwahahid" }
+    }
+  ],
+  "fiverr": {
+    "title": "Fiverr reviews",
+    "text": "Read client feedback on my Fiverr profile, @arafatwahahid.",
+    "button": { "label": "Read Fiverr reviews", "href": "https://www.fiverr.com/arafatwahahid", "style": "primary", "icon": "globe" }
+  },
+  "form": {
+    "show": true,
+    "title": "Write a review",
+    "text": "Worked with me or used my services? Tell others what it was like.",
+    "nameLabel": "Your name",
+    "emailLabel": "Your email (optional)",
+    "ratingLabel": "Your rating",
+    "messageLabel": "Your review",
+    "allowLabel": "I allow my review and name to be shown on this website",
+    "submitLabel": "Submit review",
+    "ratingError": "Please choose a star rating first.",
+    "success": "Thank you for your review!",
+    "note": "Reviews are read before anything is shown here."
+  }
+}

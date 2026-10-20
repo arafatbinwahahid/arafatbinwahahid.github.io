@@ -1,0 +1,34 @@
+{
+  "seo": { "title": "Work", "description": "Portfolio of Arafat Bin Wahahid: Excel sales dashboards and vector portrait art." },
+  "hero": { "title": "Work", "text": "A few recent projects you can hire me for." },
+  "projects": [
+    {
+      "title": "Sales Performance Dashboard",
+      "summary": "A professional Excel workbook with three sheets and 54 live formulas, with zero errors.",
+      "image": { "src": "/assets/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard with revenue table and sales rep rankings" },
+      "points": [
+        "KPI cards for total revenue, units sold, average deal size, and year-over-year growth",
+        "Twelve-month table with green and red attainment against target",
+        "Sales rep leaderboard with quota attainment",
+        "Assumptions sheet with editable inputs for growth rate, COGS, commission, and quotas"
+      ],
+      "buttons": [
+        { "label": "Ask for a dashboard", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20an%20Excel%20dashboard.", "style": "primary", "icon": "wa" }
+      ]
+    },
+    {
+      "title": "Vector portrait art",
+      "summary": "Your photo redrawn as clean vector art in Adobe Illustrator, offered on Fiverr.",
+      "image": { "src": "/assets/images/IMAGE05.PNG", "alt": "Vector portrait service poster showing an illustrated man in a navy shirt" },
+      "points": [
+        "100% vector, scalable and high quality",
+        "High resolution, ready for print and web",
+        "Fast delivery and unlimited revisions"
+      ],
+      "buttons": [
+        { "label": "Order a portrait", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20vector%20portrait.", "style": "primary", "icon": "wa" },
+        { "label": "Fiverr profile", "href": "https://www.fiverr.com/arafatwahahid", "style": "outline", "icon": "globe" }
+      ]
+    }
+  ]
+}
