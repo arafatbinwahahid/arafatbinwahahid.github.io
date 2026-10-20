@@ -32,7 +32,7 @@
     │   ├── footer.json      ← ফুটারের লেখা, কলাম, কপিরাইট, নিচের লিংক
     │   ├── contact.json     ← WhatsApp, ফোন, ইমেইল, ঠিকানা, ম্যাপ
     │   ├── social.json      ← সোশ্যাল লিংক ও আইকন
-    │   ├── sitemap.json     ← sitemap.xml-এর সব লিংক
+    │   ├── sitemap.json     ← sitemap.xml-এ বাড়তি লিংক (বাকি সব নিজে যোগ হয়)
     │   └── icons.json       ← সব আইকন (নাম দিয়ে যেকোনো JSON-এ ব্যবহার করুন)
     │
     ├── pages/               ← প্রতিটি পেইজের লেখা
@@ -59,7 +59,7 @@
         └── blog/*.json      → /blog/<slug>/   (প্রতিটি পোস্ট = একটি ফাইল)
 ```
 
-`sitemap.xml` তৈরি হয় `data/global/sitemap.json`-এর লিংক থেকে, আর `robots.txt` তৈরি হয় `site.json` থেকে। নতুন পেইজ যোগ করলে তার লিংক `sitemap.json`-এ দিন। ভুলে গেলে বা লিংক ভুল হলে build সতর্ক করবে।
+`sitemap.xml` নিজে থেকে তৈরি হয়: সব পেইজ, প্রোডাক্ট, সার্ভিস ও ব্লগ পোস্টের লিংক স্বয়ংক্রিয়ভাবে যোগ হয়, কোনো তারিখ ছাড়া। `data/global/sitemap.json`-এ শুধু বাড়তি লিংক (যেমন CV-এর PDF) দিন। `robots.txt` তৈরি হয় `site.json` থেকে।
 
 ## কীভাবে এডিট করবেন
 
@@ -75,7 +75,7 @@
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
 | নতুন ছবি | `assets/images/`-এ রাখুন, JSON-এ লিখুন `"/assets/images/নাম.jpg"` |
-| sitemap-এ লিংক যোগ/বাদ | `data/global/sitemap.json` → `urls` |
+| sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
 
 **বাটন:** `{ "label": "লেখা", "href": "/contact/", "style": "primary | outline | light", "icon": "wa" }`

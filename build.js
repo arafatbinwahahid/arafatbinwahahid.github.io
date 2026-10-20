@@ -20,10 +20,10 @@ fs.rmSync(OUT, { recursive: true, force: true });
 const pages = allPages();
 for (const p of pages) write(p.file || path.join(p.path, 'index.html'), layout(p));
 
-// sitemap.xml (links come from data/global/sitemap.json)
-const urls = sitemap.urls.map((u) => `  <url><loc>${u}</loc></url>`);
+// sitemap.xml: links from data/global/sitemap.json, then every other page added automatically
+const added = pages.filter((p) => !p.noindex).map((p) => absUrl(p.path)).filter((u) => !sitemap.urls.includes(u));
+const urls = [...sitemap.urls, ...added].map((u) => `  <url><loc>${u}</loc></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
-for (const p of pages) if (!p.noindex && !sitemap.urls.includes(absUrl(p.path))) console.warn(`  ! Not in sitemap.json: ${absUrl(p.path)}`);
 
 // robots.txt
 const { allow = [], disallow = [] } = site.robots;
