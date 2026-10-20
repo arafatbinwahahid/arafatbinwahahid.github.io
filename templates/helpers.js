@@ -33,7 +33,7 @@ export const posts = fs
 // ---- HTML helpers ----
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
-export const isHttp = (href) => /^https?:\/\//.test(href || '');
+const isHttp = (href) => /^https?:\/\//.test(href || '');
 export const target = (href) => (isHttp(href) ? ' target="_blank" rel="noopener"' : '');
 
 export const icon = (name) =>

@@ -118,11 +118,7 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .list .i { color: var(--accent); margin-top: .25rem; stroke-width: 3; }
 .note { margin-top: 1.5rem; font-size: .88rem; color: var(--muted); }
 
-/* Stats, tags, facts, steps */
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 1rem; }
-.stat { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 1.2rem 1.3rem; }
-.stat b { display: block; font-size: 2rem; line-height: 1.1; color: var(--primary); }
-.stat span { color: var(--muted); font-size: .93rem; }
+/* Tags, facts, steps */
 .tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .5rem; }
 .tags span { padding: .3rem .75rem; border-radius: 999px; background: var(--soft); border: 1px solid var(--border); font-size: .88rem; }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: .55rem 1.2rem; padding: 1.2rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); margin-top: .6rem; }
@@ -218,8 +214,7 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .social a:hover { background: var(--accent); color: var(--dark); }
 .ftr-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; padding-top: 1.3rem; border-top: 1px solid rgba(255, 255, 255, .12); font-size: .85rem; }
 .ftr-bottom nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
-@media (max-width: 860px) { .ftr-grid { grid-template-columns: 1fr 1fr; } .ftr-grid > div:first-child { grid-column: 1 / -1; } }
-@media (max-width: 480px) { .ftr-grid { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .ftr-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; } .ftr-grid > div:first-child, .ftr-grid > div:last-child { grid-column: 1 / -1; } }
 
 /* Floating WhatsApp */
 .wa-float { position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; font-size: 1.5rem; box-shadow: 0 8px 20px -6px rgba(0, 0, 0, .35); }

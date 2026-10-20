@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
   site, contact, social, products, services, posts, page,
-  esc, icon, btn, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl,
+  esc, icon, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl,
 } from './helpers.js';
 
 const shopText = page('shop');
@@ -60,7 +60,6 @@ const homeSections = {
   products: (s) => section(grid(products.slice(0, s.limit).map(productCard)), s),
   services: (s) => section(grid(services.slice(0, s.limit).map(serviceCard), 4), s),
   about: (s) => section(`<div class="split"><div>${img(s.image)}</div><div><h2>${esc(s.title)}</h2>${paras(s.text)}${btns(s.buttons)}</div></div>`, { background: s.background }),
-  stats: (s) => section(`<div class="stats">${s.items.map((i) => `<div class="stat"><b>${esc(i.value)}</b><span>${esc(i.label)}</span></div>`).join('')}</div>`, s),
   work: (s) => section(grid(workPage.projects.slice(0, s.limit).map(workCard), 2), s),
   reviews: (s) => section(grid(reviewsPage.items.slice(0, s.limit).map(reviewCard)), s),
   blog: (s) => (posts.length ? section(grid(posts.slice(0, s.limit).map(postCard)), s) : ''),
@@ -168,10 +167,10 @@ function skillsPage() {
   const d = page('skills');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/skills/' });
   const groups = d.groups.map((g) => `<div class="card card-pad"><span class="ic">${icon(g.icon)}</span><h2 class="h3">${esc(g.title)}</h2><div class="tags">${g.items.map((i) => `<span>${esc(i)}</span>`).join('')}</div></div>`);
-  const langs = d.languages.map((l) => `<div class="stat"><b>${esc(l.name)}</b><span>${esc(l.level)}</span></div>`).join('');
+  groups.push(`<div class="card card-pad"><span class="ic">${icon('globe')}</span><h2 class="h3">${esc(d.languagesTitle)}</h2><div class="tags">${d.languages.map((l) => `<span>${esc(l.name)} · ${esc(l.level)}</span>`).join('')}</div></div>`);
   return {
     path: '/skills/', seo: d.seo, crumbs,
-    body: pageHero(d.hero, crumbs) + section(grid(groups, 2)) + section(`<div class="stats">${langs}</div>`, { title: d.languagesTitle, background: 'soft' }),
+    body: pageHero(d.hero, crumbs) + section(grid(groups, 2)),
   };
 }
 
