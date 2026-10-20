@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, absUrl } from './templates/helpers.js';
+import { ROOT, site, sitemap, absUrl } from './templates/helpers.js';
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 
@@ -21,11 +21,11 @@ fs.rmSync(OUT, { recursive: true, force: true });
 const pages = allPages();
 for (const p of pages) write(p.file || path.join(p.path, 'index.html'), layout(p));
 
-// sitemap.xml
-const urls = pages
-  .filter((p) => !p.noindex)
-  .map((p) => `  <url><loc>${absUrl(p.path)}</loc><lastmod>${p.lastmod || today}</lastmod></url>`);
+// sitemap.xml (links come from data/global/sitemap.json)
+const lastmods = Object.fromEntries(pages.map((p) => [absUrl(p.path), p.lastmod]));
+const urls = sitemap.urls.map((u) => `  <url><loc>${u}</loc><lastmod>${lastmods[u] || today}</lastmod></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+for (const p of pages) if (!p.noindex && !sitemap.urls.includes(absUrl(p.path))) console.warn(`  ! Not in sitemap.json: ${absUrl(p.path)}`);
 
 // robots.txt
 const { allow = [], disallow = [] } = site.robots;
@@ -45,6 +45,13 @@ const css = fs.readFileSync(cssFile, 'utf8')
 fs.writeFileSync(cssFile, css);
 if (fs.existsSync(path.join(ROOT, 'CNAME'))) fs.copyFileSync(path.join(ROOT, 'CNAME'), path.join(OUT, 'CNAME'));
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
+
+// Warn about sitemap links that point to nothing
+for (const u of sitemap.urls) {
+  const file = path.join(OUT, decodeURI(new URL(u).pathname));
+  const ok = fs.existsSync(file) && (fs.statSync(file).isFile() || fs.existsSync(path.join(file, 'index.html')));
+  if (!u.startsWith(site.url) || !ok) console.warn(`  ! Broken link in sitemap.json: ${u}`);
+}
 
 console.log(`Built ${pages.length} pages + sitemap.xml + robots.txt into dist/`);
 
