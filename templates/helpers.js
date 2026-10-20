@@ -7,9 +7,18 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const DATA = path.join(ROOT, 'data');
 
 function read(file) {
+  const text = fs.readFileSync(path.join(DATA, file), 'utf8');
   try {
-    return JSON.parse(fs.readFileSync(path.join(DATA, file), 'utf8'));
+    return JSON.parse(text);
   } catch (e) {
+    // Phone keyboards type curly quotes “ ” which JSON does not accept; retry with straight ones
+    if (/[“”]/.test(text)) {
+      try {
+        const data = JSON.parse(text.replace(/[“”]/g, '"'));
+        console.warn(`  ! data/${file}: curly quotes “ ” were read as straight quotes ". Please use " in JSON.`);
+        return data;
+      } catch {}
+    }
     throw new Error(`Problem in data/${file}: ${e.message}`);
   }
 }
