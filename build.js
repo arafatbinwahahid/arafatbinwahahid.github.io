@@ -9,7 +9,6 @@ import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 
 const OUT = path.join(ROOT, 'dist');
-const today = new Date().toISOString().slice(0, 10);
 
 function write(file, content) {
   const full = path.join(OUT, file);
@@ -22,8 +21,7 @@ const pages = allPages();
 for (const p of pages) write(p.file || path.join(p.path, 'index.html'), layout(p));
 
 // sitemap.xml (links come from data/global/sitemap.json)
-const lastmods = Object.fromEntries(pages.map((p) => [absUrl(p.path), p.lastmod]));
-const urls = sitemap.urls.map((u) => `  <url><loc>${u}</loc><lastmod>${lastmods[u] || today}</lastmod></url>`);
+const urls = sitemap.urls.map((u) => `  <url><loc>${u}</loc></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 for (const p of pages) if (!p.noindex && !sitemap.urls.includes(absUrl(p.path))) console.warn(`  ! Not in sitemap.json: ${absUrl(p.path)}`);
 
