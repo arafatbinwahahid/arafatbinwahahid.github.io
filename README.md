@@ -18,7 +18,7 @@
 │   ├── layout.js            ← <head> (SEO), header, 3-dot মেনু, footer
 │   └── pages.js             ← প্রতিটি পেইজের HTML
 ├── assets/
-│   ├── css/style.css        ← ডিজাইন
+│   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে minify করে dist-এ দেয়)
 │   ├── js/main.js           ← মেনু বন্ধ করা, shop filter, ফর্ম পাঠানো
 │   ├── images/              ← সব ছবি
 │   └── files/               ← CV (PDF)
