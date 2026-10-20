@@ -8,46 +8,131 @@
     "title": "Excel templates, design and data work by Arafat Bin Wahahid",
     "text": "Buy ready-made templates or hire me for vector portraits, logos, Excel dashboards and data entry. Delivered online, anywhere.",
     "buttons": [
-      { "label": "Message on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20found%20your%20website.", "style": "primary", "icon": "wa" },
-      { "label": "Download CV", "href": "/assets/files/Arafat_Bin_Wahahid_CV.pdf", "style": "outline", "icon": "download", "download": true }
+      {
+        "label": "Message on WhatsApp",
+        "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20found%20your%20website.",
+        "style": "primary",
+        "icon": "wa"
+      },
+      {
+        "label": "Download CV",
+        "href": "/assets/files/Arafat_Bin_Wahahid_CV.pdf",
+        "style": "outline",
+        "icon": "download",
+        "download": true
+      }
     ],
     "tiles": [
-      { "title": "Shop", "text": "Excel templates, portraits and design packs", "href": "/shop/", "icon": "cart", "label": "Browse the shop" },
-      { "title": "Services", "text": "Design, dashboards and data entry on request", "href": "/services/", "icon": "briefcase", "label": "See all services" }
+      {
+        "title": "Shop",
+        "text": "Excel templates, portraits and design packs",
+        "href": "/shop/",
+        "icon": "cart",
+        "label": "Browse the shop"
+      },
+      {
+        "title": "Services",
+        "text": "Design, dashboards and data entry on request",
+        "href": "/services/",
+        "icon": "briefcase",
+        "label": "See all services"
+      }
     ]
   },
   "sections": [
-    { "type": "products", "show": true, "title": "Shop", "text": "Ready-made products you can order today.", "limit": 6, "link": { "label": "View all products", "href": "/shop/" } },
-    { "type": "services", "show": true, "background": "soft", "title": "Services", "text": "Remote work you can hire me for.", "limit": 4, "link": { "label": "View all services", "href": "/services/" } },
     {
-      "type": "about", "show": true,
+      "type": "products",
+      "show": true,
+      "title": "Shop",
+      "text": "Ready-made products you can order today.",
+      "limit": 6,
+      "link": {
+        "label": "View all products",
+        "href": "/shop/"
+      }
+    },
+    {
+      "type": "services",
+      "show": true,
+      "background": "soft",
+      "title": "Services",
+      "text": "Remote work you can hire me for.",
+      "limit": 4,
+      "link": {
+        "label": "View all services",
+        "href": "/services/"
+      }
+    },
+    {
+      "type": "about",
+      "show": true,
       "title": "About me",
       "text": [
         "I work in fuel station operations at Oman Oil (OQ) in Dhofar, covering safe fueling, HSE rules and shift supervision.",
         "On the side I build Excel dashboards and design logos, vector portraits and social media graphics in Photoshop and Illustrator."
       ],
-      "image": { "src": "/assets/images/IMAGE08.JPG", "alt": "Arafat in his blue Oman Oil uniform on duty at a fuel pump" },
-      "buttons": [{ "label": "More about me", "href": "/about/", "style": "outline" }]
-    },
-    {
-      "type": "stats", "show": true, "background": "soft",
-      "items": [
-        { "value": "3+", "label": "Years in fuel station operations" },
-        { "value": "4", "label": "Languages spoken" },
-        { "value": "54", "label": "Live formulas in my top dashboard" },
-        { "value": "4", "label": "Certificates earned" }
+      "image": {
+        "src": "/assets/images/IMAGE08.JPG",
+        "alt": "Arafat in his blue Oman Oil uniform on duty at a fuel pump"
+      },
+      "buttons": [
+        {
+          "label": "More about me",
+          "href": "/about/",
+          "style": "outline"
+        }
       ]
     },
-    { "type": "work", "show": true, "title": "Recent work", "limit": 2, "link": { "label": "See all work", "href": "/work/" } },
-    { "type": "reviews", "show": true, "background": "soft", "title": "What people say", "limit": 3, "link": { "label": "All reviews", "href": "/reviews/" } },
-    { "type": "blog", "show": true, "title": "From the blog", "limit": 3, "link": { "label": "Read the blog", "href": "/blog/" } },
     {
-      "type": "cta", "show": true,
+      "type": "work",
+      "show": true,
+      "title": "Recent work",
+      "limit": 2,
+      "link": {
+        "label": "See all work",
+        "href": "/work/"
+      },
+      "background": "soft"
+    },
+    {
+      "type": "reviews",
+      "show": true,
+      "title": "What people say",
+      "limit": 3,
+      "link": {
+        "label": "All reviews",
+        "href": "/reviews/"
+      }
+    },
+    {
+      "type": "blog",
+      "show": true,
+      "title": "From the blog",
+      "limit": 3,
+      "link": {
+        "label": "Read the blog",
+        "href": "/blog/"
+      },
+      "background": "soft"
+    },
+    {
+      "type": "cta",
+      "show": true,
       "title": "Have a project in mind?",
       "text": "Send me a message on WhatsApp or through the contact form. I usually reply within a day.",
       "buttons": [
-        { "label": "Contact me", "href": "/contact/", "style": "primary", "icon": "mail" },
-        { "label": "WhatsApp", "href": "https://wa.me/96892130528", "style": "light", "icon": "wa" }
+        {
+          "label": "Contact me",
+          "href": "/contact/",
+          "style": "primary",
+          "icon": "mail"
+        },
+        {
+          "label": "WhatsApp",
+          "href": "https://wa.me/96892130528",
+          "style": "light",
+          "icon": "wa"
+        }
       ]
     }
   ]
