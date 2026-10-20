@@ -29,7 +29,7 @@ const { hero, stats, marquee, sections: s, cta } = page;
   {stats.length > 0 && (
     <section class="statsec">
       <div class="wrap stats">
-        {stats.map((st) => <div class="stat rv"><b><span data-count={st.value}>{st.value}</span>{st.suffix}</b><span>{st.label}</span></div>)}
+        {stats.map((st) => <div class="stat rv"><p class="num"><span data-count={st.value}>{st.value}</span>{st.suffix && <span class="suf">{st.suffix}</span>}</p><p class="lbl">{st.label}</p></div>)}
       </div>
     </section>
   )}
