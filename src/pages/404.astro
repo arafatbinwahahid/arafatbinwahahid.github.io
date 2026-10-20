@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Buttons from '../components/Buttons.astro';
+import page from '../data/pages/404.json';
+---
+<BaseLayout title={page.seo.title} description={page.seo.description} noindex>
+  <section class="nf">
+    <div class="wrap">
+      <p class="nfcode">{page.code}</p>
+      <h1>{page.title}</h1>
+      <p class="lead">{page.text}</p>
+      <Buttons items={page.buttons} />
+    </div>
+  </section>
+</BaseLayout>

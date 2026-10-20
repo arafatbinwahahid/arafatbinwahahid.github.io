@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Zoom from '../../components/Zoom.astro';
+import page from '../../data/pages/blog.json';
+import { site, posts, formatDate } from '../../lib/data';
+
+export function getStaticPaths() {
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.excerpt,
+  datePublished: post.date,
+  author: { '@type': 'Person', name: post.author },
+  image: post.image ? new URL(post.image.src, site.url).href : undefined,
+};
+---
+<BaseLayout title={post.title} description={post.excerpt} image={post.image?.src} type="article" schema={schema}>
+  <PageHero title={post.title} eyebrow={post.category}>
+    <p class="postmeta">{post.author} &middot; <time datetime={post.date}>{formatDate(post.date)}</time></p>
+  </PageHero>
+  <section>
+    <article class="wrap prose">
+      {post.image && <img class="cover" src={post.image.src} alt={post.image.alt} />}
+      {post.content.map((b) => {
+        switch (b.type) {
+          case 'h2': return <h2>{b.text}</h2>;
+          case 'h3': return <h3>{b.text}</h3>;
+          case 'quote': return <blockquote>{b.text}</blockquote>;
+          case 'list': return b.ordered ? <ol>{b.items.map((i) => <li>{i}</li>)}</ol> : <ul>{b.items.map((i) => <li>{i}</li>)}</ul>;
+          case 'image': return <Zoom src={b.src} alt={b.alt} caption={b.caption} />;
+          default: return <p>{b.text}</p>;
+        }
+      })}
+      {post.tags.length > 0 && <div class="tags in">{post.tags.map((t) => <span>{t}</span>)}</div>}
+      <p class="back"><a href="/blog">&larr; {page.backLabel}</a></p>
+    </article>
+  </section>
+</BaseLayout>

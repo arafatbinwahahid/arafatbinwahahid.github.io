@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+import { site, navigation } from '../lib/data';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
+const btn = navigation.headerButton;
+---
+<header id="hdr">
+  <div class="wrap nav">
+    <a class="brand" href="/">{site.name}</a>
+    <nav class="links" id="links" aria-label="Main">
+      {navigation.header.map((l) => <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a>)}
+      {btn && <a class="btn primary" href={btn.href} target="_blank" rel="noopener"><Icon name={btn.icon} />{btn.label}</a>}
+    </nav>
+    <div class="navbtns">
+      <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark theme"><Icon name="sun" /></button>
+      <button class="iconbtn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="links"><Icon name="menu" /></button>
+    </div>
+  </div>
+</header>

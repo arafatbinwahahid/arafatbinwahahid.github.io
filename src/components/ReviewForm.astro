@@ -1,0 +1,28 @@
+---
+import Icon from './Icon.astro';
+interface Props { form: { title: string; text: string; submitLabel: string; success: string; note: string } }
+const { form } = Astro.props;
+---
+<div class="card formcard rv">
+  <h3>{form.title}</h3>
+  <p>{form.text}</p>
+  <form data-form="review" data-success={form.success}>
+    <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" hidden />
+    <div class="two">
+      <div><label for="rn">Your name</label><input id="rn" name="name" autocomplete="name" required placeholder="Your name" /></div>
+      <div><label for="re">Your email (optional)</label><input id="re" name="email" type="email" autocomplete="email" placeholder="you@example.com" /></div>
+    </div>
+    <label id="rl">Your rating</label>
+    <div class="stars" role="radiogroup" aria-labelledby="rl">
+      {[5, 4, 3, 2, 1].map((n) => (
+        <><input type="radio" id={`r${n}`} name="rating" value={n} /><label for={`r${n}`} title={`${n} stars`}><span class="sr">{n} stars</span>&#9733;</label></>
+      ))}
+    </div>
+    <label for="rm">Your review</label>
+    <textarea id="rm" name="message" required placeholder="Share your experience"></textarea>
+    <label class="check"><input type="checkbox" name="allow_public" value="Yes" /> I allow my review and name to be shown on this website</label>
+    <div class="btns"><button class="btn dark" type="submit"><Icon name="mail" />{form.submitLabel}</button></div>
+    <p class="status" role="status" aria-live="polite"></p>
+    <p class="note">{form.note}</p>
+  </form>
+</div>

@@ -1,0 +1,19 @@
+{
+  "slug": "life-as-fuel-attendant",
+  "title": "What I learned working as a fuel attendant in Oman",
+  "date": "2026-09-15",
+  "author": "Arafat Bin Wahahid",
+  "category": "Work",
+  "tags": ["Oman Oil", "HSE", "Career"],
+  "excerpt": "Three years on the forecourt taught me a lot about safety, teamwork and customer service.",
+  "image": { "src": "/images/IMAGE08.JPG", "alt": "Arafat on duty at a fuel pump" },
+  "draft": false,
+  "content": [
+    { "type": "p", "text": "I joined Oman Oil Marketing Company in November 2023. Here is what the job has taught me so far." },
+    { "type": "h2", "text": "Safety comes first, every time" },
+    { "type": "p", "text": "HSE rules are not paperwork. They keep customers and the team safe, so I report problems early." },
+    { "type": "h2", "text": "Training others makes you better" },
+    { "type": "p", "text": "Teaching new attendants made me understand every procedure more deeply." },
+    { "type": "image", "src": "/images/IMAGE04.JPG", "alt": "Top Filler certificate of appreciation", "caption": "Top Filler award, June 2026" }
+  ]
+}

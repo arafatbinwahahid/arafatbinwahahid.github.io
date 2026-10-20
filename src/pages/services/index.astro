@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import page from '../../data/pages/services.json';
+import { services } from '../../lib/data';
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap">
+      <div class="grid2">{services.map((s) => <ServiceCard service={s} />)}</div>
+    </div>
+  </section>
+  {page.process && (
+    <section class="alt">
+      <div class="wrap">
+        <h2 class="rv">{page.process.title}</h2>
+        <ol class="steps">{page.process.steps.map((st) => <li class="card rv"><h3>{st.title}</h3><p>{st.text}</p></li>)}</ol>
+      </div>
+    </section>
+  )}
+</BaseLayout>

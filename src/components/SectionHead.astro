@@ -1,0 +1,11 @@
+---
+interface Props { title: string; intro?: string; link?: { label: string; href: string } }
+const { title, intro, link } = Astro.props;
+---
+<div class="shead">
+  <div>
+    <h2 class="rv">{title}</h2>
+    {intro && <p class="mute">{intro}</p>}
+  </div>
+  {link && <a class="more" href={link.href}>{link.label} &rarr;</a>}
+</div>

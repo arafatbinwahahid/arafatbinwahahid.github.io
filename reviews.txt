@@ -1,8 +1,0 @@
-# Visitor reviews. Add one review per line, like this (no quotes needed):
-#
-# Name | rating from 1 to 5 | review text | date (optional)
-#
-# Example (remove the # at the start to show it):
-# Ahmed | 5 | Great work and fast delivery. | October 2026
-#
-# Lines that start with # are ignored. Do not use the | sign inside the review text.

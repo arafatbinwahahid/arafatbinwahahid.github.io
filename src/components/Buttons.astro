@@ -1,0 +1,6 @@
+---
+import Button, { type ButtonData } from './Button.astro';
+interface Props { items?: ButtonData[] }
+const { items = [] } = Astro.props;
+---
+{items.length > 0 && <div class="btns">{items.map((b) => <Button {...b} />)}</div>}

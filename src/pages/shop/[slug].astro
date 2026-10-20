@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Zoom from '../../components/Zoom.astro';
+import Icon from '../../components/Icon.astro';
+import page from '../../data/pages/shop.json';
+import { site, products, formatPrice, whatsappLink } from '../../lib/data';
+
+export function getStaticPaths() {
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+const { product: p } = Astro.props;
+const price = p.salePrice ?? p.price;
+const orderLink = whatsappLink(`Hello Arafat, I want to order: ${p.title} (${formatPrice(price)}).`);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.title,
+  description: p.summary,
+  image: new URL(p.image.src, site.url).href,
+  category: p.category,
+  offers: { '@type': 'Offer', price, priceCurrency: site.currency, availability: p.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' },
+};
+---
+<BaseLayout title={p.title} description={p.summary} image={p.image.src} schema={schema}>
+  <PageHero title={p.title} subtitle={p.summary} eyebrow={p.category} />
+  <section>
+    <div class="wrap detail">
+      <div><Zoom src={p.image.src} alt={p.image.alt} class="fimg" /></div>
+      <div>
+        <p class="price big">
+          {p.salePrice != null ? <><b>{formatPrice(p.salePrice)}</b> <s>{formatPrice(p.price)}</s></> : <b>{formatPrice(p.price)}</b>}
+        </p>
+        {p.description.map((d) => <p>{d}</p>)}
+        <ul>{p.features.map((f) => <li>{f}</li>)}</ul>
+        <p class="mute">Format: {p.format}</p>
+        {p.inStock ? (
+          <div class="btns">
+            <a class="btn primary" href={orderLink} target="_blank" rel="noopener"><Icon name="wa" />{page.orderButtonLabel}</a>
+            {p.buyLink && <a class="btn line" href={p.buyLink} target="_blank" rel="noopener"><Icon name="cart" />Buy online</a>}
+          </div>
+        ) : <p class="badge out">Sold out</p>}
+        <p class="note">{page.orderNote}</p>
+        <p class="back"><a href="/shop">&larr; Back to shop</a></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
