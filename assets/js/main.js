@@ -3,16 +3,18 @@ const menu = document.querySelector('.menu');
 document.addEventListener('click', (e) => { if (menu?.open && !menu.contains(e.target)) menu.open = false; });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu) menu.open = false; });
 
-// 2. Shop category filter
-document.querySelectorAll('[data-filter]').forEach((chip) => chip.addEventListener('click', () => {
-  document.querySelectorAll('[data-filter]').forEach((c) => c.classList.toggle('is-on', c === chip));
-  document.querySelectorAll('#products [data-cat]').forEach((card) => {
-    card.hidden = chip.dataset.filter !== 'all' && card.dataset.cat !== chip.dataset.filter;
+// 2. Send data to Web3Forms (used by the forms below and by shop.js)
+window.sendToWeb3Forms = async (data) => {
+  const res = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ access_key: document.body.dataset.formsKey, from_name: 'Website', ...data }),
   });
-}));
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || !json.success) throw new Error(json.message || 'Send failed');
+};
 
-// 3. Contact + review forms (sent with Web3Forms)
-const key = document.body.dataset.formsKey;
+// 3. Contact + review forms
 document.querySelectorAll('form[data-form]').forEach((form) => {
   const status = form.querySelector('.status');
   const say = (text, ok) => { status.textContent = text; status.className = 'status ' + (ok ? 'ok' : 'err'); };
@@ -21,7 +23,7 @@ document.querySelectorAll('form[data-form]').forEach((form) => {
     e.preventDefault();
     if (form.botcheck.checked) return;
     const f = form.elements;
-    const data = { access_key: key, from_name: 'Website', name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim() };
+    const data = { name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim() };
     if (form.dataset.form === 'review') {
       if (!f.rating.value) return say(form.dataset.ratingError);
       data.subject = `New review: ${f.rating.value} of 5 stars`;
@@ -33,8 +35,7 @@ document.querySelectorAll('form[data-form]').forEach((form) => {
     const button = form.querySelector('[type=submit]');
     button.disabled = true;
     try {
-      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) });
-      if (!(await res.json()).success) throw new Error();
+      await window.sendToWeb3Forms(data);
       say(form.dataset.success, true);
       form.reset();
     } catch {

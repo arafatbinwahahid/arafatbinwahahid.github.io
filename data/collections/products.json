@@ -1,58 +1,143 @@
 [
   {
+    "id": "P001",
     "slug": "sales-dashboard-template",
     "title": "Sales Performance Dashboard template",
     "category": "Excel templates",
-    "price": 12,
-    "salePrice": null,
-    "image": { "src": "/assets/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard template" },
+    "prices": {"OMR": 4.6, "USD": 12, "BDT": 1460},
+    "stock": 10,
+    "images": [
+      {"src": "/assets/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard template"}
+    ],
     "summary": "Ready-to-use Excel dashboard with KPI cards, monthly targets and a sales rep leaderboard.",
-    "description": ["Three sheets and 54 live formulas, with zero errors. Paste your sales data and the dashboard updates itself."],
-    "features": ["KPI cards for revenue, units, deal size and growth", "Twelve-month target table", "Sales rep leaderboard", "Editable assumptions sheet"],
+    "about": "A ready-made Excel workbook that turns your sales data into a clear dashboard.",
+    "description": [
+      "Three sheets and 54 live formulas, with zero errors. Paste your sales data and the dashboard updates itself."
+    ],
+    "usage": [
+      "Open the file in Microsoft Excel.",
+      "Paste your monthly sales data into the data sheet.",
+      "Change growth rate, COGS, commission and quotas on the Assumptions sheet.",
+      "Read the KPI cards, target table and leaderboard on the Dashboard sheet."
+    ],
+    "features": [
+      {"icon": "chart", "text": "KPI cards for revenue, units, deal size and growth"},
+      {"icon": "table", "text": "Twelve-month target table"},
+      {"icon": "user", "text": "Sales rep leaderboard"},
+      {"icon": "tool", "text": "Editable assumptions sheet"}
+    ],
     "format": "Excel (.xlsx)",
-    "inStock": true,
-    "buyLink": ""
+    "faq": [
+      {"q": "Which file format will I receive?", "a": "Excel (.xlsx)."},
+      {"q": "How do I pay?", "a": "Add the product to your cart and choose a currency and payment method on the payment page."}
+    ],
+    "reviews": []
   },
   {
+    "id": "P002",
     "slug": "custom-vector-portrait",
     "title": "Custom vector portrait",
     "category": "Design",
-    "price": 15,
-    "salePrice": 10,
-    "image": { "src": "/assets/images/IMAGE05.PNG", "alt": "Vector portrait example" },
+    "prices": {"OMR": 3.8, "USD": 10, "BDT": 1220},
+    "compareAtPrices": {"OMR": 5.8, "USD": 15, "BDT": 1830},
+    "stock": 10,
+    "images": [
+      {"src": "/assets/images/IMAGE05.PNG", "alt": "Vector portrait example"}
+    ],
     "summary": "One person, any background colour, delivered as high resolution PNG and JPG.",
-    "description": ["Send a clear photo after ordering. You get a draft in 2 days and unlimited revisions."],
-    "features": ["One person", "Solid colour background", "PNG and JPG", "Unlimited revisions"],
+    "about": "Your photo redrawn as clean vector art in Adobe Illustrator.",
+    "description": [
+      "Send a clear photo after ordering. You get a draft in 2 days and unlimited revisions."
+    ],
+    "usage": [
+      "Place your order and send a clear photo.",
+      "Review the first draft (sent within 2 days).",
+      "Ask for changes until you are happy.",
+      "Receive the final PNG and JPG files."
+    ],
+    "features": [
+      {"icon": "user", "text": "One person"},
+      {"icon": "image", "text": "Solid colour background"},
+      {"icon": "image", "text": "PNG and JPG"},
+      {"icon": "refresh", "text": "Unlimited revisions"}
+    ],
     "format": "PNG, JPG",
-    "inStock": true,
-    "buyLink": "https://www.fiverr.com/arafatwahahid"
+    "faq": [
+      {"q": "Which file formats will I receive?", "a": "PNG and JPG."},
+      {"q": "How many revisions are included?", "a": "Unlimited revisions."}
+    ],
+    "reviews": [],
+    "externalLink": {"label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid"}
   },
   {
+    "id": "P003",
     "slug": "social-media-post-pack",
     "title": "Social media post pack (10 posts)",
     "category": "Design",
-    "price": 25,
-    "salePrice": null,
-    "image": { "src": "/assets/images/IMAGE10.PNG", "alt": "Social media post design sample" },
+    "prices": {"OMR": 9.6, "USD": 25, "BDT": 3050},
+    "stock": 10,
+    "images": [
+      {"src": "/assets/images/IMAGE10.PNG", "alt": "Social media post design sample"}
+    ],
     "summary": "Ten branded posts sized for Instagram and Facebook.",
-    "description": ["Tell me your brand colours and topics. I design ten matching posts you can schedule straight away."],
-    "features": ["10 posts", "Instagram and Facebook sizes", "Your logo and colours", "Editable source files"],
+    "about": "Ten matching social media posts designed for your brand.",
+    "description": [
+      "Tell me your brand colours and topics. I design ten matching posts you can schedule straight away."
+    ],
+    "usage": [
+      "Place your order and tell me your brand colours and topics.",
+      "Send your logo.",
+      "Receive 10 posts sized for Instagram and Facebook.",
+      "Schedule them on your pages."
+    ],
+    "features": [
+      {"icon": "image", "text": "10 posts"},
+      {"icon": "globe", "text": "Instagram and Facebook sizes"},
+      {"icon": "pen", "text": "Your logo and colours"},
+      {"icon": "file", "text": "Editable source files"}
+    ],
     "format": "PNG, PSD",
-    "inStock": true,
-    "buyLink": ""
+    "faq": [
+      {"q": "Which file formats will I receive?", "a": "PNG and PSD."},
+      {"q": "Can I edit the posts later?", "a": "Yes. Editable source files are included."}
+    ],
+    "reviews": []
   },
   {
+    "id": "P004",
     "slug": "excel-data-entry-service",
     "title": "Professional Excel Data Entry Service",
     "category": "Excel Services",
-    "price": 15,
-    "salePrice": null,
-    "image": { "src": "/assets/images/IMAGE9.PNG", "alt": "Professional Excel data entry and spreadsheet management service" },
+    "prices": {"OMR": 5.8, "USD": 15, "BDT": 1830},
+    "stock": 10,
+    "images": [
+      {"src": "/assets/images/IMAGE9.PNG", "alt": "Professional Excel data entry and spreadsheet management service"}
+    ],
     "summary": "Accurate and professional Excel data entry service for businesses, individuals, and professionals. Get clean, organized, and well-formatted spreadsheets tailored to your needs.",
-    "description": ["Need help entering, organizing, or formatting data in Excel? I provide reliable Excel data entry services to help you save time and keep your data organized. From PDF-to-Excel conversion and copy-paste tasks to data cleaning and spreadsheet formatting, your data will be handled with care and attention to detail."],
-    "features": ["Accurate data entry into Microsoft Excel", "PDF, image, and scanned document to Excel conversion", "Copy-paste and data collection tasks", "Data cleaning, sorting, and duplicate removal", "Professional spreadsheet formatting and organization", "Custom Excel tables and basic formulas", "Confidential handling of client data", "Timely delivery based on project requirements"],
+    "about": "Accurate Excel data entry, cleaning and formatting for your files.",
+    "description": [
+      "Need help entering, organizing, or formatting data in Excel? I provide reliable Excel data entry services to help you save time and keep your data organized. From PDF-to-Excel conversion and copy-paste tasks to data cleaning and spreadsheet formatting, your data will be handled with care and attention to detail."
+    ],
+    "usage": [
+      "Place your order and send your files (PDF, images or scanned documents).",
+      "Tell me the format you need: Excel, CSV or Google Sheets.",
+      "Receive your organised spreadsheet."
+    ],
+    "features": [
+      {"icon": "table", "text": "Accurate data entry into Microsoft Excel"},
+      {"icon": "file", "text": "PDF, image, and scanned document to Excel conversion"},
+      {"icon": "refresh", "text": "Copy-paste and data collection tasks"},
+      {"icon": "check", "text": "Data cleaning, sorting, and duplicate removal"},
+      {"icon": "table", "text": "Professional spreadsheet formatting and organization"},
+      {"icon": "table", "text": "Custom Excel tables and basic formulas"},
+      {"icon": "shield", "text": "Confidential handling of client data"},
+      {"icon": "clock", "text": "Timely delivery based on project requirements"}
+    ],
     "format": "Microsoft Excel (.xlsx), CSV (.csv), and Google Sheets",
-    "inStock": true,
-    "buyLink": ""
+    "faq": [
+      {"q": "Which formats can you deliver?", "a": "Microsoft Excel (.xlsx), CSV (.csv) and Google Sheets."},
+      {"q": "Is my data kept private?", "a": "Yes. Client data is handled confidentially."}
+    ],
+    "reviews": []
   }
 ]

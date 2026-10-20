@@ -1,0 +1,52 @@
+{
+  "seo": { "title": "Payment", "description": "Choose a currency and payment method to complete your order from Arafat Bin Wahahid's shop." },
+  "hero": { "title": "Payment", "text": "Choose a currency and a payment method, pay, then send the confirmation form." },
+  "noscript": "This page needs JavaScript to show your cart. Please turn JavaScript on, or order on WhatsApp.",
+  "summaryTitle": "Order summary",
+  "orderIdLabel": "Order ID",
+  "editCartLabel": "Edit cart",
+  "stockNotice": "Some quantities were changed to match the stock that is available now.",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from the shop first.",
+    "button": { "label": "Go to the shop", "href": "/shop/", "style": "primary", "icon": "cart" }
+  },
+  "currencyTitle": "1. Choose currency",
+  "methodTitle": "2. Choose payment method",
+  "payTitle": "3. Pay and confirm",
+  "detailsTitle": "Payment details",
+  "missingDetails": "Some payment details are not listed here yet. Message us on WhatsApp and we will send them.",
+  "stepsTitle": "How to pay",
+  "locationTitle": "Location",
+  "hoursTitle": "Available hours",
+  "openMapLabel": "Open in Google Maps",
+  "copyLabel": "Copy",
+  "copiedLabel": "Copied",
+  "verifyNote": "Sending this form does not mark your order as paid. We check every payment by hand, then confirm your order by email or WhatsApp.",
+  "form": {
+    "nameLabel": "Your name",
+    "mobileLabel": "Mobile number",
+    "emailLabel": "Email address",
+    "amountLabel": "Amount you paid",
+    "transactionLabel": "Transaction or reference number (optional)",
+    "dateLabel": "Preferred visit date",
+    "timeLabel": "Preferred visit time",
+    "messageLabel": "Message (optional)",
+    "submitPayment": "Send payment confirmation",
+    "submitAppointment": "Request appointment",
+    "sending": "Sending…",
+    "invalidPhone": "Please enter a valid mobile number, for example +968 9213 0528.",
+    "invalidAmount": "Please enter the amount you paid.",
+    "invalidDate": "Please choose today or a later date.",
+    "invalidTime": "Please choose a time within the available hours.",
+    "emptyCart": "Your cart is empty.",
+    "duplicate": "This order was already sent. Order ID: {id}",
+    "error": "Could not send. Please try again, or message us on WhatsApp with your order ID {id}."
+  },
+  "done": {
+    "title": "Thank you!",
+    "payment": "We received your payment confirmation for order {id}. We will check the payment and contact you soon.",
+    "appointment": "We received your appointment request for order {id}. We will confirm the date and time with you soon.",
+    "button": { "label": "Back to the shop", "href": "/shop/", "style": "outline" }
+  }
+}

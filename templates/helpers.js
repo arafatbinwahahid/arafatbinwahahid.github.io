@@ -29,6 +29,7 @@ export const footer = read('global/footer.json');
 export const contact = read('global/contact.json');
 export const social = read('global/social.json');
 export const sitemap = read('global/sitemap.json');
+export const payments = read('global/payments.json');
 export const icons = read('global/icons.json');
 export const products = read('collections/products.json');
 export const services = read('collections/services.json');
@@ -79,15 +80,55 @@ function imageSize(src) {
   return (sizes[src] = size);
 }
 
-export function img(image, { eager = false } = {}) {
+// WebP versions are made at build time when the optional "sharp" package is installed (it is on GitHub).
+let sharp = null;
+try { sharp = (await import('sharp')).default; } catch {}
+export const imageJobs = new Map(); // source path -> widths to generate
+const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(src).replace(/\.[^.]+$/, '')}-${w}.${ext}`;
+
+function webpWidths(src, size) {
+  if (!sharp || !size || isHttp(src) || !/\.(jpe?g|png)$/i.test(src)) return null;
+  const widths = [...new Set([400, 800, 1200].filter((w) => w < size[0]).concat(Math.min(size[0], 1600)))];
+  imageJobs.set(src, new Set([...(imageJobs.get(src) || []), ...widths]));
+  return widths;
+}
+
+export function img(image, { eager = false, sizes = '(max-width: 800px) 100vw, 50vw' } = {}) {
   if (!image?.src) return '';
   const s = imageSize(image.src);
   const wh = s ? ` width="${s[0]}" height="${s[1]}"` : '';
-  return `<img src="${esc(image.src)}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+  const tag = `<img src="${esc(image.src)}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+  const widths = webpWidths(image.src, s);
+  if (!widths) return tag;
+  return `<picture><source type="image/webp" srcset="${widths.map((w) => `${optPath(image.src, w)} ${w}w`).join(', ')}" sizes="${sizes}">${tag}</picture>`;
 }
 
-export const formatPrice = (n) =>
-  n == null ? '' : new Intl.NumberFormat(site.locale, { style: 'currency', currency: site.currency }).format(n);
+// Small image for the cart; falls back to the original file without sharp
+export const thumb = (src) => (webpWidths(src, imageSize(src)) ? optPath(src, Math.min(400, imageSize(src)[0])) : src);
+
+// Favicon: a small square PNG made from site.json "favicon" when sharp is available
+export function iconLinks() {
+  if (!sharp || isHttp(site.favicon)) return `<link rel="icon" href="${esc(site.favicon)}">`;
+  imageJobs.set(site.favicon, new Set([...(imageJobs.get(site.favicon) || []), 'icon']));
+  return `<link rel="icon" type="image/png" sizes="48x48" href="${optPath(site.favicon, 48, 'png')}">\n<link rel="apple-touch-icon" href="${optPath(site.favicon, 180, 'png')}">`;
+}
+
+export async function buildImages(outDir) {
+  for (const [src, widths] of imageJobs) {
+    const input = path.join(ROOT, decodeURI(src));
+    for (const w of widths) {
+      if (w === 'icon') {
+        for (const px of [48, 180]) await sharp(input).resize(px, px, { fit: 'cover' }).png().toFile(path.join(outDir, optPath(src, px, 'png')));
+      } else {
+        await sharp(input).resize({ width: w, withoutEnlargement: true }).webp({ quality: 78 }).toFile(path.join(outDir, optPath(src, w)));
+      }
+    }
+  }
+  return imageJobs.size;
+}
+
+export const formatPrice = (n, currency = site.currency) =>
+  n == null ? '' : new Intl.NumberFormat(site.locale, { style: 'currency', currency }).format(n);
 export const formatDate = (iso) =>
   new Date(iso + 'T00:00:00Z').toLocaleDateString(site.locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 export const whatsapp = (text) => `https://wa.me/${contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
