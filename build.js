@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, sitemap, absUrl } from './templates/helpers.js';
+import { ROOT, site, sitemap, products, payments, absUrl, buildImages } from './templates/helpers.js';
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 
@@ -14,6 +14,25 @@ function write(file, content) {
   const full = path.join(OUT, file);
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, content);
+}
+
+// Check shop data before building: a wrong price or stock should stop the build, not reach customers
+const codes = payments.currencies.map((c) => c.code);
+const ids = new Set();
+for (const p of products) {
+  const where = `data/collections/products.json (${p.slug || p.title})`;
+  if (!p.id || ids.has(p.id)) throw new Error(`${where}: every product needs its own "id"`);
+  ids.add(p.id);
+  for (const c of codes) if (!(p.prices?.[c] > 0)) throw new Error(`${where}: "prices" needs a ${c} price above 0`);
+  if (!Number.isInteger(p.stock) || p.stock < 0) throw new Error(`${where}: "stock" must be a whole number, 0 or more`);
+  if (!p.images?.length) throw new Error(`${where}: add at least one image in "images"`);
+}
+if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);
+for (const c of payments.currencies) for (const m of c.methods) {
+  if (m.enabled === false) continue;
+  const empty = (m.details || []).filter((r) => !r.value).map((r) => r.label);
+  if (empty.length) console.warn(`  ! Payment ${m.id}: empty details (${empty.join(', ')}), customers are asked to message on WhatsApp`);
+  if (m.type === 'appointment' && !m.location?.mapQuery) console.warn(`  ! Payment ${m.id}: no map location set`);
 }
 
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -31,6 +50,9 @@ write('robots.txt', ['User-agent: *', ...allow.map((r) => `Allow: ${r}`), ...dis
 
 // Static files
 fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true });
+fs.mkdirSync(path.join(OUT, 'assets/opt'), { recursive: true });
+const optimised = await buildImages(OUT);
+if (!optimised) console.warn('  ! "sharp" is not installed: images are not converted to WebP (run npm install)');
 
 // Minify CSS (edit the readable assets/css/style.css, the site gets the small version)
 const cssFile = path.join(OUT, 'assets/css/style.css');

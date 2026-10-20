@@ -1,11 +1,58 @@
 {
-  "seo": { "title": "Shop", "description": "Excel templates, vector portraits and social media design packs by Arafat Bin Wahahid. Order by WhatsApp or Fiverr." },
-  "hero": { "title": "Shop", "text": "Ready-made templates and design packs. Order through WhatsApp or Fiverr." },
+  "seo": { "title": "Shop", "description": "Buy Excel templates, vector portraits, social media post packs and data entry services from Arafat Bin Wahahid. Pay in OMR, USD or BDT." },
+  "hero": { "title": "Shop", "text": "Ready-made templates, design packs and data services. Pay in OMR, USD or BDT." },
+  "productsTitle": "All products",
   "allLabel": "All",
-  "orderLabel": "Order on WhatsApp",
-  "buyLabel": "Buy online",
-  "orderMessage": "Hello Arafat, I want to order: {product} ({price}).",
+  "currencyLabel": "Currency",
+  "addToCartLabel": "Add to cart",
   "soldOutLabel": "Sold out",
   "saleLabel": "Sale",
-  "note": "Payment and delivery are arranged by WhatsApp or email after you order. Please read the refund policy before buying."
+  "stockLabel": "{n} in stock",
+  "quantityLabel": "Quantity",
+  "maxStockMessage": "Only {n} available. Your cart already has the rest.",
+  "formatLabel": "Format",
+  "sections": {
+    "about": "About this product",
+    "description": "Description",
+    "usage": "How to use",
+    "features": "Features",
+    "faq": "Questions about this product",
+    "reviews": "Customer reviews"
+  },
+  "benefits": [
+    { "icon": "zap", "title": "Instant Delivery", "text": "Digital files are sent as soon as your payment is confirmed." },
+    { "icon": "cart", "title": "Fast Checkout", "text": "Add to cart, choose a currency and pay in a few steps." },
+    { "icon": "lock", "title": "Secure Payment", "text": "Bank, mobile money, PayPal or RedotPay. Every payment is checked by hand." },
+    { "icon": "headset", "title": "Customer Support", "text": "Help on WhatsApp and email before and after you buy." }
+  ],
+  "policyLinks": [
+    { "label": "Privacy Policy", "href": "/privacy-policy/" },
+    { "label": "Terms and Conditions", "href": "/terms-and-conditions/" },
+    { "label": "Refund Policy", "href": "/refund-policy/" }
+  ],
+  "cart": {
+    "title": "Your cart",
+    "openLabel": "Open cart",
+    "closeLabel": "Close cart",
+    "empty": "Your cart is empty.",
+    "removeLabel": "Remove",
+    "decreaseLabel": "Decrease quantity",
+    "increaseLabel": "Increase quantity",
+    "totalLabel": "Total",
+    "checkoutLabel": "Go to payment",
+    "continueLabel": "Continue shopping"
+  },
+  "queue": {
+    "title": "Get in the product queue",
+    "lines": [
+      "Want a product that is sold out, or something made just for you?",
+      "Message me and I will add you to the queue and reply within a day."
+    ],
+    "buttons": [
+      { "label": "WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20please%20add%20me%20to%20the%20product%20queue.", "style": "primary", "icon": "wa" },
+      { "label": "Email", "href": "mailto:contact@arafatbin.com?subject=Product%20queue", "style": "light", "icon": "mail" },
+      { "label": "Contact Oman", "href": "tel:+96892130528", "style": "light", "icon": "phone" },
+      { "label": "Contact Bangladesh", "href": "tel:+8801752427601", "style": "light", "icon": "phone" }
+    ]
+  }
 }

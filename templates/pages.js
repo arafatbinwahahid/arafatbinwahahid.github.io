@@ -1,8 +1,9 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
-  site, contact, social, products, services, posts, page,
+  site, contact, social, products, services, posts, payments, page,
   esc, icon, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl,
 } from './helpers.js';
+import { policyLinks, currencySelect } from './layout.js';
 
 const shopText = page('shop');
 const servicesText = page('services');
@@ -28,12 +29,29 @@ const section = (inner, { title, text, link, background } = {}) =>
 
 const grid = (items, cols = 3) => `<div class="grid g${cols}">${items.join('')}</div>`;
 
-const priceTag = (p) =>
-  p.salePrice != null ? `<b>${formatPrice(p.salePrice)}</b> <s>${formatPrice(p.price)}</s>` : `<b>${formatPrice(p.price)}</b>`;
+// Prices: the default currency is written into the HTML, shop.js switches it to the visitor's currency
+const DEF = payments.defaultCurrency;
+const money = (prices) => `<span data-prices="${esc(JSON.stringify(prices))}">${formatPrice(prices[DEF], DEF)}</span>`;
+const priceTag = (p) => `<b>${money(p.prices)}</b>${p.compareAtPrices ? ` <s>${money(p.compareAtPrices)}</s>` : ''}`;
+const badges = (p) => `${p.compareAtPrices ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${p.stock < 1 ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}`;
+const CARD = '(max-width: 640px) 100vw, 360px';
 
-const productCard = (p) => `<a class="card" href="/shop/${esc(p.slug)}/" data-cat="${esc(p.category)}">
-<div class="card-img">${img(p.image)}${p.salePrice != null ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${!p.inStock ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}</div>
+// Home page card (no cart there)
+const productCard = (p) => `<a class="card" href="/shop/${esc(p.slug)}/">
+<div class="card-img">${img(p.images[0], { sizes: CARD })}${badges(p)}</div>
 <div class="card-body"><p class="kicker">${esc(p.category)}</p><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><p class="price">${priceTag(p)}</p></div></a>`;
+
+const addButton = (p, cls = 'btn-sm') => (p.stock > 0
+  ? `<button class="btn btn-primary ${cls}" type="button" data-add="${esc(p.id)}">${icon('cart')}${esc(shopText.addToCartLabel)}</button>`
+  : `<button class="btn btn-outline ${cls}" type="button" disabled>${esc(shopText.soldOutLabel)}</button>`);
+
+// Shop page card with Add to cart
+const shopCard = (p) => `<article class="card" data-cat="${esc(p.category)}">
+<a class="card-link" href="/shop/${esc(p.slug)}/"><div class="card-img">${img(p.images[0], { sizes: CARD })}${badges(p)}</div>
+<div class="card-body"><p class="kicker">${esc(p.category)}</p><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></a>
+<div class="card-foot"><p class="price">${priceTag(p)}</p>${addButton(p)}</div></article>`;
+
+const benefits = () => `<ul class="benefits">${shopText.benefits.map((b) => `<li><span class="ic">${icon(b.icon)}</span><span><b>${esc(b.title)}</b><span>${esc(b.text)}</span></span></li>`).join('')}</ul>`;
 
 const serviceCard = (s) => `<a class="card card-pad" href="/services/${esc(s.slug)}/">
 <span class="ic">${icon(s.icon)}</span><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p>
@@ -90,32 +108,104 @@ function homePage() {
 function shopPage() {
   const cats = [...new Set(products.map((p) => p.category))];
   const filters = cats.length > 1
-    ? `<div class="chips" role="group"><button class="chip is-on" data-filter="all">${esc(shopText.allLabel)}</button>${cats.map((c) => `<button class="chip" data-filter="${esc(c)}">${esc(c)}</button>`).join('')}</div>`
-    : '';
+    ? `<div class="chips" role="group" aria-label="Categories"><button class="chip is-on" type="button" data-filter="all" aria-pressed="true">${esc(shopText.allLabel)}</button>${cats.map((c) => `<button class="chip" type="button" data-filter="${esc(c)}" aria-pressed="false">${esc(c)}</button>`).join('')}</div>`
+    : '<div></div>';
   const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' });
   const list = { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: absUrl(`/shop/${p.slug}/`), name: p.title })) };
+  const q = shopText.queue;
   return {
-    path: '/shop/', seo: shopText.seo, crumbs, schema: [list],
-    body: pageHero(shopText.hero, crumbs) + section(`${filters}<div class="grid g3" id="products">${products.map(productCard).join('')}</div><p class="note">${esc(shopText.note)} <a href="/refund-policy/">→</a></p>`),
+    path: '/shop/', seo: shopText.seo, crumbs, schema: [list], cart: true,
+    body: pageHero(shopText.hero, crumbs)
+      + section(`<h2 class="sr">${esc(shopText.productsTitle)}</h2><div class="toolbar">${filters}${currencySelect()}</div><div class="grid g3" id="products">${products.map(shopCard).join('')}</div>${policyLinks()}`)
+      + section(benefits(), { background: 'soft' })
+      + section(`<div class="cta"><h2>${esc(q.title)}</h2>${paras(q.lines)}${btns(q.buttons)}</div>`),
   };
 }
 
 function productPage(p) {
-  const price = p.salePrice ?? p.price;
-  const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' }, { label: p.title, href: `/shop/${p.slug}/` });
-  const order = whatsapp(shopText.orderMessage.replace('{product}', p.title).replace('{price}', formatPrice(price)));
-  const buy = p.inStock
-    ? btns([{ label: shopText.orderLabel, href: order, icon: 'wa' }, p.buyLink && { label: shopText.buyLabel, href: p.buyLink, style: 'outline', icon: 'cart' }].filter(Boolean))
-    : `<p class="badge badge-out">${esc(shopText.soldOutLabel)}</p>`;
+  const S = shopText.sections;
+  const url = `/shop/${p.slug}/`;
+  const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' }, { label: p.title, href: url });
+  const gallery = `<div class="gallery">${p.images.map((im, i) => `<div class="gallery-main" data-slide="${i}"${i ? ' hidden' : ''}>${img(im, { eager: i === 0 })}</div>`).join('')}${p.images.length > 1
+    ? `<div class="thumbs">${p.images.map((im, i) => `<button class="thumb" type="button" data-thumb="${i}" aria-label="Image ${i + 1}"${i ? '' : ' aria-current="true"'}>${img(im, { sizes: '96px' })}</button>`).join('')}</div>` : ''}</div>`;
+  const qty = p.stock > 0
+    ? `<div class="qty-row"><div class="qty"><button type="button" data-step="-1" aria-label="${esc(shopText.cart.decreaseLabel)}">${icon('minus')}</button><input id="qty-${esc(p.id)}" type="number" inputmode="numeric" min="1" max="${p.stock}" value="1" data-qty aria-label="${esc(shopText.quantityLabel)}"><button type="button" data-step="1" aria-label="${esc(shopText.cart.increaseLabel)}">${icon('plus')}</button></div>${addButton(p, '')}</div><p class="status" role="status" data-buy-status></p>`
+    : addButton(p, '');
+  const buy = `<div class="buy" data-buy="${esc(p.id)}"><p class="kicker">${esc(p.category)}</p><p class="price price-lg">${priceTag(p)}</p>${currencySelect()}
+<p class="stock${p.stock > 0 ? '' : ' stock-out'}">${esc(p.stock > 0 ? shopText.stockLabel.replace('{n}', p.stock) : shopText.soldOutLabel)}</p>${qty}
+${p.externalLink ? btns([{ ...p.externalLink, style: 'outline', icon: 'globe' }]) : ''}<p class="muted">${esc(shopText.formatLabel)}: ${esc(p.format)}</p>${policyLinks()}</div>`;
+  const info = `<div class="split split-top"><div class="prose-sm"><h2>${esc(S.about)}</h2><p>${esc(p.about)}</p>
+<h3>${esc(S.description)}</h3>${paras(p.description)}${p.usage?.length ? `<h3>${esc(S.usage)}</h3><ol class="steps-list">${p.usage.map((u) => `<li>${esc(u)}</li>`).join('')}</ol>` : ''}</div>
+<div><h2>${esc(S.features)}</h2><ul class="features">${p.features.map((f) => `<li><span class="ic">${icon(f.icon || 'check')}</span><span>${esc(f.text)}</span></li>`).join('')}</ul></div></div>`;
+  const faq = p.faq?.length ? section(`<div class="faq narrow">${p.faq.map((i) => `<details><summary>${esc(i.q)}</summary><p>${esc(i.a)}</p></details>`).join('')}</div>`, { title: S.faq }) : '';
+  const reviews = p.reviews?.length ? section(grid(p.reviews.map(reviewCard)), { title: S.reviews, background: 'soft' }) : '';
+  const availability = `https://schema.org/${p.stock > 0 ? 'InStock' : 'OutOfStock'}`;
   const schema = {
-    '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.summary, image: absUrl(p.image.src), category: p.category,
-    brand: { '@type': 'Brand', name: site.name },
-    offers: { '@type': 'Offer', price, priceCurrency: site.currency, url: absUrl(`/shop/${p.slug}/`), availability: `https://schema.org/${p.inStock ? 'InStock' : 'OutOfStock'}` },
+    '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.summary, sku: p.id, category: p.category,
+    image: p.images.map((im) => absUrl(im.src)), brand: { '@type': 'Brand', name: site.name },
+    offers: payments.currencies.map((c) => ({ '@type': 'Offer', price: p.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability })),
   };
   return {
-    path: `/shop/${p.slug}/`, seo: { title: p.title, description: p.summary, image: p.image.src }, crumbs, schema: [schema],
-    body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top"><div>${img(p.image, { eager: true })}</div><div>
-<p class="kicker">${esc(p.category)}</p><p class="price price-lg">${priceTag(p)}</p>${paras(p.description)}${bullets(p.features)}<p class="muted">Format: ${esc(p.format)}</p>${buy}<p class="note">${esc(shopText.note)}</p></div></div>`),
+    path: url, seo: { title: p.title, description: p.summary, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
+    body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery}${buy}</div>`)
+      + section(info, { background: 'soft' }) + section(benefits()) + faq + reviews,
+  };
+}
+
+// ---- Payments (checkout) ----
+const enabledMethods = (c) => c.methods.filter((m) => m.enabled !== false);
+
+function payForm(m, c, f) {
+  const field = (label, input) => `<label>${esc(label)}${input}</label>`;
+  const who = `${field(f.nameLabel, '<input name="name" autocomplete="name" required maxlength="100">')}
+<div class="row2">${field(f.mobileLabel, '<input name="mobile" type="tel" autocomplete="tel" required maxlength="25">')}${field(f.emailLabel, '<input name="email" type="email" autocomplete="email" required maxlength="120">')}</div>`;
+  const tr = m.timeRange || {};
+  const extra = m.type === 'appointment'
+    ? `<div class="row2">${field(f.dateLabel, '<input name="date" type="date" required data-date>')}${field(f.timeLabel, `<input name="time" type="time" required${tr.start ? ` min="${esc(tr.start)}"` : ''}${tr.end ? ` max="${esc(tr.end)}"` : ''}>`)}</div>
+${field(f.messageLabel, '<textarea name="message" rows="3" maxlength="1000"></textarea>')}`
+    : `<div class="row2">${field(`${f.amountLabel} (${c.code})`, '<input name="amount" type="number" inputmode="decimal" min="0" step="any" required data-amount>')}${field(f.transactionLabel, '<input name="transaction" maxlength="100">')}</div>`;
+  return `<form class="form" data-pay-form data-type="${esc(m.type)}" data-method="${esc(m.name)}" data-currency="${esc(c.code)}">
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">${who}${extra}
+<button class="btn btn-primary" type="submit">${icon(m.type === 'appointment' ? 'calendar' : 'mail')}${esc(m.type === 'appointment' ? f.submitAppointment : f.submitPayment)}</button><p class="status" role="status"></p></form>`;
+}
+
+function methodPanel(m, c, d) {
+  const rows = (m.details || []).filter((r) => r.value);
+  const missing = (m.details || []).some((r) => !r.value) || (m.type === 'appointment' && !m.location?.mapQuery);
+  const details = rows.length ? `<dl class="pay-details">${rows.map((r) => `<div><dt>${esc(r.label)}</dt><dd><span>${esc(r.value)}</span><button class="copy" type="button" data-copy="${esc(r.value)}">${icon('copy')}<span>${esc(d.copyLabel)}</span></button></dd></div>`).join('')}</dl>` : '';
+  const loc = m.location || {};
+  const place = m.type === 'appointment' && loc.mapQuery
+    ? `<h4>${esc(d.locationTitle)}</h4><p>${esc(loc.address || loc.name)}</p><div class="map"><iframe title="${esc(d.locationTitle)}: ${esc(loc.name)}" src="https://www.google.com/maps?q=${encodeURIComponent(loc.mapQuery)}&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+<p><a class="more" href="https://www.google.com/maps?q=${encodeURIComponent(loc.mapQuery)}" target="_blank" rel="noopener">${esc(d.openMapLabel)}${icon('arrow')}</a></p>` : '';
+  const hours = m.hours?.length ? `<h4>${esc(d.hoursTitle)}</h4><dl class="pay-details">${m.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join('')}</dl>` : '';
+  return `<section class="card card-pad method-panel" data-panel="${esc(m.id)}" hidden aria-labelledby="h-${esc(m.id)}">
+<h2 class="h3" id="h-${esc(m.id)}">${esc(d.payTitle)}: ${icon(m.icon)} ${esc(m.name)} (${esc(c.code)})</h2><p>${esc(m.intro)}</p>
+${details ? `<h4>${esc(d.detailsTitle)}</h4>${details}` : ''}${m.link?.href ? btns([{ label: m.link.label, href: m.link.href, icon: 'card' }]) : ''}
+${m.poster?.src ? `<figure class="poster">${img(m.poster)}</figure>` : ''}${place}${hours}
+${missing ? `<p class="notice">${esc(d.missingDetails)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>` : ''}
+${m.steps?.length ? `<h4>${esc(d.stepsTitle)}</h4><ol class="steps-list">${m.steps.map((st) => `<li>${esc(st)}</li>`).join('')}</ol>` : ''}
+${payForm(m, c, d.form)}<p class="note">${esc(d.verifyNote)}</p></section>`;
+}
+
+function paymentsPage() {
+  const d = page('payments');
+  const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' }, { label: d.hero.title, href: '/payments/' });
+  const opt = (name, value, label) => `<label class="opt"><input type="radio" name="${esc(name)}" value="${esc(value)}"><span>${label}</span></label>`;
+  const curs = payments.currencies;
+  const choose = `<fieldset class="choice"><legend class="h3">${esc(d.currencyTitle)}</legend><div class="opts">${curs.map((c) => opt('currency', c.code, `<b>${esc(c.code)}</b> ${esc(c.name)}`)).join('')}</div></fieldset>
+${curs.map((c) => `<fieldset class="choice" data-methods="${esc(c.code)}" hidden><legend class="h3">${esc(d.methodTitle)}</legend><div class="opts">${enabledMethods(c).map((m) => opt(`method-${c.code}`, m.id, `${icon(m.icon)}<b>${esc(m.name)}</b>`)).join('')}</div></fieldset>`).join('')}
+${curs.flatMap((c) => enabledMethods(c).map((m) => methodPanel(m, c, d))).join('')}`;
+  const summary = `<aside class="card card-pad pay-summary" aria-labelledby="sum-title"><h2 class="h3" id="sum-title">${esc(d.summaryTitle)}</h2>
+<p>${esc(d.orderIdLabel)}: <b data-order-id></b></p><p class="notice" data-stock-notice hidden>${esc(d.stockNotice)}</p>
+<ul class="sum-list" data-summary></ul><p class="cart-total"><span>${esc(shopText.cart.totalLabel)}</span><b data-cart-total></b></p>
+<button class="more" type="button" data-cart-open>${esc(d.editCartLabel)}</button>${policyLinks()}</aside>`;
+  const e = d.empty;
+  return {
+    path: '/payments/', seo: d.seo, crumbs, noindex: true, cart: true,
+    body: pageHero(d.hero, crumbs) + section(`<noscript><p class="notice">${esc(d.noscript)}</p></noscript>
+<div class="card card-pad narrow center" data-pay-empty hidden><h2 class="h3">${esc(e.title)}</h2><p>${esc(e.text)}</p>${btns([e.button])}</div>
+<div class="card card-pad narrow center" data-pay-done hidden><h2 class="h3">${esc(d.done.title)}</h2><p data-done-text></p>${btns([d.done.button])}</div>
+<div class="pay" data-pay-main>${summary}<div class="pay-steps">${choose}</div></div>`),
   };
 }
 
@@ -200,7 +290,7 @@ function reviewsPageFn() {
   const fiverr = d.fiverr ? `<div class="card card-pad card-accent"><span class="ic">${icon('star')}</span><h3>${esc(d.fiverr.title)}</h3><p>${esc(d.fiverr.text)}</p>${btns([d.fiverr.button])}</div>` : '';
   const form = f.show ? section(`<div class="narrow card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
 <form class="form" data-form="review" data-success="${esc(f.success)}" data-rating-error="${esc(f.ratingError)}" data-error="${esc(page('contact').form.error)}">
-<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 <div class="row2"><label>${esc(f.nameLabel)}<input name="name" autocomplete="name" required></label><label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email"></label></div>
 <fieldset class="rating"><legend>${esc(f.ratingLabel)}</legend>${[5, 4, 3, 2, 1].map((n) => `<input type="radio" id="r${n}" name="rating" value="${n}"><label for="r${n}" title="${n}">★<span class="sr">${n} stars</span></label>`).join('')}</fieldset>
 <label>${esc(f.messageLabel)}<textarea name="message" rows="5" required></textarea></label>
@@ -225,7 +315,7 @@ function contactPage() {
   ].join('');
   const form = `<div class="card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
 <form class="form" data-form="contact" data-success="${esc(f.success)}" data-error="${esc(f.error)}">
-<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 <label>${esc(f.nameLabel)}<input name="name" autocomplete="name" required></label>
 <label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email" required></label>
 <label>${esc(f.messageLabel)}<textarea name="message" rows="6" required></textarea></label>
@@ -293,7 +383,7 @@ function notFoundPage() {
 export function allPages() {
   return [
     homePage(),
-    shopPage(), ...products.map(productPage),
+    shopPage(), ...products.map(productPage), paymentsPage(),
     servicesPage(), ...services.map(servicePage),
     aboutPage(), experiencePage(), skillsPage(), workPageFn(), credentialsPage(),
     reviewsPageFn(), contactPage(),

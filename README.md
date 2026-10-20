@@ -1,13 +1,13 @@
 # arafatbin.com — JAMstack static website
 
-- **J**avaScript → `build.js` + `templates/*.js` (build করার সময় JSON থেকে HTML বানায়), `assets/js/main.js` (মেনু, ফর্ম)
+- **J**avaScript → `build.js` + `templates/*.js` (build করার সময় JSON থেকে HTML বানায়), `assets/js/main.js` (মেনু, ফর্ম), `assets/js/shop.js` (কার্ট, পেমেন্ট)
 - **A**PI → `data/` ফোল্ডারের JSON ফাইল (সব লেখা, ছবি, আইকন, লিংক)
 - **M**arkup → `dist/`-এ তৈরি হওয়া আসল HTML + `assets/css/style.css`
 
 **SSG (Static Site Generation):** `node build.js` চালালে প্রতিটি পেইজ আগে থেকেই পুরো লেখাসহ HTML ফাইল হয়ে যায়।
 তাই Google বা অন্য search engine পেইজ খুললেই সব লেখা সরাসরি পায়, JavaScript চালাতে হয় না।
 প্রতিটি পেইজে title, description, canonical, Open Graph, breadcrumb আর Schema.org (JSON-LD) ডাটা থাকে।
-ছবির width/height নিজে থেকে বসে যায়। কোনো framework, npm package বা animation নেই, তাই সাইট খুব দ্রুত লোড হয়।
+ছবির width/height নিজে থেকে বসে যায়, আর build প্রতিটি ছবির ছোট WebP কপি বানায় (`sharp` package দিয়ে, GitHub-এ নিজে থেকে install হয়)। কোনো framework বা animation নেই, তাই সাইট খুব দ্রুত লোড হয়।
 
 ## File structure
 
@@ -19,7 +19,8 @@
 │   └── pages.js             ← প্রতিটি পেইজের HTML
 ├── assets/
 │   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে minify করে dist-এ দেয়)
-│   ├── js/main.js           ← মেনু বন্ধ করা, shop filter, ফর্ম পাঠানো
+│   ├── js/main.js           ← মেনু বন্ধ করা, Contact/Review ফর্ম, Web3Forms-এ পাঠানো
+│   ├── js/shop.js           ← কার্ট, currency, gallery, quantity, পেমেন্ট ফর্ম (শুধু Shop ও Payment পেইজে)
 │   ├── images/              ← সব ছবি
 │   └── files/               ← CV (PDF)
 ├── CNAME                    ← arafatbin.com
@@ -33,11 +34,13 @@
     │   ├── contact.json     ← WhatsApp, ফোন, ইমেইল, ঠিকানা, ম্যাপ
     │   ├── social.json      ← সোশ্যাল লিংক ও আইকন
     │   ├── sitemap.json     ← sitemap.xml-এ বাড়তি লিংক (বাকি সব নিজে যোগ হয়)
+    │   ├── payments.json    ← currency (OMR/USD/BDT), পেমেন্ট মেথড, ব্যাংক/Send Money/PayPal/RedotPay তথ্য, poster, ম্যাপ, সময়
     │   └── icons.json       ← সব আইকন (নাম দিয়ে যেকোনো JSON-এ ব্যবহার করুন)
     │
     ├── pages/               ← প্রতিটি পেইজের লেখা
     │   ├── home.json        → /           (উপরে Shop + Service, নিচে বাকি section)
-    │   ├── shop.json        → /shop/
+    │   ├── shop.json        → /shop/  (benefits, policy লিংক, কার্টের লেখা, নিচের queue CTA)
+    │   ├── payments.json    → /payments/  (Payment পেইজ ও ফর্মের সব লেখা)
     │   ├── services.json    → /services/
     │   ├── about.json       → /about/
     │   ├── experience.json  → /experience/
@@ -54,7 +57,7 @@
     │   └── 404.json         → 404 error page
     │
     └── collections/         ← প্রতিটি আইটেমের নিজের পেইজ তৈরি হয়
-        ├── products.json    → /shop/<slug>/
+        ├── products.json    → /shop/<slug>/  (দাম, stock, ছবি, about, usage, FAQ, review)
         ├── services.json    → /services/<slug>/
         └── blog/*.json      → /blog/<slug>/   (প্রতিটি পোস্ট = একটি ফাইল)
 ```
@@ -70,7 +73,7 @@
 | ফুটার | `data/global/footer.json` |
 | ফোন, ইমেইল, WhatsApp, ঠিকানা | `data/global/contact.json` |
 | হোম পেইজের section-এর ক্রম | `data/pages/home.json` → `sections` (উপর-নিচ সরান, `"show": false` দিলে লুকাবে) |
-| নতুন প্রোডাক্ট | `data/collections/products.json`-এ একটি `{ ... }` কপি করে নতুন `slug` দিন |
+| নতুন প্রোডাক্ট | `data/collections/products.json`-এ একটি `{ ... }` কপি করে নতুন `id` ও `slug` দিন |
 | নতুন সার্ভিস | `data/collections/services.json` |
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
@@ -85,9 +88,39 @@
 
 **JSON নিয়ম:** লেখা সবসময় সোজা `"ডাবল কোট"`-এ দিন, ফোনের বাঁকা কোট `“ ”` নয় (iPhone-এ Settings → General → Keyboard → Smart Punctuation বন্ধ রাখুন)। শেষ আইটেমের পরে কমা দেবেন না। ভুল হলে build কোন ফাইলে সমস্যা তা বলে দেবে।
 
+## Shop ও Payment
+
+**প্রোডাক্ট (`data/collections/products.json`):**
+
+| ঘর | কী |
+| --- | --- |
+| `id` | প্রতিটির আলাদা (যেমন `P005`), অর্ডার ইমেইলে এটা আসে |
+| `prices` | তিন currency-তেই দাম দিতে হবে: `{ "OMR": 4.6, "USD": 12, "BDT": 1460 }` |
+| `compareAtPrices` | (ঐচ্ছিক) আগের দাম, দিলে "Sale" ব্যাজ ও কাটা দাম দেখায় |
+| `stock` | কয়টি বিক্রি করা যাবে। `0` দিলে "Sold out" |
+| `images` | এক বা একাধিক ছবি, একাধিক দিলে gallery হয় |
+| `about`, `description`, `usage`, `features`, `format` | প্রোডাক্ট পেইজের অংশগুলো |
+| `faq` | `[{ "q": "প্রশ্ন", "a": "উত্তর" }]` |
+| `reviews` | আপনি নিজে যোগ করবেন: `[{ "name": "...", "rating": 5, "text": "...", "date": "October 2026" }]`। খালি থাকলে অংশটা দেখায় না |
+| `externalLink` | (ঐচ্ছিক) যেমন Fiverr লিংক |
+
+দাম বা stock ভুল হলে (যেমন কোনো currency-র দাম নেই) build থেমে যাবে আর কোন প্রোডাক্টে সমস্যা তা বলবে।
+
+**পেমেন্ট (`data/global/payments.json`):** প্রতিটি currency-র নিচে তার মেথড। ব্যাংক নাম, account number, PayPal email, RedotPay ID ইত্যাদি `"value"`-তে লিখুন। খালি `"value"` সাইটে দেখায় না, তার বদলে "WhatsApp-এ জানতে চান" লেখা আসে, আর build লগে সতর্কবার্তা দেয়। `poster.src`-এ ছবির পথ দিলে poster দেখায়। Face to Face-এর জন্য `location.mapQuery` (যেমন `"16.8186958,53.4757235"`), `hours` (`[{ "days": "Saturday – Thursday", "time": "4 PM – 9 PM" }]`) আর `timeRange` (`{ "start": "16:00", "end": "21:00" }`) দিন। `"enabled": false` দিলে মেথড লুকাবে।
+
+**অর্ডার যেভাবে কাজ করে:**
+1. গ্রাহক কার্টে প্রোডাক্ট নেয়। দাম আর stock সবসময় JSON থেকে আসে, ব্রাউজারে সেভ করা ডাটা থেকে নয়। Payment পেইজে আর ফর্ম পাঠানোর ঠিক আগে stock আবার যাচাই হয়।
+2. Payment পেইজে একটি Order ID তৈরি হয় (যেমন `AB-261020-K7Q2M`)। গ্রাহক currency ও মেথড বেছে পেমেন্ট করে, তারপর ফর্ম পাঠায়।
+3. আপনার ইমেইলে (Web3Forms) আসে: Order ID, গ্রাহকের নাম/মোবাইল/ইমেইল, প্রতিটি প্রোডাক্টের নাম, ID, quantity, unit price, মোট, currency, মেথড, গ্রাহকের দেওয়া amount ও transaction নম্বর, পাঠানোর তারিখ ও সময়। Appointment হলে visit-এর তারিখ ও সময়।
+4. **ফর্ম পাঠালেই অর্ডার paid নয়।** ইমেইলের Order ID আর amount আপনার ব্যাংক/PayPal/RedotPay-এর সাথে মিলিয়ে নিজে যাচাই করুন, তারপর গ্রাহককে জানান।
+5. **Stock কমানো:** পেমেন্ট যাচাই হওয়ার পর `products.json`-এ ওই প্রোডাক্টের `stock` নিজে কমিয়ে দিন। সাইট নিজে stock কমায় না, কারণ GitHub Pages-এ কোনো server বা database নেই।
+
+**নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
+
 ## চালানো ও publish
 
 ```bash
+npm install              # একবার (sharp, ছবি WebP করার জন্য)
 node build.js            # dist/ ফোল্ডারে সাইট তৈরি
 node build.js --serve    # তৈরি করে http://localhost:8080 এ দেখুন
 ```

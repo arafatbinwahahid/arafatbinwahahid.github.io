@@ -1,0 +1,185 @@
+{
+  "_help": "Currencies and payment methods for the Payment page. Fill in every empty \"value\". Rows with an empty value are hidden. type \"transfer\" = payment confirmation form, type \"appointment\" = visit request form. Set \"enabled\": false to hide a method.",
+  "defaultCurrency": "USD",
+  "currencies": [
+    {
+      "code": "OMR",
+      "name": "Omani Rial",
+      "methods": [
+        {
+          "id": "omr-bank",
+          "type": "transfer",
+          "enabled": true,
+          "name": "Bank Transfer",
+          "icon": "bank",
+          "intro": "Transfer the order total to the bank account below.",
+          "details": [
+            { "label": "Bank name", "value": "" },
+            { "label": "Account holder", "value": "Arafat Bin Wahahid" },
+            { "label": "Account number", "value": "" },
+            { "label": "IBAN", "value": "" }
+          ],
+          "link": { "label": "", "href": "" },
+          "poster": { "src": "", "alt": "Bank transfer details for OMR payments" },
+          "steps": [
+            "Copy the account details above.",
+            "Transfer the exact order total in OMR from your bank app.",
+            "Write your order ID in the transfer note.",
+            "Fill in the form below and send it."
+          ]
+        },
+        {
+          "id": "omr-send-money",
+          "type": "transfer",
+          "enabled": true,
+          "name": "Send Money",
+          "icon": "wallet",
+          "intro": "Send the order total with a money transfer service.",
+          "details": [
+            { "label": "Service", "value": "" },
+            { "label": "Receiver name", "value": "Arafat Bin Wahahid" },
+            { "label": "Receiver mobile", "value": "" }
+          ],
+          "link": { "label": "", "href": "" },
+          "poster": { "src": "", "alt": "Send money details for OMR payments" },
+          "steps": [
+            "Open your money transfer app or visit an exchange.",
+            "Send the exact order total in OMR to the receiver above.",
+            "Keep the transaction number.",
+            "Fill in the form below and send it."
+          ]
+        },
+        {
+          "id": "omr-face-to-face",
+          "type": "appointment",
+          "enabled": true,
+          "name": "Face to Face",
+          "icon": "user",
+          "intro": "Meet in person and pay in cash. Choose a date and time and we will confirm it.",
+          "location": {
+            "name": "Rakhyut, Dhofar",
+            "address": "Rakhyut (224), Dhofar Governorate, Salalah, Oman",
+            "mapQuery": "16.8186958,53.4757235"
+          },
+          "hours": [],
+          "timeRange": { "start": "", "end": "" },
+          "steps": [
+            "Choose a date and time that suits you.",
+            "Send the form. We will confirm on WhatsApp.",
+            "Bring the exact amount in OMR to the meeting."
+          ]
+        }
+      ]
+    },
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "methods": [
+        {
+          "id": "usd-paypal",
+          "type": "transfer",
+          "enabled": true,
+          "name": "PayPal",
+          "icon": "card",
+          "intro": "Pay the order total in USD with PayPal.",
+          "details": [
+            { "label": "PayPal email", "value": "" }
+          ],
+          "link": { "label": "Pay with PayPal", "href": "" },
+          "poster": { "src": "", "alt": "PayPal payment details" },
+          "steps": [
+            "Open PayPal with the button above, or send money to the PayPal email.",
+            "Pay the exact order total in USD.",
+            "Write your order ID in the PayPal note.",
+            "Fill in the form below and send it."
+          ]
+        },
+        {
+          "id": "usd-redotpay",
+          "type": "transfer",
+          "enabled": true,
+          "name": "RedotPay",
+          "icon": "card",
+          "intro": "Pay the order total in USD with RedotPay.",
+          "details": [
+            { "label": "RedotPay ID", "value": "" }
+          ],
+          "link": { "label": "Pay with RedotPay", "href": "" },
+          "poster": { "src": "", "alt": "RedotPay payment details" },
+          "steps": [
+            "Open RedotPay with the button above, or send to the RedotPay ID.",
+            "Pay the exact order total in USD.",
+            "Write your order ID in the note.",
+            "Fill in the form below and send it."
+          ]
+        }
+      ]
+    },
+    {
+      "code": "BDT",
+      "name": "Bangladeshi Taka",
+      "methods": [
+        {
+          "id": "bdt-bank",
+          "type": "transfer",
+          "enabled": true,
+          "name": "Bank Transfer",
+          "icon": "bank",
+          "intro": "Transfer the order total to the Bangladeshi bank account below.",
+          "details": [
+            { "label": "Bank name", "value": "" },
+            { "label": "Branch", "value": "" },
+            { "label": "Account holder", "value": "Arafat Bin Wahahid" },
+            { "label": "Account number", "value": "" },
+            { "label": "Routing number", "value": "" }
+          ],
+          "link": { "label": "", "href": "" },
+          "poster": { "src": "", "alt": "Bank transfer details for BDT payments" },
+          "steps": [
+            "Copy the account details above.",
+            "Transfer the exact order total in BDT.",
+            "Write your order ID in the transfer note.",
+            "Fill in the form below and send it."
+          ]
+        },
+        {
+          "id": "bdt-send-money",
+          "type": "transfer",
+          "enabled": true,
+          "name": "Send Money",
+          "icon": "wallet",
+          "intro": "Send the order total with mobile banking.",
+          "details": [
+            { "label": "Service", "value": "" },
+            { "label": "Account type", "value": "" },
+            { "label": "Number", "value": "" }
+          ],
+          "link": { "label": "", "href": "" },
+          "poster": { "src": "", "alt": "Send money details for BDT payments" },
+          "steps": [
+            "Open your mobile banking app and choose Send Money.",
+            "Send the exact order total in BDT to the number above.",
+            "Keep the transaction ID.",
+            "Fill in the form below and send it."
+          ]
+        },
+        {
+          "id": "bdt-face-to-face",
+          "type": "appointment",
+          "enabled": true,
+          "name": "Face to Face",
+          "icon": "user",
+          "intro": "Meet in person in Bangladesh and pay in cash. Choose a date and time and we will confirm it.",
+          "location": { "name": "", "address": "", "mapQuery": "" },
+          "hours": [],
+          "timeRange": { "start": "", "end": "" },
+          "steps": [
+            "Choose a date and time that suits you.",
+            "Send the form. We will confirm on WhatsApp.",
+            "Bring the exact amount in BDT to the meeting."
+          ]
+        }
+      ]
+    }
+  ]
+}
