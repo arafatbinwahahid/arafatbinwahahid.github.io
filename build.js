@@ -33,6 +33,16 @@ write('robots.txt', ['User-agent: *', ...allow.map((r) => `Allow: ${r}`), ...dis
 
 // Static files
 fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true });
+
+// Minify CSS (edit the readable assets/css/style.css, the site gets the small version)
+const cssFile = path.join(OUT, 'assets/css/style.css');
+const css = fs.readFileSync(cssFile, 'utf8')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\s+/g, ' ')
+  .replace(/\s*([{}:;,>])\s*/g, '$1')
+  .replace(/;}/g, '}')
+  .trim();
+fs.writeFileSync(cssFile, css);
 if (fs.existsSync(path.join(ROOT, 'CNAME'))) fs.copyFileSync(path.join(ROOT, 'CNAME'), path.join(OUT, 'CNAME'));
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
