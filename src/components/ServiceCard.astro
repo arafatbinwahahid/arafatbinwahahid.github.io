@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+import { formatPrice } from '../lib/data';
+interface Props { service: { slug: string; title: string; icon: string; summary: string; priceFrom?: number; delivery?: string } }
+const { service: s } = Astro.props;
+---
+<a class="card scard rv" href={`/services/${s.slug}`}>
+  <span class="sicon"><Icon name={s.icon} /></span>
+  <h3>{s.title}</h3>
+  <p>{s.summary}</p>
+  <p class="meta">
+    {s.priceFrom != null && <span>From <b>{formatPrice(s.priceFrom)}</b></span>}
+    {s.delivery && <span>{s.delivery}</span>}
+  </p>
+</a>

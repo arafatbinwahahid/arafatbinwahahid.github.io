@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Buttons from '../components/Buttons.astro';
+import Zoom from '../components/Zoom.astro';
+import page from '../data/pages/about.json';
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap about">
+      <div>
+        {page.paragraphs.map((p) => <p class="rv">{p}</p>)}
+        <Buttons items={page.buttons} />
+      </div>
+      <div>
+        {page.image && <Zoom src={page.image.src} alt={page.image.alt} />}
+        <dl class="facts rv">
+          {page.facts.map((f) => <><dt>{f.label}</dt><dd>{f.value}</dd></>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

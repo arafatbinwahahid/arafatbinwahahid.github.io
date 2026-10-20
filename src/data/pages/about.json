@@ -1,0 +1,21 @@
+{
+  "seo": { "title": "About", "description": "About Arafat Bin Wahahid, fuel attendant at Oman Oil (OQ) in Dhofar and freelance graphic designer." },
+  "hero": { "title": "About me", "subtitle": "Safe, steady, and always learning" },
+  "image": { "src": "/images/IMAGE08.JPG", "alt": "Arafat in his blue Oman Oil uniform on duty at a fuel pump" },
+  "paragraphs": [
+    "I have worked in fuel station operations at Oman Oil (OQ) for three years. My day covers safe fueling, HSE rules, supervising shifts, and keeping the station clean and running.",
+    "I train new attendants, handle cash and invoicing, and report safety issues early. That is the work I want to grow into a role, where I can lead a team and improve how the station performs.",
+    "Outside the forecourt I work with Microsoft Excel and Word, and I design logos and social media graphics in Photoshop and Illustrator. That mix lets me handle reports and paperwork as well as customers and pumps."
+  ],
+  "facts": [
+    { "label": "Based in", "value": "Rakhyut, Dhofar, Oman" },
+    { "label": "Now", "value": "Fuel attendant, Oman Oil Marketing Company" },
+    { "label": "Next", "value": "Oman Oil or the wider oil and gas sector" },
+    { "label": "Languages", "value": "English, Bangla, Hindi, Arabic" },
+    { "label": "On the side", "value": "Graphic design and data entry, available remotely" }
+  ],
+  "buttons": [
+    { "label": "Download CV", "href": "/files/Arafat_Bin_Wahahid_CV.pdf", "style": "primary", "icon": "dl", "download": true },
+    { "label": "My experience", "href": "/experience", "style": "line" }
+  ]
+}

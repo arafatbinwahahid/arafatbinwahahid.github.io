@@ -1,0 +1,31 @@
+---
+// Shared layout for Terms, Privacy and Refund pages.
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { formatDate } from '../lib/data';
+
+interface Props {
+  page: {
+    seo: { title: string; description: string };
+    hero: { title: string; subtitle?: string };
+    lastUpdated?: string;
+    sections: { heading: string; paragraphs?: string[]; list?: string[] }[];
+  };
+}
+const { page } = Astro.props;
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap prose">
+      {page.lastUpdated && <p class="mute">Last updated: <time datetime={page.lastUpdated}>{formatDate(page.lastUpdated)}</time></p>}
+      {page.sections.map((s) => (
+        <>
+          <h2>{s.heading}</h2>
+          {s.paragraphs?.map((p) => <p>{p}</p>)}
+          {s.list && <ul>{s.list.map((li) => <li>{li}</li>)}</ul>}
+        </>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

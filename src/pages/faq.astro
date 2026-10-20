@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import page from '../data/pages/faq.json';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: page.groups.flatMap((g) => g.items).map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+};
+---
+<BaseLayout title={page.seo.title} description={page.seo.description} schema={schema}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap narrow">
+      {page.groups.map((g) => (
+        <>
+          <h2 class="rv">{g.title}</h2>
+          <div class="faq">{g.items.map((i) => <details class="card"><summary>{i.q}</summary><p>{i.a}</p></details>)}</div>
+        </>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

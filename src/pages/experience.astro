@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Zoom from '../components/Zoom.astro';
+import page from '../data/pages/experience.json';
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap">
+      <div class="tl" id="tl">
+        <div class="fill" id="tlFill"></div>
+        {page.roles.map((r) => (
+          <article class:list={['role', 'rv', { now: r.current }]}>
+            <h3>{r.title}</h3>
+            <p class="meta">{r.company}. {r.period}, {r.type}</p>
+            <ul>{r.points.map((p) => <li>{p}</li>)}</ul>
+            {r.image && <Zoom {...r.image} />}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

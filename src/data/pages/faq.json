@@ -1,0 +1,29 @@
+{
+  "seo": { "title": "FAQ", "description": "Frequently asked questions about orders, delivery, payment and revisions." },
+  "hero": { "title": "Frequently asked questions", "subtitle": "Quick answers about working with me." },
+  "groups": [
+    {
+      "title": "Orders",
+      "items": [
+        { "q": "How do I place an order?", "a": "Message me on WhatsApp or use the contact form. Tell me what you need and I will send you a quote." },
+        { "q": "Do you work remotely?", "a": "Yes. All design and data work is done remotely and delivered online." },
+        { "q": "Can I order through Fiverr?", "a": "Yes. Vector portraits and some other services are also available on my Fiverr profile, @arafatwahahid." }
+      ]
+    },
+    {
+      "title": "Delivery and revisions",
+      "items": [
+        { "q": "How long does delivery take?", "a": "Most small jobs are delivered in 1 to 3 days. Bigger projects get a delivery date in the quote." },
+        { "q": "How many revisions do I get?", "a": "Each service page lists its revisions. Vector portraits come with unlimited revisions." },
+        { "q": "What file formats do you deliver?", "a": "Design work comes as PNG, JPG, PDF and source files (AI or PSD) when agreed. Excel work comes as .xlsx." }
+      ]
+    },
+    {
+      "title": "Payment",
+      "items": [
+        { "q": "How can I pay?", "a": "Payment methods are confirmed when you order. Fiverr orders are paid through Fiverr." },
+        { "q": "Can I get a refund?", "a": "Please read the refund and return policy page for details." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Buttons from '../../components/Buttons.astro';
+import Zoom from '../../components/Zoom.astro';
+import { services, formatPrice } from '../../lib/data';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+const { service: s } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.title,
+  description: s.summary,
+  offers: s.priceFrom != null ? { '@type': 'Offer', price: s.priceFrom, priceCurrency: 'USD' } : undefined,
+};
+---
+<BaseLayout title={s.title} description={s.summary} image={s.image?.src} schema={schema}>
+  <PageHero title={s.title} subtitle={s.summary} eyebrow="Service" />
+  <section>
+    <div class="wrap detail">
+      <div>{s.image && <Zoom src={s.image.src} alt={s.image.alt} class="fimg" />}</div>
+      <div>
+        <p class="price">
+          {s.priceFrom != null && <span>From <b>{formatPrice(s.priceFrom)}</b></span>}
+          {s.delivery && <span class="mute"> &middot; Delivery {s.delivery}</span>}
+        </p>
+        {s.description.map((p) => <p>{p}</p>)}
+        <h3>What you get</h3>
+        <ul>{s.includes.map((i) => <li>{i}</li>)}</ul>
+        <Buttons items={s.buttons} />
+        <p class="back"><a href="/services">&larr; All services</a></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

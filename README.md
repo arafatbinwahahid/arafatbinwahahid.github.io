@@ -1,70 +1,98 @@
-# Hi, I'm Arafat Bin Wahahid
+# arafatbin.com — Astro JAMstack website
 
-**Fuel Attendant at Oman Oil (OQ) | Aspiring Foreman | Excel and Graphic Design**
+পুরো ওয়েবসাইটের সব লেখা, ছবি, লিংক, দাম, মেনু — সবকিছু `src/data/` ফোল্ডারের **JSON ফাইলে** আছে।
+কোড না ছুঁয়ে শুধু JSON এডিট করলেই ওয়েবসাইট বদলে যাবে।
 
-I work in fuel station operations in Rakhyut, Dhofar, Oman. I focus on safe fueling, HSE compliance and leading shifts, and I build Excel dashboards and design graphics on the side.
+## File structure
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-arafatbin.com-0A6DBF?style=for-the-badge&logo=githubpages&logoColor=white)](https://arafatbin.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-arafatbinwahahid-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arafatbinwahahid)
-[![Fiverr](https://img.shields.io/badge/Fiverr-arafatwahahid-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://www.fiverr.com/arafatwahahid)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-Message%20me-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/96892130528)
-[![Email](https://img.shields.io/badge/Email-contact%40arafatbin.com-333333?style=for-the-badge&logo=maildotru&logoColor=white)](mailto:contact@arafatbin.com)
+```
+arafatbinwahahid.github.io/
+├── .github/workflows/deploy.yml     ← main-এ push করলে নিজে থেকে build + GitHub Pages-এ deploy
+├── astro.config.mjs                 ← Astro config (site URL নেয় site.json থেকে)
+├── package.json
+├── public/                          ← যা আছে তা হুবহু ওয়েবসাইটে যায়
+│   ├── CNAME                        ← arafatbin.com ডোমেইন
+│   ├── files/Arafat_Bin_Wahahid_CV.pdf
+│   └── images/                      ← সব ছবি এখানে রাখুন, JSON-এ লিখুন "/images/নাম.jpg"
+│
+└── src/
+    ├── data/                        ★ সব কন্টেন্ট এখানে — শুধু এগুলো এডিট করবেন ★
+    │   ├── settings/
+    │   │   ├── site.json            ← নাম, ডোমেইন, SEO, Google Analytics, ফর্ম key, CV, robots.txt নিয়ম
+    │   │   ├── navigation.json      ← হেডার মেনু, হেডার বাটন, ফুটারের কলাম ও লিংক
+    │   │   ├── contact.json         ← WhatsApp, ফোন, ইমেইল, ঠিকানা, ম্যাপ
+    │   │   └── social.json          ← সোশ্যাল লিংক (ফুটার + কন্টাক্ট পেইজ)
+    │   │
+    │   ├── pages/                   ← প্রতিটি পেইজের লেখা
+    │   │   ├── home.json            → /            (Home)
+    │   │   ├── shop.json            → /shop        (Shop পেইজের শিরোনাম/নোট)
+    │   │   ├── services.json        → /services    (Service পেইজের শিরোনাম + "How it works")
+    │   │   ├── about.json           → /about
+    │   │   ├── experience.json      → /experience
+    │   │   ├── skills.json          → /skills
+    │   │   ├── work.json            → /work
+    │   │   ├── credentials.json     → /credentials
+    │   │   ├── reviews.json         → /reviews     (রিভিউ তালিকা + রিভিউ ফর্ম)
+    │   │   ├── contact.json         → /contact
+    │   │   ├── blog.json            → /blog        (Blog পেইজের শিরোনাম)
+    │   │   ├── terms.json           → /terms-and-conditions
+    │   │   ├── privacy.json         → /privacy-policy
+    │   │   ├── refund.json          → /refund-policy
+    │   │   ├── faq.json             → /faq
+    │   │   └── 404.json             → 404 error page
+    │   │
+    │   └── collections/             ← একাধিক আইটেম (প্রতিটির নিজের পেইজ তৈরি হয়)
+    │       ├── services.json        → /services/<slug>  (প্রতিটি সার্ভিস)
+    │       ├── products.json        → /shop/<slug>      (প্রতিটি প্রোডাক্ট)
+    │       └── blog/                → /blog/<slug>      (প্রতিটি পোস্ট = একটি JSON ফাইল)
+    │           ├── excel-dashboard-tips.json
+    │           └── life-as-fuel-attendant.json
+    │
+    ├── pages/                       ← রাউট (URL) — সাধারণত এডিট করতে হবে না
+    │   ├── index.astro  about.astro  experience.astro  skills.astro  work.astro
+    │   ├── credentials.astro  reviews.astro  contact.astro  faq.astro  404.astro
+    │   ├── terms-and-conditions.astro  privacy-policy.astro  refund-policy.astro
+    │   ├── services/index.astro  services/[slug].astro
+    │   ├── shop/index.astro      shop/[slug].astro
+    │   ├── blog/index.astro      blog/[slug].astro
+    │   ├── sitemap.xml.ts           ← সব পেইজ + পোস্ট + প্রোডাক্ট থেকে নিজে sitemap.xml বানায়
+    │   └── robots.txt.ts            ← site.json-এর "robots" থেকে robots.txt বানায়
+    ├── layouts/   BaseLayout.astro (SEO, হেডার, ফুটার)  LegalLayout.astro (Terms/Privacy/Refund)
+    ├── components/  Header, Footer, Button, cards, forms ...
+    ├── lib/data.ts                  ← JSON লোড করে + দাম/তারিখ ফরম্যাট
+    ├── scripts/main.js              ← থিম, মেনু, অ্যানিমেশন, লাইটবক্স, ফর্ম
+    └── styles/global.css            ← ডিজাইন; রং বদলাতে উপরের :root অংশ এডিট করুন
+```
 
----
+## কীভাবে এডিট করবেন
 
-## About me
-
-- Fuel attendant at Oman Oil Marketing Company since November 2023
-- Train new attendants, supervise shifts, and handle cash and invoicing
-- Working toward a Foreman role at Oman Oil or in the wider oil and gas sector
-- Freelance graphic designer and data entry specialist, available remotely
-- Languages: English, Bangla, Hindi, Arabic
-- Based in Rakhyut (224), Dhofar, Salalah, Oman
-
-## Skills
-
-| Area | What I use |
+| কী করতে চান | কোন ফাইল |
 | --- | --- |
-| Operations | Safe fueling, HSE compliance, shift supervision, staff training, cash handling and invoicing, inventory checks, customer service |
-| Computer | Microsoft Excel, Microsoft Word, Windows, data entry, reporting and record keeping |
-| Design | Adobe Photoshop, Adobe Illustrator, logo design, social media graphics, vector portraits |
-| Digital | SEO, social media marketing, Google Analytics, digital security |
+| ফোন / ইমেইল / WhatsApp বদলানো | `src/data/settings/contact.json` |
+| মেনুতে লিংক যোগ/বাদ | `src/data/settings/navigation.json` |
+| নতুন প্রোডাক্ট যোগ | `src/data/collections/products.json`-এ একটি `{ ... }` ব্লক কপি করে নতুন `slug` দিন |
+| নতুন সার্ভিস যোগ | `src/data/collections/services.json` |
+| নতুন ব্লগ পোস্ট | `src/data/collections/blog/` ফোল্ডারে একটি ফাইল কপি করে নতুন নাম ও `slug` দিন |
+| নতুন রিভিউ দেখানো | `src/data/pages/reviews.json` → `items` |
+| নতুন ছবি | `public/images/`-এ রাখুন, JSON-এ `"/images/ফাইলের-নাম.jpg"` লিখুন |
+| পোস্ট লুকানো | পোস্টের JSON-এ `"draft": true` |
 
-## Featured work
+**ব্লগ পোস্টের `content` ব্লক:**
+`{ "type": "p", "text": "..." }` (প্যারাগ্রাফ), `"h2"` / `"h3"` (শিরোনাম), `"quote"`,
+`{ "type": "list", "items": ["..."], "ordered": false }`,
+`{ "type": "image", "src": "/images/x.jpg", "alt": "...", "caption": "..." }`।
 
-**Sales Performance Dashboard (Excel).** A workbook with 3 sheets and 54 live formulas, with zero errors. It includes KPI cards, a 12-month revenue table with green and red attainment against target, a sales rep leaderboard, and an assumptions sheet with editable inputs.
+**বাটন ফরম্যাট (যেকোনো জায়গায়):** `{ "label": "লেখা", "href": "/contact", "style": "primary | ghost | dark | line", "icon": "wa | mail | dl | globe | in | phone | pin" }`
 
-**Vector Portrait Art (Adobe Illustrator).** Photos redrawn as 100% vector art, ready for print and web, with unlimited revisions. Available on [Fiverr](https://www.fiverr.com/arafatwahahid).
+JSON নিয়ম: স্ট্রিং সবসময় `"ডাবল কোট"`-এ, শেষ আইটেমের পরে কমা দেবেন না।
 
-See more in my [portfolio](https://arafatbin.com).
+## চালানো ও deploy
 
-## Experience
+```bash
+npm install
+npm run dev      # http://localhost:4321 এ লাইভ প্রিভিউ
+npm run build    # dist/ ফোল্ডারে স্ট্যাটিক সাইট
+```
 
-**Fuel Attendant**, Oman Oil Marketing Company, Rakhyout New Service Station
-November 2023 to present
-
-**Computer Operator (Internship)**, National Academy for Computer Training and Research (NACTAR), Bangladesh
-December 2021 to September 2023
-
-## Certifications and recognition
-
-- Top Filler, Certificate of Appreciation for outstanding performance and cooperation (June 2026)
-- Professional Freelancing with SEO, SMM, NACTAR (2021)
-- Google Analytics Individual Qualification, Google (2021)
-- Digital Security Essentials, Digital Security Agency and a2i, Bangladesh (2020)
-
-## Education
-
-- Higher Secondary Certificate in Business Management (Computer Operation), Bangladesh Technical Education Board, GPA 4.54 out of 5.00 (2020)
-- Diploma in Medical Technology, Cumilla Institute of Health Technology (2019 to 2024)
-
-## Get in touch
-
-I'm open to Foreman opportunities and freelance design or Excel projects. The quickest way to reach me is [WhatsApp](https://wa.me/96892130528).
-
-| | |
-| --- | --- |
-| WhatsApp | +968 9213 0528 |
-| Phone (Bangladesh) | +880 1752 427601 |
-| Email | contact@arafatbin.com |
-| Website | [arafatbin.com](https://arafatbin.com) |
+GitHub Pages: রিপোর **Settings → Pages → Source** থেকে **GitHub Actions** সিলেক্ট করুন।
+এরপর `main` ব্রাঞ্চে push করলেই সাইট নিজে থেকে build ও publish হবে।

@@ -1,0 +1,78 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { site, contact, social } from '../lib/data';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: Record<string, unknown>;
+}
+const { title, description = site.defaultDescription, image = site.defaultImage, type = 'website', noindex = false, schema } = Astro.props;
+const fullTitle = title ? site.titleTemplate.replace('%s', title) : site.defaultTitle;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL(image, site.url).href;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.person.jobTitle,
+  worksFor: { '@type': 'Organization', name: site.person.worksFor },
+  address: { '@type': 'PostalAddress', addressLocality: site.person.locality, addressRegion: site.person.region, addressCountry: site.person.country },
+  email: `mailto:${contact.email}`,
+  telephone: `+${contact.whatsapp}`,
+  url: site.url,
+  sameAs: social.filter((s) => s.url.startsWith('http') && !s.url.includes('wa.me') && !s.url.includes('google.com')).map((s) => s.url),
+  knowsAbout: site.person.knowsAbout,
+};
+---
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.author} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <meta name="theme-color" content={site.themeColor} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={site.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema ?? person)} />
+    <script is:inline>try{var t=localStorage.getItem('theme');t&&document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    {site.googleAnalyticsId && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${site.googleAnalyticsId}`}></script>
+        <script is:inline define:vars={{ id: site.googleAnalyticsId }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config',id);</script>
+      </>
+    )}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=DotGothic16&display=swap" rel="stylesheet" />
+  </head>
+  <body id="top" data-forms-key={site.web3formsAccessKey} data-email={contact.email}>
+    <div id="gauge" aria-hidden="true"><i></i></div>
+    <Header />
+    <main><slot /></main>
+    <Footer />
+    <a class="wa" href={`https://wa.me/${contact.whatsapp}`} target="_blank" rel="noopener" aria-label="Message on WhatsApp"><Icon name="wa" /></a>
+    <dialog id="lb"><button class="x" aria-label="Close">&times;</button><img alt="" /><p></p></dialog>
+    <script>import '../scripts/main.js';</script>
+  </body>
+</html>

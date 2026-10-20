@@ -1,0 +1,19 @@
+{
+  "seo": { "title": "Skills", "description": "Skills of Arafat Bin Wahahid: fuel station operations, Microsoft Excel, graphic design and digital marketing." },
+  "hero": { "title": "What I bring", "subtitle": "Skills from the forecourt, the computer and the design desk." },
+  "groups": [
+    { "title": "On the forecourt", "items": ["Safe fueling", "HSE compliance", "Shift supervision", "Staff training", "Cash handling and invoicing", "Inventory checks", "Customer service"] },
+    { "title": "At the computer", "items": ["Microsoft Excel", "Microsoft Word", "Windows", "Data entry", "Reporting and record keeping", "Dashboards"] },
+    { "title": "Design", "items": ["Adobe Photoshop", "Adobe Illustrator", "Logo design", "Social media graphics", "Vector portraits"] },
+    { "title": "Digital", "items": ["SEO", "Social media marketing", "Google Analytics", "Digital security"] }
+  ],
+  "languages": {
+    "title": "Languages",
+    "items": [
+      { "name": "English", "level": "Professional" },
+      { "name": "Bangla", "level": "Native" },
+      { "name": "Hindi", "level": "Conversational" },
+      { "name": "Arabic", "level": "Conversational" }
+    ]
+  }
+}

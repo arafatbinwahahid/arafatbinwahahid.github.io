@@ -1,0 +1,73 @@
+[
+  {
+    "slug": "vector-portrait",
+    "title": "Vector portrait art",
+    "icon": "pen",
+    "summary": "Your photo redrawn as clean, scalable vector art in Adobe Illustrator.",
+    "image": { "src": "/images/IMAGE05.PNG", "alt": "Vector portrait service poster" },
+    "priceFrom": 10,
+    "delivery": "2 to 3 days",
+    "featured": true,
+    "description": [
+      "I redraw your photo as a clean vector portrait in Adobe Illustrator. It works for profile pictures, gifts, posters and branding.",
+      "Send me a clear photo and tell me the style you like. I will share a draft and change it until you are happy."
+    ],
+    "includes": ["100% vector, scalable and high quality", "High resolution PNG and JPG", "Source file on request", "Unlimited revisions"],
+    "buttons": [
+      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20vector%20portrait.", "style": "primary", "icon": "wa" },
+      { "label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid", "style": "line", "icon": "globe" }
+    ]
+  },
+  {
+    "slug": "excel-dashboard",
+    "title": "Excel dashboards and reports",
+    "icon": "chart",
+    "summary": "Clear Excel dashboards with KPI cards, charts and live formulas.",
+    "image": { "src": "/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard" },
+    "priceFrom": 25,
+    "delivery": "3 to 5 days",
+    "featured": true,
+    "description": [
+      "I turn your raw data into an Excel dashboard that updates by itself. You get KPI cards, tables and charts that are easy to read.",
+      "Every formula is checked so the workbook has zero errors."
+    ],
+    "includes": ["KPI cards and charts", "Editable assumptions sheet", "Conditional formatting", "Short guide on how to update the data"],
+    "buttons": [
+      { "label": "Ask for a dashboard", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20an%20Excel%20dashboard.", "style": "primary", "icon": "wa" }
+    ]
+  },
+  {
+    "slug": "logo-social-design",
+    "title": "Logo and social media design",
+    "icon": "image",
+    "summary": "Logos, posters and social media posts made in Photoshop and Illustrator.",
+    "image": { "src": "/images/IMAGE05.PNG", "alt": "Graphic design sample" },
+    "priceFrom": 15,
+    "delivery": "2 to 4 days",
+    "featured": true,
+    "description": [
+      "I design logos, posters, banners and social media posts that match your brand."
+    ],
+    "includes": ["2 to 3 first concepts", "Print and web ready files", "Source file (AI or PSD)", "3 rounds of revisions"],
+    "buttons": [
+      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20a%20design.", "style": "primary", "icon": "wa" }
+    ]
+  },
+  {
+    "slug": "data-entry",
+    "title": "Data entry",
+    "icon": "table",
+    "summary": "Fast and accurate data entry in Excel, Word or Google Sheets.",
+    "image": { "src": "/images/IMAGE07.JPG", "alt": "Computer training lab" },
+    "priceFrom": 5,
+    "delivery": "1 to 3 days",
+    "featured": false,
+    "description": [
+      "I type, clean and organise your data in Excel, Word or Google Sheets, with careful checking."
+    ],
+    "includes": ["Copy typing and form filling", "Data cleaning and formatting", "PDF to Excel or Word"],
+    "buttons": [
+      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20data%20entry%20work.", "style": "primary", "icon": "wa" }
+    ]
+  }
+]

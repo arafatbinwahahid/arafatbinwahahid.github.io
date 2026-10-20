@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import page from '../../data/pages/blog.json';
+import { posts } from '../../lib/data';
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap">
+      <div class="grid3">{posts.map((p) => <PostCard post={p} readMore={page.readMoreLabel} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

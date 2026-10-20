@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import page from '../../data/pages/shop.json';
+import { products } from '../../lib/data';
+const categories = [...new Set(products.map((p) => p.category))];
+---
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHero title={page.hero.title} subtitle={page.hero.subtitle} />
+  <section>
+    <div class="wrap">
+      {categories.length > 1 && (
+        <div class="filters" role="group" aria-label={page.categoriesLabel}>
+          <button class="chip on" data-filter="all">All</button>
+          {categories.map((c) => <button class="chip" data-filter={c}>{c}</button>)}
+        </div>
+      )}
+      <div class="grid3" id="products">
+        {products.map((p) => <div data-cat={p.category}><ProductCard product={p} /></div>)}
+      </div>
+      <p class="note">{page.orderNote} <a href="/refund-policy">Refund policy</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

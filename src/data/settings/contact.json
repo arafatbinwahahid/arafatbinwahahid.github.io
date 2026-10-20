@@ -1,0 +1,13 @@
+{
+  "whatsapp": "96892130528",
+  "whatsappDisplay": "+968 9213 0528",
+  "whatsappDefaultText": "Hello Arafat, I found your website.",
+  "phones": [
+    { "label": "Phone, Oman", "number": "+96892130528", "display": "+968 9213 0528" },
+    { "label": "Phone, Bangladesh", "number": "+8801752427601", "display": "+880 1752 427601" }
+  ],
+  "email": "contact@arafatbin.com",
+  "address": "Rakhyut (224), Dhofar Governorate, Salalah, Oman",
+  "mapUrl": "https://www.google.com/maps?q=16.8186958,53.4757235",
+  "gps": "16.8186958, 53.4757235"
+}
