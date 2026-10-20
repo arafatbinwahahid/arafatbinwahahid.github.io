@@ -262,7 +262,7 @@ function postPage(p) {
   const body = pageHero({ title: p.title, text: `${blogText.byLabel} ${p.author} · ${formatDate(p.date)}` }, crumbs)
     + section(`<article class="prose">${p.image ? img(p.image, { eager: true }) : ''}${p.content.map((b) => (blocks[b.type] || blocks.p)(b)).join('')}
 <div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`);
-  return { path: `/blog/${p.slug}/`, seo: { title: p.title, description: p.excerpt, image: p.image?.src }, crumbs, schema: [schema], type: 'article', lastmod: p.date, body };
+  return { path: `/blog/${p.slug}/`, seo: { title: p.title, description: p.excerpt, image: p.image?.src }, crumbs, schema: [schema], type: 'article', body };
 }
 
 // ---- FAQ, legal, 404 ----
@@ -280,7 +280,7 @@ function legalPage(name, path) {
   const crumbs = crumbsOf({ label: d.hero.title, href: path });
   const sections = d.sections.map((s) => `<h2>${esc(s.heading)}</h2>${paras(s.paragraphs)}${s.list ? `<ul>${s.list.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : ''}`).join('');
   return {
-    path, seo: d.seo, crumbs, lastmod: d.lastUpdated,
+    path, seo: d.seo, crumbs,
     body: pageHero(d.hero, crumbs) + section(`<article class="prose"><p class="muted">${esc(d.updatedLabel)}: <time datetime="${esc(d.lastUpdated)}">${formatDate(d.lastUpdated)}</time></p>${sections}</article>`),
   };
 }
