@@ -40,5 +40,33 @@
     "format": "PNG, PSD",
     "inStock": true,
     "buyLink": ""
-  }
+  },
+  {
+“slug”: “excel-data-entry-service”,
+“title”: “Professional Excel Data Entry Service”,
+“category”: “Excel Services”,
+“price”: 15,
+“salePrice”: null,
+“image”: {
+“src”: “/assets/images/IMAGE9.JPG”,
+“alt”: “Professional Excel data entry and spreadsheet management service”
+},
+“summary”: “Accurate and professional Excel data entry service for businesses, individuals, and professionals. Get clean, organized, and well-formatted spreadsheets tailored to your needs.”,
+“description”: [
+“Need help entering, organizing, or formatting data in Excel? I provide reliable Excel data entry services to help you save time and keep your data organized. From PDF-to-Excel conversion and copy-paste tasks to data cleaning and spreadsheet formatting, your data will be handled with care and attention to detail.”
+],
+“features”: [
+“Accurate data entry into Microsoft Excel”,
+“PDF, image, and scanned document to Excel conversion”,
+“Copy-paste and data collection tasks”,
+“Data cleaning, sorting, and duplicate removal”,
+“Professional spreadsheet formatting and organization”,
+“Custom Excel tables and basic formulas”,
+“Confidential handling of client data”,
+“Timely delivery based on project requirements”
+],
+“format”: “Microsoft Excel (.xlsx), CSV (.csv), and Google Sheets”,
+“inStock”: true,
+“buyLink”: “”
+}
 ]
