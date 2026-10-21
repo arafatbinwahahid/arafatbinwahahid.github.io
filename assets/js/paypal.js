@@ -27,6 +27,22 @@
     return Math.ceil(Math.round((gross - price) * 1e6) / 1e4) / 100;
   };
 
+  // What PayPal really charged on this payment (from the capture), so you can set "fees" in payments.json from real numbers
+  const amt = (m) => (m?.value ? `${m.value} ${m.currency_code}` : '');
+  function received(b) {
+    if (!b) return {};
+    const fee = Number(b.paypal_fee?.value || 0);
+    const gross = Number(b.gross_amount?.value || 0);
+    const out = {
+      'PayPal fee charged': amt(b.paypal_fee),
+      'PayPal fee %': gross && fee ? `${((fee / gross) * 100).toFixed(2)}% of ${amt(b.gross_amount)}` : '',
+      'You received (net)': amt(b.net_amount),
+      'Exchange rate used': b.exchange_rate?.value ? `1 ${b.exchange_rate.source_currency} = ${b.exchange_rate.value} ${b.exchange_rate.target_currency}` : '',
+      'Received in your currency': amt(b.receivable_amount),
+    };
+    return Object.fromEntries(Object.entries(out).filter(([, v]) => v));
+  }
+
   window.payPalButtons = (box, { order, check = () => true, paid, error, hide }) => {
     if (box.dataset.ready) return;
     box.dataset.ready = '1';
@@ -67,6 +83,7 @@
               'PayPal status': `${o.status}${cap.status ? ` / ${cap.status}` : ''}`,
               'PayPal amount': `${cap.amount?.value || ''} ${cap.amount?.currency_code || ''}`.trim(),
               'PayPal payer': `${name} <${email}>`,
+              ...received(cap.seller_receivable_breakdown),
             },
           });
         },
