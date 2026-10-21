@@ -5,6 +5,12 @@
   "properties": {
     "url": { "type": "string", "pattern": "^https://[^/]+$", "description": "No slash at the end, e.g. https://arafatbin.com" },
     "googleAnalyticsId": { "type": "string", "pattern": "^$|^G-[A-Z0-9]+$" },
+    "verification": {
+      "type": "object",
+      "description": "Codes from Google Search Console and Bing Webmaster Tools (HTML meta tag method). The code alone or the whole <meta> tag both work.",
+      "properties": { "google": { "type": "string" }, "bing": { "type": "string" } },
+      "additionalProperties": false
+    },
     "web3formsAccessKey": { "type": "string", "pattern": "^[0-9a-f-]{36}$" },
     "defaultImage": { "$ref": "common#/$defs/imagePath" },
     "favicon": { "$ref": "common#/$defs/imagePath" },
