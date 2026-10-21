@@ -182,6 +182,8 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
 }
 
 // ---- Payments (checkout) ----
+// The first enabled payment method with a working PayPal Client ID (used by the checkout and the service pages)
+const paypalClientId = () => payments.currencies.flatMap((c) => c.methods).find((m) => m.enabled !== false && paypalIdOk(m.paypalClientId))?.paypalClientId;
 const enabledMethods = (c) => c.methods.filter((m) => m.enabled !== false);
 
 function payForm(m, c, f) {
@@ -207,9 +209,16 @@ function methodPanel(m, c, d) {
     ? `<h4>${esc(d.locationTitle)}</h4><p>${esc(loc.address || loc.name)}</p><div class="map"><iframe title="${esc(d.locationTitle)}: ${esc(loc.name)}" src="https://www.google.com/maps?q=${encodeURIComponent(loc.mapQuery)}&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 <p><a class="more" href="https://www.google.com/maps?q=${encodeURIComponent(loc.mapQuery)}" target="_blank" rel="noopener">${esc(d.openMapLabel)}${icon('arrow')}</a></p>` : '';
   const hours = m.hours?.length ? `<h4>${esc(d.hoursTitle)}</h4><dl class="pay-details">${m.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join('')}</dl>` : '';
-  return `<section class="card card-pad method-panel" data-panel="${esc(m.id)}" hidden aria-labelledby="h-${esc(m.id)}">
-<h2 class="h3" id="h-${esc(m.id)}">${esc(d.payTitle)}: ${icon(m.icon)} ${esc(m.name)} (${esc(c.code)})</h2><p>${esc(m.intro)}</p>
-${paypalIdOk(m.paypalClientId) ? `<div class="paypal-box"><h4>${esc(d.paypal.title)}</h4><p class="muted">${esc(d.paypal.note)}</p><div data-paypal="${esc(m.paypalClientId)}" data-currency="${esc(c.code)}"></div><p class="muted">${esc(d.paypal.or)}</p></div>` : ''}
+  const head = `<section class="card card-pad method-panel" data-panel="${esc(m.id)}" hidden aria-labelledby="h-${esc(m.id)}">
+<h2 class="h3" id="h-${esc(m.id)}">${esc(d.payTitle)}: ${icon(m.icon)} ${esc(m.name)} (${esc(c.code)})</h2><p>${esc(m.intro)}</p>`;
+  // With a PayPal Client ID the buttons do everything (payer name and email come from PayPal), so no form or manual steps
+  if (paypalIdOk(m.paypalClientId)) {
+    return `${head}
+<div class="paypal-box" data-method="${esc(m.name)}" data-type="transfer"><h4>${esc(d.paypal.title)}</h4><p class="muted">${esc(d.paypal.note)}</p>
+<div data-paypal="${esc(m.paypalClientId)}" data-currency="${esc(c.code)}"></div>
+<p class="notice" data-paypal-fallback hidden>${esc(d.paypal.fallback)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p><p class="status" role="status"></p></div></section>`;
+  }
+  return `${head}
 ${details ? `<h4>${esc(d.detailsTitle)}</h4>${details}` : ''}${m.link?.href ? btns([{ label: m.link.label, href: m.link.href, icon: 'card' }]) : ''}
 ${m.poster?.src ? `<figure class="poster">${img(m.poster)}</figure>` : ''}${place}${hours}
 ${missing ? `<p class="notice">${esc(d.missingDetails)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>` : ''}
@@ -231,7 +240,7 @@ ${curs.flatMap((c) => enabledMethods(c).map((m) => methodPanel(m, c, d))).join('
 <button class="more" type="button" data-cart-open>${esc(d.editCartLabel)}</button>${policyLinks()}</aside>`;
   const e = d.empty;
   return {
-    path: '/payments/', seo: d.seo, crumbs, noindex: true, cart: true,
+    path: '/payments/', seo: d.seo, crumbs, noindex: true, cart: true, scripts: payments.currencies.some((c) => c.methods.some((m) => paypalIdOk(m.paypalClientId))) ? ['paypal'] : [],
     // .pay-area keeps the footer below the screen while the script decides what to show, so nothing jumps
     body: pageHero(d.hero, crumbs) + section(`<div class="pay-area"><noscript><p class="notice">${esc(d.noscript)}</p></noscript>
 <div class="card card-pad narrow center" data-pay-empty hidden><h2 class="h3">${esc(e.title)}</h2><p>${esc(e.text)}</p>${btns([e.button])}</div>
@@ -258,8 +267,17 @@ function servicePage(s) {
   const crumbs = crumbsOf({ label: T.hero.title, href: '/services/' }, { label: s.title, href: url });
   const price = (pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return formatPrice(v, cur); };
   const order = (pk) => whatsapp(T.orderMessage.replace('{service}', s.title).replace('{package}', pk.name).replace('{price}', price(pk)));
-  const packages = `<h2 class="h3">${esc(s.packagesTitle)}</h2><ul class="packages">${s.packages.map((pk) => `<li><div><b>${esc(pk.name)}</b><span class="muted">${esc(s.priceLabel)} <b class="plan-price">${price(pk)}</b></span></div>
-<a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a></li>`).join('')}</ul>`;
+  // A package with a USD price also gets PayPal / card buttons (Client ID from payments.json), next to Order on WhatsApp
+  const P = T.paypal;
+  const payId = paypalClientId();
+  const payBox = (pk) => (payId && pk.prices.USD ? `<div class="pk-btns"><a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a>
+<button class="btn btn-outline btn-sm" type="button" data-pay-open aria-expanded="false">${icon('card')}${esc(P.payLabel.replace('{price}', formatPrice(pk.prices.USD, 'USD')))}</button></div>
+<div class="paypal-box" hidden data-package="${esc(pk.name)}" data-sku="${esc(`${s.slug}-${s.packages.indexOf(pk) + 1}`)}" data-price="${pk.prices.USD}"><p class="muted">${esc(P.note)}</p>
+<div data-paypal="${esc(payId)}" data-currency="USD"></div><p class="notice" data-paypal-fallback hidden>${esc(P.fallback)}</p><p class="status" role="status"></p></div>`
+    : `<a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a>`);
+  const payText = payId ? ` data-service="${esc(s.title)}" data-order-prefix="${esc(payments.orderPrefix || 'AB')}" data-wa="${esc(contact.whatsapp)}"${['doneTitle', 'doneText', 'doneWhatsapp', 'error', 'sendError'].map((k) => ` data-${k.toLowerCase()}="${esc(P[k])}"`).join('')}` : '';
+  const packages = `<h2 class="h3">${esc(s.packagesTitle)}</h2><ul class="packages"${payText}>${s.packages.map((pk) => `<li><div><b>${esc(pk.name)}</b><span class="muted">${esc(s.priceLabel)} <b class="plan-price">${price(pk)}</b></span></div>
+${payBox(pk)}</li>`).join('')}</ul>`;
   const box = `<div class="buy"><p class="kicker">${esc(s.category)}</p><p class="price price-lg"><span class="from">${esc(T.fromLabel)}</span> <b>${serviceFrom(s)}</b></p>${packages}${btns(s.buttons)}${policyLinks()}</div>`;
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service', name: s.title, serviceType: s.category, description: s.seo?.description || s.summary,
@@ -268,6 +286,7 @@ function servicePage(s) {
   };
   return {
     path: url, seo: { title: s.title, description: s.summary, image: s.images[0]?.src, ...filled(s.seo) }, crumbs, schema: [schema],
+    scripts: payId && s.packages.some((pk) => pk.prices.USD) ? ['paypal', 'service-pay'] : [],
     body: pageHero({ title: s.title, text: s.summary }, crumbs) + section(`<div class="split split-top">${gallery(s.images)}${box}</div>`)
       + infoSection(s, T.sections) + faqSection(s.faq, T.sections.faq) + queueSection(),
   };

@@ -46,9 +46,9 @@
     "packagesTitle": "Service packages & starting prices",
     "priceLabel": "Starting from",
     "packages": [
-      {"name": "Personal / Portfolio Website", "prices": {"OMR": 40}},
-      {"name": "Business / Corporate Website", "prices": {"OMR": 60}},
-      {"name": "E-commerce / Online Store", "prices": {"OMR": 65}}
+      {"name": "Personal / Portfolio Website", "prices": {"OMR": 40, "USD": 104}},
+      {"name": "Business / Corporate Website", "prices": {"OMR": 60, "USD": 156}},
+      {"name": "E-commerce / Online Store", "prices": {"OMR": 65, "USD": 169}}
     ],
     "images": [
       {"src": "/assets/images/services/web-development-01.jpg", "alt": "Professional web development and custom website design services by arafatbin.com"},
