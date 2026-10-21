@@ -80,6 +80,7 @@
 | নতুন ছবি | `assets/images/`-এ রাখুন, JSON-এ লিখুন `"/assets/images/নাম.jpg"` |
 | sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
+| লোগো | `data/global/header.json` → `logo.image` (হেডার ও ফুটার), `data/global/site.json` → `favicon`। build নিজে চারপাশের সাদা অংশ কেটে ছোট কপি বানায় |
 
 **বাটন:** `{ "label": "লেখা", "href": "/contact/", "style": "primary | outline | light", "icon": "wa" }`
 
@@ -98,6 +99,9 @@
 | `prices` | তিন currency-তেই দাম দিতে হবে: `{ "OMR": 4.6, "USD": 12, "BDT": 1460 }` |
 | `compareAtPrices` | (ঐচ্ছিক) আগের দাম, দিলে "Sale" ব্যাজ ও কাটা দাম দেখায় |
 | `stock` | কয়টি বিক্রি করা যাবে। `0` দিলে "Sold out" |
+| `variants` | (ঐচ্ছিক) একাধিক plan, প্রতিটির নিজের `id`, `name`, `prices`, `stock`। যেমন: `[{ "id": "P005-STD-1M", "name": "Standard · 1 Month", "prices": { "OMR": 2.3, "USD": 6, "BDT": 730 }, "stock": 3 }]`। দিলে উপরের `prices`/`stock` লাগবে না, পেইজে "Choose a plan" দেখায় আর কার্ডে "From" দাম |
+| `seo` | (ঐচ্ছিক) `title`, `description`, `keywords`। `"titleSuffix": false` দিলে title-এর শেষে সাইটের নাম যোগ হয় না |
+| `usageTitle`, `usageIntro` | (ঐচ্ছিক) "How to use" অংশের শিরোনাম আর শুরুর লাইন বদলাতে |
 | `images` | এক বা একাধিক ছবি, একাধিক দিলে gallery হয় |
 | `about`, `description`, `usage`, `features`, `format` | প্রোডাক্ট পেইজের অংশগুলো |
 | `faq` | `[{ "q": "প্রশ্ন", "a": "উত্তর" }]` |

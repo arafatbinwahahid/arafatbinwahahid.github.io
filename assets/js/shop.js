@@ -35,6 +35,7 @@ function loadCart() {
 let cart = loadCart();
 const save = () => { store.set('cart', cart); render(); };
 const qtyOf = (id) => cart.find((x) => x.id === id)?.qty || 0;
+const name = (p) => (p.option ? `${p.title} (${p.option})` : p.title);
 const lines = () => cart.map((it) => { const p = byId[it.id]; const unit = p.prices[currency]; return { ...it, p, unit, total: round(unit * it.qty) }; });
 const total = () => round(lines().reduce((sum, l) => sum + l.total, 0));
 
@@ -64,10 +65,12 @@ $('[data-checkout]').addEventListener('click', (e) => { if (!cart.length) e.prev
 function cartRow(l) {
   const li = document.createElement('li');
   li.className = 'cart-item';
-  li.innerHTML = `<img alt="" width="56" height="56" loading="lazy"><div><a></a><span class="muted"></span>
+  li.innerHTML = `<img alt="" width="56" height="56" loading="lazy"><div><a></a><span class="muted" data-option></span><span class="muted"></span>
 <div class="qty qty-sm"><button type="button" data-step="-1"></button><input type="number" inputmode="numeric" min="1"><button type="button" data-step="1"></button></div></div>
 <div class="cart-item-end"><b></b><button type="button" class="icon-btn" data-remove></button></div>`;
-  const [img, link, unit, input, total] = [$('img', li), $('a', li), $('.muted', li), $('input', li), $('b', li)];
+  const [img, link, unit, input, total] = [$('img', li), $('a', li), $('.muted:not([data-option])', li), $('input', li), $('b', li)];
+  $('[data-option]', li).textContent = l.p.option;
+  $('[data-option]', li).hidden = !l.p.option;
   img.src = l.p.image;
   link.href = `/shop/${l.p.slug}/`;
   link.textContent = l.p.title;
@@ -127,10 +130,21 @@ function renderBuy(box) {
   input.max = Math.max(room, 1);
   input.value = Math.min(Math.max(Number(input.value) || 1, 1), Math.max(room, 1));
   $('[data-add]', box).disabled = room < 1;
+  const st = $('[data-stock-text]', box);
+  st.textContent = p.stock > 0 ? fill(T.stock, { n: p.stock }) : T.soldOut;
+  st.classList.toggle('stock-out', p.stock < 1);
   $('[data-buy-status]', box).textContent = room < 1 ? fill(T.maxStock, { n: p.stock }) : '';
 }
 $$('[data-buy]').forEach((box) => {
   const input = $('[data-qty]', box);
+  $$('[data-plan]', box).forEach((r) => r.addEventListener('change', () => {
+    box.dataset.buy = r.value;
+    $('[data-add]', box).dataset.add = r.value;
+    $('[data-main-price] [data-prices]', box).dataset.prices = r.dataset.plan;
+    $('[data-main-price] s', box)?.remove();
+    input.value = 1;
+    render();
+  }));
   $$('[data-step]', box).forEach((b) => b.addEventListener('click', () => { input.value = Number(input.value) + Number(b.dataset.step); renderBuy(box); }));
   input?.addEventListener('change', () => renderBuy(box));
 });
@@ -168,7 +182,7 @@ function renderPayment() {
   $('[data-summary]').replaceChildren(...lines().map((l) => {
     const li = document.createElement('li');
     li.innerHTML = '<span></span><b></b>';
-    li.firstChild.textContent = `${l.p.title} × ${l.qty}`;
+    li.firstChild.textContent = `${name(l.p)} × ${l.qty}`;
     li.lastChild.textContent = money(l.total);
     return li;
   }));
@@ -225,7 +239,7 @@ async function submitOrder(form) {
     email: v('email'),
     'Payment method': form.dataset.method,
     Currency: currency,
-    Items: items.map((l, i) => `${i + 1}. ${l.p.title} (ID ${l.id}) × ${l.qty} @ ${money(l.unit)} = ${money(l.total)}`).join('\n'),
+    Items: items.map((l, i) => `${i + 1}. ${name(l.p)} (ID ${l.id}) × ${l.qty} @ ${money(l.unit)} = ${money(l.total)}`).join('\n'),
     'Order total': money(sum),
     'Submitted at': `${now.toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'long' })} (${now.toISOString()})`,
     Page: location.href,

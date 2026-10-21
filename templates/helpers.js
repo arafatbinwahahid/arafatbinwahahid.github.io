@@ -84,7 +84,9 @@ function imageSize(src) {
 let sharp = null;
 try { sharp = (await import('sharp')).default; } catch {}
 export const imageJobs = new Map(); // source path -> widths to generate
-const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(src).replace(/\.[^.]+$/, '')}-${w}.${ext}`;
+// File names with spaces or capitals become simple names, e.g. "My Logo.PNG" -> my-logo-400.webp
+const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${ext}`;
+export const url = (src) => encodeURI(decodeURI(src || ''));
 
 function webpWidths(src, size) {
   if (!sharp || !size || isHttp(src) || !/\.(jpe?g|png)$/i.test(src)) return null;
@@ -97,18 +99,38 @@ export function img(image, { eager = false, sizes = '(max-width: 800px) 100vw, 5
   if (!image?.src) return '';
   const s = imageSize(image.src);
   const wh = s ? ` width="${s[0]}" height="${s[1]}"` : '';
-  const tag = `<img src="${esc(image.src)}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+  const tag = `<img src="${esc(url(image.src))}" alt=""${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
   const widths = webpWidths(image.src, s);
   if (!widths) return tag;
   return `<picture><source type="image/webp" srcset="${widths.map((w) => `${optPath(image.src, w)} ${w}w`).join(', ')}" sizes="${sizes}">${tag}</picture>`;
 }
 
 // Small image for the cart; falls back to the original file without sharp
-export const thumb = (src) => (webpWidths(src, imageSize(src)) ? optPath(src, Math.min(400, imageSize(src)[0])) : src);
+export const thumb = (src) => (webpWidths(src, imageSize(src)) ? optPath(src, Math.min(400, imageSize(src)[0])) : url(src));
+
+// Logo: white space around it is cut off, then a 64px-high copy is used in the header and footer
+const LOGO_H = 64;
+let logoSize = null;
+if (sharp && header.logo.image && !isHttp(header.logo.image)) {
+  try { logoSize = (await sharp(path.join(ROOT, decodeURI(header.logo.image))).trim().toBuffer({ resolveWithObject: true })).info; } catch { console.warn(`  ! Logo not found: ${header.logo.image}`); }
+}
+export function logoImg() {
+  const src = header.logo.image;
+  if (!src) return '';
+  if (!logoSize) return `<img src="${esc(url(src))}" alt="" height="32">`;
+  imageJobs.set(src, new Set([...(imageJobs.get(src) || []), 'logo']));
+  const w = Math.round((logoSize.width / logoSize.height) * LOGO_H);
+  return `<img src="${optPath(src, 'logo')}" alt="" width="${Math.round(w / 2)}" height="${LOGO_H / 2}">`;
+}
+
+// Products can have plans ("variants"), each with its own id, prices and stock. Without plans the product itself is the only option.
+export const optionsOf = (p) => (p.variants?.length ? p.variants : [{ id: p.id, name: '', prices: p.prices, compareAtPrices: p.compareAtPrices, stock: p.stock }]);
+export const stockOf = (p) => optionsOf(p).reduce((n, o) => n + o.stock, 0);
+export const lowestPrices = (p) => Object.fromEntries(Object.keys(optionsOf(p)[0].prices).map((c) => [c, Math.min(...optionsOf(p).map((o) => o.prices[c]))]));
 
 // Favicon: a small square PNG made from site.json "favicon" when sharp is available
 export function iconLinks() {
-  if (!sharp || isHttp(site.favicon)) return `<link rel="icon" href="${esc(site.favicon)}">`;
+  if (!sharp || isHttp(site.favicon)) return `<link rel="icon" href="${esc(url(site.favicon))}">`;
   imageJobs.set(site.favicon, new Set([...(imageJobs.get(site.favicon) || []), 'icon']));
   return `<link rel="icon" type="image/png" sizes="48x48" href="${optPath(site.favicon, 48, 'png')}">\n<link rel="apple-touch-icon" href="${optPath(site.favicon, 180, 'png')}">`;
 }
@@ -118,7 +140,22 @@ export async function buildImages(outDir) {
     const input = path.join(ROOT, decodeURI(src));
     for (const w of widths) {
       if (w === 'icon') {
-        for (const px of [48, 180]) await sharp(input).resize(px, px, { fit: 'cover' }).png().toFile(path.join(outDir, optPath(src, px, 'png')));
+        const white = { r: 255, g: 255, b: 255, alpha: 1 };
+        const mark = await sharp(input).trim().toBuffer();
+        for (const px of [48, 180]) {
+          const inner = await sharp(mark).resize(Math.round(px * 0.86), Math.round(px * 0.86), { fit: 'contain', background: white }).toBuffer();
+          await sharp({ create: { width: px, height: px, channels: 4, background: white } }).composite([{ input: inner, gravity: 'centre' }]).png().toFile(path.join(outDir, optPath(src, px, 'png')));
+        }
+      } else if (w === 'logo') {
+        // Turn the white background into transparency so the logo also works on the dark footer
+        const { data, info } = await sharp(input).trim().resize({ height: LOGO_H }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+        const rgba = Buffer.alloc(info.width * info.height * 4);
+        for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {
+          const a = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+          for (let k = 0; k < 3; k++) rgba[j + k] = a ? Math.round(255 - ((255 - data[i + k]) * 255) / a) : 0;
+          rgba[j + 3] = a;
+        }
+        await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 90, alphaQuality: 100 }).toFile(path.join(outDir, optPath(src, 'logo')));
       } else {
         await sharp(input).resize({ width: w, withoutEnlargement: true }).webp({ quality: 78 }).toFile(path.join(outDir, optPath(src, w)));
       }

@@ -5,6 +5,8 @@
   "allLabel": "All",
   "currencyLabel": "Currency",
   "addToCartLabel": "Add to cart",
+  "fromLabel": "From",
+  "choosePlanLabel": "Choose a plan",
   "soldOutLabel": "Sold out",
   "saleLabel": "Sale",
   "stockLabel": "{n} in stock",

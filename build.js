@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, sitemap, products, payments, absUrl, buildImages } from './templates/helpers.js';
+import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf } from './templates/helpers.js';
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 
@@ -21,10 +21,15 @@ const codes = payments.currencies.map((c) => c.code);
 const ids = new Set();
 for (const p of products) {
   const where = `data/collections/products.json (${p.slug || p.title})`;
-  if (!p.id || ids.has(p.id)) throw new Error(`${where}: every product needs its own "id"`);
-  ids.add(p.id);
-  for (const c of codes) if (!(p.prices?.[c] > 0)) throw new Error(`${where}: "prices" needs a ${c} price above 0`);
-  if (!Number.isInteger(p.stock) || p.stock < 0) throw new Error(`${where}: "stock" must be a whole number, 0 or more`);
+  for (const id of [p.id, ...(p.variants || []).map((v) => v.id)]) {
+    if (!id || ids.has(id)) throw new Error(`${where}: every product and plan needs its own "id" (${id || 'missing'})`);
+    ids.add(id);
+  }
+  for (const o of optionsOf(p)) {
+    const what = o.name ? `${where}, plan "${o.name}"` : where;
+    for (const c of codes) if (!(o.prices?.[c] > 0)) throw new Error(`${what}: "prices" needs a ${c} price above 0`);
+    if (!Number.isInteger(o.stock) || o.stock < 0) throw new Error(`${what}: "stock" must be a whole number, 0 or more`);
+  }
   if (!p.images?.length) throw new Error(`${where}: add at least one image in "images"`);
 }
 if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);
