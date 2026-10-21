@@ -1,5 +1,6 @@
 // Loads every JSON file in data/ and provides small HTML helpers.
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -96,7 +97,12 @@ export const hasSharp = !!sharp;
 const imageJobs = new Map(); // source path -> widths to generate
 const addJob = (src, w) => imageJobs.set(src, new Set([...(imageJobs.get(src) || []), w]));
 // File names with spaces or capitals become simple names, e.g. "My Logo.PNG" -> my-logo-400.webp
-const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${ext}`;
+// A short fingerprint of the file is part of the name, so a changed image always gets a new URL (safe to cache for a long time)
+const hashes = {};
+const fileHash = (file) => (hashes[file] ??= crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, file))).digest('hex').slice(0, 8));
+const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${fileHash(decodeURI(src))}.${ext}`;
+// Script URL with the same fingerprint, e.g. /assets/js/main.js?v=1a2b3c4d
+export const assetUrl = (file) => `/${file}?v=${fileHash(file)}`;
 export const url = (src) => encodeURI(decodeURI(src || ''));
 const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png)$/i.test(src || '') && imageSize(src);
 

@@ -10,6 +10,8 @@
   "defaultImage": "/assets/images/about/arafat-bin-wahahid-fuel-attendant-oman.jpg",
   "favicon": "/assets/images/brand/arafatbin-logo.png",
   "homeLabel": "Home",
+  "clarityId": "",
+  "comments": { "repo": "arafatbinwahahid/arafatbinwahahid.github.io", "repoId": "", "category": "General", "categoryId": "", "lang": "en" },
   "googleAnalyticsId": "G-STXXJ4FZ6V",
   "verification": { "google": "", "bing": "FFA12F3E4F15271D4B78A1CE99298574", "yandex": "", "pinterest": "", "facebook": "", "baidu": "" },
   "seo": { "author": "Arafat Bin Wahahid", "twitterSite": "", "twitterCreator": "", "facebookAppId": "" },

@@ -68,6 +68,19 @@ fs.mkdirSync(path.join(OUT, 'assets/opt'), { recursive: true });
 await buildImages(OUT);
 if (!hasSharp) console.warn('  ! "sharp" is not installed: images are not converted to WebP (run npm install)');
 
+// Site search index for /search/ (Pagefind reads the pages that have data-pagefind-body)
+try {
+  const pagefind = await import('pagefind');
+  const { index } = await pagefind.createIndex({});
+  const { errors, page_count } = await index.addDirectory({ path: OUT });
+  if (errors.length) throw new Error(errors.join('; '));
+  await index.writeFiles({ outputPath: path.join(OUT, 'pagefind') });
+  await pagefind.close();
+  console.log(`Search index: ${page_count} pages`);
+} catch (e) {
+  console.warn(`  ! Search index not made (${e.code === 'ERR_MODULE_NOT_FOUND' ? 'run npm install' : e.message})`);
+}
+
 // Minify JS: drop comment lines and indentation (edit the readable files in assets/js/)
 for (const f of fs.readdirSync(path.join(OUT, 'assets/js'))) {
   const file = path.join(OUT, 'assets/js', f);

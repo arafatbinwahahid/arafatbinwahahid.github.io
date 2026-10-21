@@ -81,9 +81,18 @@
     "duplicate": "This order was already sent. Order ID: {id}",
     "error": "Could not send. Please try again, or message us on WhatsApp with your order ID {id}."
   },
+  "paypal": {
+    "title": "Pay now with PayPal or card",
+    "note": "Fill in your name, mobile and email in the form below first. After you pay, the order is sent to us automatically.",
+    "or": "Or pay by hand with the details below and send the form.",
+    "missing": "Please fill in your name, a valid mobile number and email in the form below, then press the PayPal button again.",
+    "error": "PayPal could not finish the payment. Nothing was charged. Please try again or message us on WhatsApp with your order ID {id}.",
+    "paid": "Paid with PayPal"
+  },
   "done": {
     "title": "Thank you!",
     "payment": "We received your payment confirmation for order {id}. We will check the payment and contact you soon.",
+    "paypal": "Payment received for order {id}. Thank you! We will contact you soon with your order.",
     "appointment": "We received your appointment request for order {id}. We will confirm the date and time with you soon.",
     "button": { "label": "Back to the shop", "href": "/shop/", "style": "outline" }
   }

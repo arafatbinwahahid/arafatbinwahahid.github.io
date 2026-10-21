@@ -41,5 +41,7 @@
   "hero": { "title": "Blog", "text": "Notes on Excel, design and work." },
   "readMoreLabel": "Read more",
   "backLabel": "Back to blog",
+  "commentsTitle": "Comments",
+  "commentsNote": "Sign in with GitHub to comment.",
   "byLabel": "By"
 }

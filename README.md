@@ -26,6 +26,7 @@
 │   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে ছোট করে প্রতিটি পেইজে বসায়)
 │   ├── js/main.js           ← মেনু বন্ধ করা, Contact/Review ফর্ম, Web3Forms-এ পাঠানো
 │   ├── js/shop.js           ← কার্ট, currency, gallery, quantity, পেমেন্ট ফর্ম (শুধু Shop ও Payment পেইজে)
+│   ├── js/search.js         ← /search/ পেইজে খোঁজা (Pagefind)
 │   ├── images/              ← সব ছবি, ফোল্ডারে ভাগ করা:
 │   │   ├── brand/           ← লোগো
 │   │   ├── products/        ← Shop-এর প্রোডাক্টের ছবি
@@ -132,6 +133,51 @@
 5. **Stock কমানো:** পেমেন্ট যাচাই হওয়ার পর `products.json`-এ ওই প্রোডাক্টের `stock` নিজে কমিয়ে দিন। সাইট নিজে stock কমায় না, কারণ GitHub Pages-এ কোনো server বা database নেই।
 
 **নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
+
+## SEO: প্রতিটি পেইজের সব tag
+
+প্রতিটি পেইজ (`data/pages/*.json`), প্রোডাক্ট, সার্ভিস আর ব্লগ পোস্টে একটি `"seo"` অংশ আছে। **যে ঘর খালি (`""`, `[]`) রাখবেন, build নিজে সেটা বসিয়ে নেবে।**
+
+| ঘর | কোন tag | কখন দেবেন |
+|---|---|---|
+| `title`, `titleSuffix` | `<title>`, og:title, twitter:title | title ৬০ অক্ষরের মধ্যে; `false` দিলে " \| Arafat Bin Wahahid" যোগ হবে না |
+| `description` | meta description, og/twitter description | ৭০–১৫৫ অক্ষর |
+| `keywords` | meta keywords | ইচ্ছা হলে (Google এটা দেখে না, Bing অল্প দেখে) |
+| `canonical` | `<link rel="canonical">` | শুধু যখন এই পেইজটা অন্য কোনো URL-এর কপি |
+| `image`, `imageAlt` | og:image, twitter:image (+ alt) | Facebook/WhatsApp-এ শেয়ার করলে যে ছবি আসবে |
+| `author` | meta author | খালি = `site.json` → `seo.author` |
+| `robots.index` / `follow` | robots noindex / nofollow | `false` দিলে Google-এ দেখাবে না, sitemap থেকেও বাদ যাবে |
+| `robots.nosnippet`, `noimageindex`, `notranslate`, `indexifembedded` | robots | Google-এর বিশেষ নিয়ম, `true` দিলে চালু |
+| `robots.maxSnippet`, `maxImagePreview`, `maxVideoPreview` | max-snippet, max-image-preview, max-video-preview | `-1` = সীমা নেই; ছবি `none`/`standard`/`large` |
+| `robots.unavailableAfter` | unavailable_after | এই তারিখের পর Google পেইজটা সরিয়ে দেবে, যেমন `"2027-12-31"` |
+| `googlebot`, `bingbot` | শুধু Google বা Bing-এর জন্য নিয়ম | যেমন `"nosnippet"` |
+| `openGraph.type`, `title`, `description`, `localeAlternate` | og:* | Facebook-এ আলাদা লেখা দেখাতে চাইলে |
+| `twitter.card`, `title`, `description`, `creator` | twitter:* | X-এ আলাদা লেখা বা `@username` |
+| `article.*` (ব্লগ) | article:published_time, modified_time, section, tag | খালি = পোস্টের তারিখ, category, tags |
+| `alternates` | hreflang | অন্য ভাষার সংস্করণ থাকলে: `[{ "hreflang": "bn", "href": "/bn/about/" }]` |
+| `schema` | বাড়তি JSON-LD | schema.org-এর যেকোনো object, স্বয়ংক্রিয়গুলোর পাশে যোগ হয় |
+| `meta` | অন্য যেকোনো meta tag | `[{ "name": "rating", "content": "adult" }]` বা `[{ "property": "...", "content": "..." }]` |
+
+পুরো সাইটের জন্য `data/global/site.json`:
+- `seo`: author, X (Twitter) `@username`, Facebook App ID
+- `verification`: Google, Bing, Yandex, Pinterest, Facebook, Baidu-র কোড (শুধু কোড বা পুরো `<meta>` লাইন, দুটোই চলে)
+
+## বাইরের সার্ভিস (সব ঐচ্ছিক, খালি রাখলে বন্ধ)
+
+**Microsoft Clarity (heatmap ও session recording):** clarity.microsoft.com-এ project খুলুন → Settings → Overview থেকে Project ID নিন → `site.json` → `"clarityId"`। Google Analytics-এর মতোই প্রথম tap/scroll-এর পর লোড হয়, তাই সাইট ধীর হয় না। ফর্মে লেখা কিছু রেকর্ড হয় না।
+
+**Giscus (ব্লগ পোস্টে কমেন্ট):** এই repo-তে GitHub → Settings → Features → **Discussions** চালু করুন → github.com/apps/giscus থেকে app install করুন → giscus.app-এ repo লিখে "Discussion Category" বেছে নিন → সেখানে দেখানো `data-repo-id` আর `data-category-id` `site.json` → `"comments"`-এ `repoId` ও `categoryId`-তে দিন। কমেন্ট শুধু স্ক্রল করে কাছে এলে লোড হয়।
+
+**PayPal বোতাম (PayPal ও কার্ডে সরাসরি পেমেন্ট):** developer.paypal.com → Apps & Credentials → **Live** → Create App → Client ID কপি করুন → `payments.json`-এ PayPal মেথডের `"paypalClientId"`-তে দিন। তখন Payment পেইজে PayPal/কার্ডের বোতাম আসে; পেমেন্ট হলে অর্ডার (PayPal order ID সহ) Web3Forms-এ নিজে চলে আসে। PayPal শুধু USD-তে (OMR/BDT PayPal সমর্থন করে না)। ডেলিভারির আগে PayPal account-এ টাকা এসেছে কিনা দেখে নিন। Client ID গোপন নয়, কিন্তু **Secret কখনো কোথাও দেবেন না।**
+
+**Site search (Pagefind):** কিছু করতে হয় না। build প্রতিবার সব পেইজের লেখা থেকে খোঁজার index বানায়, `/search/` পেইজে খোঁজা যায়, হেডারে 🔍 আইকন। লেখা `data/pages/search.json`-এ। হেডার থেকে সরাতে `header.json` থেকে `"search"` মুছুন।
+
+**Cloudflare (দ্রুত, cache, নিরাপত্তা):** কোডে কিছু লাগে না, ডোমেইনের সেটিং:
+1. cloudflare.com-এ ফ্রি account → Add site → `arafatbin.com` → Free plan।
+2. Cloudflare যে ২টি nameserver দেবে, ডোমেইন যেখান থেকে কিনেছেন সেখানে বসান (আগের DNS record Cloudflare নিজে কপি করে; GitHub Pages-এর A/CNAME record আছে কিনা মিলিয়ে নিন)।
+3. SSL/TLS → **Full**। Speed → **Rocket Loader বন্ধ** রাখুন (ফর্ম ও কার্টের JS-এ সমস্যা করতে পারে)। Scrape Shield → **Email Obfuscation বন্ধ**।
+4. Caching → Cache Rules → নতুন rule: URI Path starts with `/assets/` → Eligible for cache, Edge TTL ১ মাস, Browser TTL ১ মাস। ছবি আর JS-এর নামে ফিঙ্গারপ্রিন্ট আছে (যেমন `main.js?v=1a2b3c4d`), তাই বদলালে নতুন URL হয়, পুরোনোটা আটকে থাকে না।
+5. HTML পেইজ cache করবেন না (সাধারণ সেটিং-এ করে না), তাহলে publish-এর সাথে সাথে নতুন লেখা আসবে।
 
 ## AI agent-এর জন্য WebMCP (`/webmcp.js`)
 

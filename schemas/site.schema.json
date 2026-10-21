@@ -4,6 +4,19 @@
   "required": ["name", "title", "titleSeparator", "description", "url", "language", "locale", "currency", "defaultImage", "favicon", "homeLabel", "web3formsAccessKey", "theme", "person", "robots"],
   "properties": {
     "url": { "type": "string", "pattern": "^https://[^/]+$", "description": "No slash at the end, e.g. https://arafatbin.com" },
+    "comments": {
+      "type": "object",
+      "description": "Giscus comments on blog posts (values from giscus.app). Empty repoId or categoryId = off",
+      "properties": {
+        "repo": { "type": "string", "pattern": "^$|^[\\w.-]+/[\\w.-]+$" },
+        "repoId": { "type": "string" },
+        "category": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "lang": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "clarityId": { "type": "string", "pattern": "^$|^[a-z0-9]+$", "description": "Microsoft Clarity project ID (clarity.microsoft.com → Settings → Overview). Empty = off" },
     "googleAnalyticsId": { "type": "string", "pattern": "^$|^G-[A-Z0-9]+$" },
     "verification": {
       "type": "object",

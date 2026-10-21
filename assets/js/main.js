@@ -51,3 +51,20 @@ document.querySelectorAll('form[data-form]').forEach((form) => {
     window.open(`https://wa.me/${e.currentTarget.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
   });
 });
+
+// 4. Giscus comments on blog posts: load the widget when it comes near the screen
+const giscus = document.querySelector('[data-giscus]');
+if (giscus) {
+  new IntersectionObserver((entries, obs) => {
+    if (!entries[0].isIntersecting) return;
+    obs.disconnect();
+    const s = document.createElement('script');
+    const d = giscus.dataset;
+    const attrs = { repo: d.repo, 'repo-id': d.repoId, category: d.category, 'category-id': d.categoryId, lang: d.lang, mapping: 'pathname', strict: '0', 'reactions-enabled': '1', 'emit-metadata': '0', 'input-position': 'top', theme: 'light', loading: 'lazy' };
+    for (const [k, v] of Object.entries(attrs)) s.setAttribute(`data-${k}`, v);
+    s.src = 'https://giscus.app/client.js';
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    giscus.append(s);
+  }, { rootMargin: '400px' }).observe(giscus);
+}

@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled } from './helpers.js';
+import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled, assetUrl } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -16,7 +16,7 @@ function catalog() {
     defaultCurrency: payments.defaultCurrency,
     currencies: payments.currencies.map((c) => c.code),
     products: products.flatMap((p) => optionsOf(p).map((o) => ({ id: o.id, slug: p.slug, title: p.title, option: o.name, prices: o.prices, stock: o.stock, image: thumb(p.images[0]?.src) }))),
-    text: { ...shop.cart, maxStock: shop.maxStockMessage, stock: shop.stockLabel, soldOut: shop.soldOutLabel, pay: payText.form, done: payText.done, copied: payText.copiedLabel, copy: payText.copyLabel, orderPrefix: payments.orderPrefix || 'AB' },
+    text: { ...shop.cart, maxStock: shop.maxStockMessage, stock: shop.stockLabel, soldOut: shop.soldOutLabel, pay: payText.form, paypal: payText.paypal, done: payText.done, copied: payText.copiedLabel, copy: payText.copyLabel, orderPrefix: payments.orderPrefix || 'AB' },
   };
   return `<script type="application/json" id="catalog">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
@@ -44,7 +44,7 @@ function siteHeader(path, cart) {
   return `<header class="hdr"><div class="wrap hdr-in">
 <a class="logo" href="${esc(logo.href)}">${logoImg()}${esc(logo.text)}</a>
 <nav class="nav" aria-label="Main">${navLinks}</nav>
-<div class="hdr-end">${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)} aria-label="${esc(button.label)}">${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
+<div class="hdr-end">${header.search ? `<a class="icon-btn hdr-search" href="${esc(header.search.href)}" aria-label="${esc(header.search.label)}" title="${esc(header.search.label)}"${path === header.search.href ? ' aria-current="page"' : ''}>${icon('search')}</a>` : ''}${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)} aria-label="${esc(button.label)}">${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
 <details class="menu"><summary aria-label="${esc(menu.buttonLabel)}" title="${esc(menu.buttonLabel)}">${icon('dots')}</summary><nav class="menu-panel" aria-label="${esc(menu.buttonLabel)}">${menuCols}</nav></details></div>
 </div></header>`;
 }
@@ -83,7 +83,7 @@ const VERIFY = { google: 'google-site-verification', bing: 'msvalidate.01', yand
 const code = (v) => (String(v || '').match(/content="([^"]+)"/)?.[1] || v || '').trim();
 const verifyTags = () => Object.entries(VERIFY).map(([k, n]) => meta('name', n, code(site.verification?.[k]))).join('');
 
-export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false, article, product }) {
+export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false, article, product, scripts = [] }) {
   const seo = filled(rawSeo) || {};
   const og = seo.openGraph || {};
   const tw = seo.twitter || {};
@@ -107,11 +107,13 @@ export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type
     }];
   }
   schema = [...schema, ...(seo.schema || [])];
-  // Google Analytics loads on the first tap, scroll or key press, or 3.5 s after the page has loaded, so it never slows the first paint
-  const gaId = esc(site.googleAnalyticsId);
-  const ga = gaId
-    ? `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaId}');
-(function(){var on=0;function go(){if(on)return;on=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${gaId}';document.head.appendChild(s)}
+  // Google Analytics and Microsoft Clarity load on the first tap, scroll or key press, or 3.5 s after the page has loaded, so they never slow the first paint
+  const gaId = esc(site.googleAnalyticsId || '');
+  const clarityId = esc(site.clarityId || '');
+  const analytics = gaId || clarityId
+    ? `<script>${gaId ? `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaId}');` : ''}${clarityId ? `window.clarity=window.clarity||function(){(clarity.q=clarity.q||[]).push(arguments)};` : ''}
+(function(){var on=0;function add(src){var s=document.createElement('script');s.async=true;s.src=src;document.head.appendChild(s)}
+function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/gtag/js?id=${gaId}');` : ''}${clarityId ? `add('https://www.clarity.ms/tag/${clarityId}');` : ''}}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})});addEventListener('load',function(){setTimeout(go,3500)})})();</script>`
     : '';
   const head = [
@@ -165,19 +167,19 @@ export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type
 ${head.trim()}
 <style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
-${ga}
+${analytics}
 </head>
 <body data-forms-key="${esc(site.web3formsAccessKey)}">
 <a class="skip" href="#main">Skip to content</a>
 ${siteHeader(path, cart)}
-<main id="main">
+<main id="main"${noindex ? '' : ' data-pagefind-body'}>
 ${body}
 </main>
 ${siteFooter()}
 ${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
 ${cart ? cartDrawer() + catalog() : ''}
-<script src="/assets/js/main.js" defer></script>
-<script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${cart ? '\n<script src="/assets/js/shop.js" defer></script>' : ''}
+<script src="${assetUrl('assets/js/main.js')}" defer></script>
+<script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${cart ? `\n<script src="${assetUrl('assets/js/shop.js')}" defer></script>` : ''}${scripts.map((s) => `\n<script src="${assetUrl(`assets/js/${s}.js`)}" defer></script>`).join('')}
 </body>
 </html>
 `;
