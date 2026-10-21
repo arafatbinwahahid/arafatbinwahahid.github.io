@@ -1,65 +1,120 @@
 [
   {
-    "slug": "vector-portrait",
-    "title": "Vector portrait art",
-    "icon": "pen",
-    "summary": "Your photo redrawn as clean, scalable vector art in Adobe Illustrator.",
-    "image": { "src": "/assets/images/IMAGE05.PNG", "alt": "Vector portrait service poster" },
-    "priceFrom": 10,
-    "delivery": "2 to 3 days",
-    "description": [
-      "I redraw your photo as a clean vector portrait in Adobe Illustrator. It works for profile pictures, gifts, posters and branding.",
-      "Send me a clear photo and tell me the style you like. I will share a draft and change it until you are happy."
+    "slug": "web-development",
+    "title": "Professional Web Development & Custom Website Design",
+    "category": "Web development",
+    "icon": "code",
+    "seo": {
+      "title": "Professional Web Development & Custom Website Design Services | arafatbin.com",
+      "titleSuffix": false,
+      "description": "Elevate your business with high-performing, custom, and fully responsive web development services. Get SEO-optimized, fast-loading websites built for maximum conversions at arafatbin.com!",
+      "keywords": ["Professional Web Development Services", "Custom Website Design BD", "E-commerce Website Development", "Full-Stack Web Developer Bangladesh", "Business Website Services", "arafatbin.com", "Responsive Web Design", "SEO-Friendly Website Building", "Website Maintenance Service", "Fast Loading Website", "Custom Web Solutions", "Web Development Test Demo"]
+    },
+    "packagesTitle": "Service packages & starting prices",
+    "priceLabel": "Starting from",
+    "packages": [
+      {"name": "Personal / Portfolio Website", "prices": {"OMR": 40}},
+      {"name": "Business / Corporate Website", "prices": {"OMR": 60}},
+      {"name": "E-commerce / Online Store", "prices": {"OMR": 65}}
     ],
-    "includes": ["100% vector, scalable and high quality", "High resolution PNG and JPG", "Source file on request", "Unlimited revisions"],
-    "buttons": [
-      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20vector%20portrait.", "style": "primary", "icon": "wa" },
-      { "label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid", "style": "outline", "icon": "globe" }
-    ]
-  },
-  {
-    "slug": "excel-dashboard",
-    "title": "Excel dashboards and reports",
-    "icon": "chart",
-    "summary": "Clear Excel dashboards with KPI cards, charts and live formulas.",
-    "image": { "src": "/assets/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard" },
-    "priceFrom": 25,
-    "delivery": "3 to 5 days",
-    "description": [
-      "I turn your raw data into an Excel dashboard that updates by itself. You get KPI cards, tables and charts that are easy to read.",
-      "Every formula is checked so the workbook has zero errors."
+    "images": [
+      {"src": "/assets/images/Professional Web Development Services arafatbin.com 01.png", "alt": "Professional web development and custom website design services by arafatbin.com"},
+      {"src": "/assets/images/Professional Web Development Services arafatbin.com 02.png", "alt": "Responsive, fast and SEO-friendly websites built by arafatbin.com"}
     ],
-    "includes": ["KPI cards and charts", "Editable assumptions sheet", "Conditional formatting", "Short guide on how to update the data"],
+    "summary": "Custom, fully responsive, fast and SEO-friendly websites: portfolio, business and e-commerce, with a test demo before launch.",
+    "about": "🚀 Ready to take your business to the next level online? Don't settle for a basic template: get a custom, high-performing, fast and visually stunning website tailored specifically to your brand. Powered by arafatbin.com, we deliver end-to-end web development solutions designed to convert visitors into loyal customers.",
+    "description": [
+      "Tech stack & platforms: WordPress, custom HTML/CSS/JavaScript, React and full-stack solutions.",
+      "Design philosophy: modern, clean, minimalist and conversion-focused.",
+      "Custom Web Development: unique, tailor-made website designs aligned with your branding goals to captivate your audience instantly.",
+      "E-commerce Solutions: complete online store setups featuring easy product management, local/international payment gateway integration (bKash, Nagad, Cards, PayPal/Stripe), order tracking and inventory control.",
+      "High-Converting Landing Pages: sleek, ultra-fast single-page layouts optimized for product launches, ad campaigns and sales lead generation.",
+      "SEO & Speed Optimization: on-page SEO, speed optimization, metadata structuring and clean coding to maximize your organic search rankings."
+    ],
+    "usageTitle": "Usage Guide & Client Rules",
+    "usageIntro": "Please keep the following guidelines in mind before starting a project:",
+    "usage": [
+      "✅ Provide assets promptly: supply your text content, product details, logos and high-resolution images on time.",
+      "✅ Domain & hosting setup: share your existing domain/hosting credentials or select one of our managed hosting packages.",
+      "❌ Avoid scope creep: major structural or theme redesigns requested mid-project may incur additional fees and timeline adjustments.",
+      "❌ Avoid unauthorized code modifications: third-party developers or plugin modifications during active development are strictly prohibited."
+    ],
+    "features": [
+      {"icon": "tv", "text": "100% Fully Responsive: flawless layout and performance across mobiles, tablets and desktops."},
+      {"icon": "zap", "text": "Lightning-Fast Speed: optimized performance to boost user retention and drive sales."},
+      {"icon": "globe", "text": "SEO & Mobile-Friendly: search-engine-ready code structure to help you rank higher on Google."},
+      {"icon": "shield", "text": "Top-Tier Security: enterprise-grade code protection and automated backup setups."},
+      {"icon": "check", "text": "Risk-Free Test Demo: review and test your site on a staging server before final launch."},
+      {"icon": "headset", "text": "After-Sales Support: continuous technical maintenance and support after delivery."}
+    ],
+    "faq": [
+      {"q": "How do I know the website will turn out the way I want?", "a": "Before going live, we share initial mockups and set up a test demo server where you can preview the working website. We only publish the final version after your complete review and approval."},
+      {"q": "How long does it take to build a complete website?", "a": "Timelines depend on the project scope. Simple portfolio or landing pages typically take 3–5 business days, while complex e-commerce or corporate platforms take 7–15 business days."},
+      {"q": "What is your Refund & Project Support Policy?", "a": "We build trust through transparency. We provide a demo/test environment during development. If we fail to deliver promised specifications or if an unresolvable issue occurs on our side prior to launch, a refund will be issued according to our agreement. Additionally, we provide free post-launch support for a designated period."},
+      {"q": "Can I easily edit content or upload products by myself after launch?", "a": "Absolutely! Your website will feature a user-friendly admin dashboard. You will be able to update text, images and products without any technical or coding knowledge. Video guides can also be provided upon request."}
+    ],
     "buttons": [
-      { "label": "Ask for a dashboard", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20an%20Excel%20dashboard.", "style": "primary", "icon": "wa" }
+      {"label": "Ask for a test demo on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20would%20like%20a%20website.%20Can%20I%20see%20a%20test%20demo%3F", "style": "outline", "icon": "wa"}
     ]
   },
   {
-    "slug": "logo-social-design",
-    "title": "Logo and social media design",
-    "icon": "image",
-    "summary": "Logos, posters and social media posts made in Photoshop and Illustrator.",
-    "image": { "src": "/assets/images/IMAGE05.PNG", "alt": "Graphic design sample" },
-    "priceFrom": 15,
-    "delivery": "2 to 4 days",
-    "description": ["I design logos, posters, banners and social media posts that match your brand."],
-    "includes": ["2 to 3 first concepts", "Print and web ready files", "Source file (AI or PSD)", "3 rounds of revisions"],
+    "slug": "clash-of-clans-account-boosting",
+    "title": "Clash of Clans (CoC) Account Boosting & Village Building",
+    "category": "Game services",
+    "icon": "shield",
+    "seo": {
+      "title": "Professional Clash of Clans (CoC) Account Boosting & Building | arafatbin.com",
+      "titleSuffix": false,
+      "description": "Max out your Clash of Clans Town Hall, Heroes, and Walls fast and safely! Premium CoC account boosting and village building service in whole world at arafatbin.com.",
+      "keywords": ["Clash of Clans account boosting", "CoC village building service", "CoC base upgrade service", "professional CoC player", "Clash of Clans account maxing", "arafatbin.com", "Trusted CoC booster", "Town Hall maxing service", "CoC hero upgrade service", "safe Clash of Clans management", "CoC trophy pushing"]
+    },
+    "packagesTitle": "Pricing & packages",
+    "priceLabel": "Price",
+    "packages": [
+      {"name": "Resource Farming Package (Gold/Elixir/Dark Elixir)", "prices": {"USD": 10}},
+      {"name": "Monthly Account Building (1 Month Full Care)", "prices": {"USD": 19.9}},
+      {"name": "Custom Town Hall Maxing Package", "prices": {"USD": 65}}
+    ],
+    "images": [
+      {"src": "/assets/images/Clash of Clans account boosting arafatbin.com 01.png", "alt": "Clash of Clans account boosting and village building service by arafatbin.com"},
+      {"src": "/assets/images/Clash of Clans account boosting arafatbin.com 02.png", "alt": "CoC Town Hall, hero and resource maxing service from arafatbin.com"}
+    ],
+    "summary": "Manual Clash of Clans account management: resource farming, base and hero upgrades, Town Hall maxing and trophy pushing, with a 24–48 hour test run.",
+    "about": "⚔️ Want to max out your Clash of Clans account without the daily grind? Stuck with rushed Town Halls, underleveled Heroes or low resources? Let an expert handle your village! Powered by arafatbin.com, we offer professional Clash of Clans Account Management & Village Building Services to upgrade your base safely, quickly and efficiently.",
+    "description": [
+      "Service type: Clash of Clans (CoC) professional account boosting & management.",
+      "Platforms supported: Android & iOS (via Supercell ID).",
+      "Play style: 100% legit, manual gameplay (no mods/bots).",
+      "Strategic Base Upgrades: prioritizing offense (offensive troops, Heroes, Army Camps) and key defenses for efficient progression.",
+      "Resource Farming: continuous attack sessions to keep your Builders and Laboratory 100% active.",
+      "Custom Orders: dedicated focus on specific goals (e.g. maxing Heroes, wall grinding, Clan War League preparation).",
+      "Daily Progress Reports: regular updates and screenshots sent to you so you can track your village growth."
+    ],
+    "usageTitle": "Usage Guide & Customer Rules",
+    "usageIntro": "Please keep the following guidelines in mind after placing your order:",
+    "usage": [
+      "✅ Provide Supercell ID OTP promptly: share the login code sent to your email when requested so we can access the account smoothly.",
+      "✅ Coordinate login times: inform us before logging in so both parties do not attempt to play simultaneously.",
+      "❌ Do not waste resources mid-service: avoid spending farmed Gold, Elixir or Dark Elixir meant for scheduled upgrades without notifying us.",
+      "❌ Do not share access with third parties: do not share your Supercell ID with other players or sellers while our management package is active."
+    ],
+    "features": [
+      {"icon": "home", "text": "Complete Village Building: upgrading Town Hall, Defenses, Walls and Troops strategically."},
+      {"icon": "award", "text": "Hero & Resource Maxing: dedicated farming for Gold, Elixir and Dark Elixir to keep your Heroes upgrading nonstop."},
+      {"icon": "shield", "text": "100% Safe & Secure: manual playing only! No hacks, bots or third-party scripts used."},
+      {"icon": "check", "text": "Test Management Option: hand over your account for a 24–48 hour test run to see quick progress before committing long-term."},
+      {"icon": "lock", "text": "Full Privacy Guaranteed: your Supercell ID and personal account details remain completely confidential."},
+      {"icon": "star", "text": "War & Trophy Pushing: strategic attacks in Clan Wars and League trophy pushes upon request."}
+    ],
+    "faq": [
+      {"q": "How does the Clash of Clans boosting process work?", "a": "You provide us login access via Supercell ID (login code). Our experienced CoC player logs into your account and plays manually to farm resources, manage builders and upgrade your base according to your chosen plan."},
+      {"q": "Can I test your service before committing to a full package?", "a": "Yes! We offer a short test trial (24–48 hours) where we log in, farm resources and start base upgrades so you can witness our progress and speed firsthand. Once you are satisfied with the test results, you can select a full monthly or custom package."},
+      {"q": "Is my account safe from bans or stealing?", "a": "All playing is done 100% manually without bots, mods or third-party tools. Additionally, Supercell ID uses a one-time OTP login sent to your email, so your email password remains completely secure with you."},
+      {"q": "What is your Refund & Satisfaction Policy?", "a": "If we fail to meet the agreed upgrade milestones during your package period or if an unresolved issue arises on our end before setup, we will issue a partial or full refund based on our agreement."},
+      {"q": "Can I log into my account and play while the service is active?", "a": "Yes, but you must inform us beforehand to avoid logging in during an active attack or War battle. We coordinate playing schedules with you so your gameplay isn't interrupted."}
+    ],
     "buttons": [
-      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20a%20design.", "style": "primary", "icon": "wa" }
-    ]
-  },
-  {
-    "slug": "data-entry",
-    "title": "Data entry",
-    "icon": "table",
-    "summary": "Fast and accurate data entry in Excel, Word or Google Sheets.",
-    "image": { "src": "/assets/images/IMAGE07.JPG", "alt": "Computer training lab" },
-    "priceFrom": 5,
-    "delivery": "1 to 3 days",
-    "description": ["I type, clean and organise your data in Excel, Word or Google Sheets, with careful checking."],
-    "includes": ["Copy typing and form filling", "Data cleaning and formatting", "PDF to Excel or Word"],
-    "buttons": [
-      { "label": "Order on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20need%20data%20entry%20work.", "style": "primary", "icon": "wa" }
+      {"label": "Ask for a 24–48 hour test run on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%2024-48%20hour%20test%20run%20for%20Clash%20of%20Clans%20account%20boosting.", "style": "outline", "icon": "wa"}
     ]
   }
 ]

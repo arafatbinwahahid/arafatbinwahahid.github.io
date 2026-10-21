@@ -326,3 +326,8 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .opts-col .opt > span { justify-content: space-between; flex-wrap: wrap; }
 .plan-price { color: var(--primary); font-weight: 700; }
 .opt input:disabled + span { opacity: .55; cursor: not-allowed; }
+
+/* Service packages */
+.packages { list-style: none; display: grid; gap: .6rem; margin: .6rem 0 0; }
+.packages li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem 1rem; padding: .9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: #fff; }
+.packages li > div { display: grid; gap: .15rem; min-width: 0; }

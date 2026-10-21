@@ -60,9 +60,14 @@ const shopCard = (p) => `<article class="card" data-cat="${esc(p.category)}">
 
 const benefits = () => `<ul class="benefits">${shopText.benefits.map((b) => `<li><span class="ic">${icon(b.icon)}</span><span><b>${esc(b.title)}</b><span>${esc(b.text)}</span></span></li>`).join('')}</ul>`;
 
-const serviceCard = (s) => `<a class="card card-pad" href="/services/${esc(s.slug)}/">
-<span class="ic">${icon(s.icon)}</span><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p>
-<p class="meta">${s.priceFrom != null ? `<span>${esc(servicesText.fromLabel)} <b>${formatPrice(s.priceFrom)}</b></span>` : ''}${s.delivery ? `<span>${icon('clock')}${esc(s.delivery)}</span>` : ''}</p></a>`;
+// Lowest package price, in the currency of the first package
+const serviceFrom = (s) => {
+  const cur = Object.keys(s.packages[0].prices)[0];
+  return formatPrice(Math.min(...s.packages.map((p) => p.prices[cur]).filter((v) => v != null)), cur);
+};
+const serviceCard = (s) => `<a class="card" href="/services/${esc(s.slug)}/">
+<div class="card-img">${img(s.images[0], { sizes: CARD })}</div>
+<div class="card-body"><p class="kicker">${esc(s.category)}</p><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><p class="price"><span class="from">${esc(servicesText.fromLabel)}</span> <b>${serviceFrom(s)}</b></p></div></a>`;
 
 const postCard = (p) => `<a class="card" href="/blog/${esc(p.slug)}/">
 <div class="card-img">${img(p.image)}</div>
@@ -83,7 +88,7 @@ const figure = (image) => (image?.src ? `<figure class="fig">${img(image)}${imag
 // ---- Home ----
 const homeSections = {
   products: (s) => section(grid(products.slice(0, s.limit).map(productCard)), s),
-  services: (s) => section(grid(services.slice(0, s.limit).map(serviceCard), 4), s),
+  services: (s) => section(grid(services.slice(0, s.limit).map(serviceCard), 2), s),
   about: (s) => section(`<div class="split"><div>${img(s.image)}</div><div><h2>${esc(s.title)}</h2>${paras(s.text)}${btns(s.buttons)}</div></div>`, { background: s.background }),
   work: (s) => section(grid(workPage.projects.slice(0, s.limit).map(workCard), 2), s),
   reviews: (s) => section(grid(reviewsPage.items.slice(0, s.limit).map(reviewCard)), s),
@@ -112,6 +117,19 @@ function homePage() {
   return { path: '/', seo: d.seo, body, schema: [person, website, org].filter(Boolean) };
 }
 
+// ---- Blocks shared by product and service pages ----
+const gallery = (images) => `<div class="gallery">${images.map((im, i) => `<div class="gallery-main" data-slide="${i}"${i ? ' hidden' : ''}>${img(im, { eager: i === 0 })}</div>`).join('')}${images.length > 1
+  ? `<div class="thumbs">${images.map((im, i) => `<button class="thumb" type="button" data-thumb="${i}" aria-label="Image ${i + 1}"${i ? '' : ' aria-current="true"'}>${img(im, { sizes: '96px' })}</button>`).join('')}</div>` : ''}</div>`;
+
+const infoSection = (it, S) => section(`<div class="split split-top"><div class="prose-sm"><h2>${esc(S.about)}</h2><p>${esc(it.about)}</p>
+<h3>${esc(S.description)}</h3>${paras(it.description)}${it.usage?.length ? `<h3>${esc(it.usageTitle || S.usage)}</h3>${it.usageIntro ? `<p>${esc(it.usageIntro)}</p>` : ''}<ol class="steps-list">${it.usage.map((u) => `<li>${esc(u)}</li>`).join('')}</ol>` : ''}</div>
+<div><h2>${esc(S.features)}</h2><ul class="features">${it.features.map((f) => `<li><span class="ic">${icon(f.icon || 'check')}</span><span>${esc(f.text)}</span></li>`).join('')}</ul></div></div>`, { background: 'soft' });
+
+const faqSection = (faq, title) => (faq?.length ? section(`<div class="faq narrow">${faq.map((i) => `<details><summary>${esc(i.q)}</summary><p>${esc(i.a)}</p></details>`).join('')}</div>`, { title }) : '');
+
+// "Get in the product queue" box from data/pages/shop.json
+const queueSection = () => { const q = shopText.queue; return section(`<div class="cta"><h2>${esc(q.title)}</h2>${paras(q.lines)}${btns(q.buttons)}</div>`); };
+
 // ---- Shop ----
 function shopPage() {
   const cats = [...new Set(products.map((p) => p.category))];
@@ -120,13 +138,12 @@ function shopPage() {
     : '<div></div>';
   const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' });
   const list = { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: absUrl(`/shop/${p.slug}/`), name: p.title })) };
-  const q = shopText.queue;
   return {
     path: '/shop/', seo: shopText.seo, crumbs, schema: [list], cart: true,
     body: pageHero(shopText.hero, crumbs)
       + section(`<h2 class="sr">${esc(shopText.productsTitle)}</h2><div class="toolbar">${filters}${currencySelect()}</div><div class="grid g3" id="products">${products.map(shopCard).join('')}</div>${policyLinks()}`)
       + section(benefits(), { background: 'soft' })
-      + section(`<div class="cta"><h2>${esc(q.title)}</h2>${paras(q.lines)}${btns(q.buttons)}</div>`),
+      + queueSection(),
   };
 }
 
@@ -134,8 +151,6 @@ function productPage(p) {
   const S = shopText.sections;
   const url = `/shop/${p.slug}/`;
   const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' }, { label: p.title, href: url });
-  const gallery = `<div class="gallery">${p.images.map((im, i) => `<div class="gallery-main" data-slide="${i}"${i ? ' hidden' : ''}>${img(im, { eager: i === 0 })}</div>`).join('')}${p.images.length > 1
-    ? `<div class="thumbs">${p.images.map((im, i) => `<button class="thumb" type="button" data-thumb="${i}" aria-label="Image ${i + 1}"${i ? '' : ' aria-current="true"'}>${img(im, { sizes: '96px' })}</button>`).join('')}</div>` : ''}</div>`;
   const opts = optionsOf(p);
   const first = opts.find((o) => o.stock > 0) || opts[0];
   const stockText = (o) => (o.stock > 0 ? shopText.stockLabel.replace('{n}', o.stock) : shopText.soldOutLabel);
@@ -146,10 +161,6 @@ function productPage(p) {
   const buy = `<div class="buy" data-buy="${esc(first.id)}"><p class="kicker">${esc(p.category)}</p><p class="price price-lg" data-main-price>${priceOf(first)}</p>${plans}${currencySelect()}
 <p class="stock${first.stock > 0 ? '' : ' stock-out'}" data-stock-text>${esc(stockText(first))}</p>${qty}
 ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]) : ''}<p class="muted">${esc(shopText.formatLabel)}: ${esc(p.format)}</p>${policyLinks()}</div>`;
-  const info = `<div class="split split-top"><div class="prose-sm"><h2>${esc(S.about)}</h2><p>${esc(p.about)}</p>
-<h3>${esc(S.description)}</h3>${paras(p.description)}${p.usage?.length ? `<h3>${esc(p.usageTitle || S.usage)}</h3>${p.usageIntro ? `<p>${esc(p.usageIntro)}</p>` : ''}<ol class="steps-list">${p.usage.map((u) => `<li>${esc(u)}</li>`).join('')}</ol>` : ''}</div>
-<div><h2>${esc(S.features)}</h2><ul class="features">${p.features.map((f) => `<li><span class="ic">${icon(f.icon || 'check')}</span><span>${esc(f.text)}</span></li>`).join('')}</ul></div></div>`;
-  const faq = p.faq?.length ? section(`<div class="faq narrow">${p.faq.map((i) => `<details><summary>${esc(i.q)}</summary><p>${esc(i.a)}</p></details>`).join('')}</div>`, { title: S.faq }) : '';
   const reviews = p.reviews?.length ? section(grid(p.reviews.map(reviewCard)), { title: S.reviews, background: 'soft' }) : '';
   const availability = `https://schema.org/${stockOf(p) > 0 ? 'InStock' : 'OutOfStock'}`;
   const offers = payments.currencies.map((c) => (hasPlans(p)
@@ -161,8 +172,8 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
   };
   return {
     path: url, seo: { title: p.title, description: p.summary, ...p.seo, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
-    body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery}${buy}</div>`)
-      + section(info, { background: 'soft' }) + section(benefits()) + faq + reviews,
+    body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery(p.images)}${buy}</div>`)
+      + infoSection(p, S) + section(benefits()) + faqSection(p.faq, S.faq) + reviews,
   };
 }
 
@@ -230,21 +241,29 @@ function servicesPage() {
   return {
     path: '/services/', seo: servicesText.seo, crumbs,
     body: pageHero(servicesText.hero, crumbs) + section(grid(services.map(serviceCard), 2))
-      + (pr ? section(`<ol class="steps">${pr.steps.map((s, i) => `<li class="card card-pad"><span class="num">${i + 1}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></li>`).join('')}</ol>`, { title: pr.title, background: 'soft' }) : ''),
+      + (pr ? section(`<ol class="steps">${pr.steps.map((st, i) => `<li class="card card-pad"><span class="num">${i + 1}</span><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></li>`).join('')}</ol>`, { title: pr.title, background: 'soft' }) : '')
+      + queueSection(),
   };
 }
 
 function servicePage(s) {
-  const crumbs = crumbsOf({ label: servicesText.hero.title, href: '/services/' }, { label: s.title, href: `/services/${s.slug}/` });
+  const T = servicesText;
+  const url = `/services/${s.slug}/`;
+  const crumbs = crumbsOf({ label: T.hero.title, href: '/services/' }, { label: s.title, href: url });
+  const price = (pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return formatPrice(v, cur); };
+  const order = (pk) => whatsapp(T.orderMessage.replace('{service}', s.title).replace('{package}', pk.name).replace('{price}', price(pk)));
+  const packages = `<h2 class="h3">${esc(s.packagesTitle)}</h2><ul class="packages">${s.packages.map((pk) => `<li><div><b>${esc(pk.name)}</b><span class="muted">${esc(s.priceLabel)} <b class="plan-price">${price(pk)}</b></span></div>
+<a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a></li>`).join('')}</ul>`;
+  const box = `<div class="buy"><p class="kicker">${esc(s.category)}</p><p class="price price-lg"><span class="from">${esc(T.fromLabel)}</span> <b>${serviceFrom(s)}</b></p>${packages}${btns(s.buttons)}${policyLinks()}</div>`;
   const schema = {
-    '@context': 'https://schema.org', '@type': 'Service', name: s.title, description: s.summary, provider: { '@type': 'Person', name: site.name, url: site.url }, areaServed: 'Worldwide',
-    ...(s.priceFrom != null && { offers: { '@type': 'Offer', price: s.priceFrom, priceCurrency: site.currency } }),
+    '@context': 'https://schema.org', '@type': 'Service', name: s.title, serviceType: s.category, description: s.seo?.description || s.summary,
+    image: s.images.map((im) => absUrl(encodeURI(im.src))), provider: { '@type': 'Person', name: site.name, url: site.url }, areaServed: 'Worldwide',
+    offers: s.packages.map((pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return { '@type': 'Offer', name: pk.name, price: v, priceCurrency: cur, url: absUrl(url) }; }),
   };
   return {
-    path: `/services/${s.slug}/`, seo: { title: s.title, description: s.summary, image: s.image?.src }, crumbs, schema: [schema],
-    body: pageHero({ title: s.title, text: s.summary }, crumbs) + section(`<div class="split split-top"><div>${img(s.image, { eager: true })}</div><div>
-<p class="meta meta-lg">${s.priceFrom != null ? `<span>${esc(servicesText.fromLabel)} <b>${formatPrice(s.priceFrom)}</b></span>` : ''}${s.delivery ? `<span>${icon('clock')}${esc(servicesText.deliveryLabel)}: ${esc(s.delivery)}</span>` : ''}</p>
-${paras(s.description)}<h2 class="h3">${esc(servicesText.includesTitle)}</h2>${bullets(s.includes)}${btns(s.buttons)}</div></div>`),
+    path: url, seo: { title: s.title, description: s.summary, ...s.seo, image: s.images[0]?.src }, crumbs, schema: [schema],
+    body: pageHero({ title: s.title, text: s.summary }, crumbs) + section(`<div class="split split-top">${gallery(s.images)}${box}</div>`)
+      + infoSection(s, T.sections) + faqSection(s.faq, T.sections.faq) + queueSection(),
   };
 }
 
