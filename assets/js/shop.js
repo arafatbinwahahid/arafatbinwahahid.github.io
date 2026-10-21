@@ -192,11 +192,19 @@ function renderPayment() {
   if (!radios.some((r) => r.value === method[currency]) && radios[0]) method[currency] = radios[0].value;
   radios.forEach((r) => { r.checked = r.value === method[currency]; });
   $$('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== method[currency]; });
+  // PayPal fee (payments.json "fees") is shown as its own line and added to the total, only while PayPal is chosen
+  const fee = feeNow();
+  $('[data-fee-line]').hidden = !fee;
+  $('[data-fee]').textContent = money(fee);
+  $$('[data-pay-main] [data-cart-total]').forEach((n) => { n.textContent = money(round(total() + fee)); });
   $$('[data-amount]').forEach((a) => { if (!a.dataset.touched) a.value = total(); });
   $$('[data-panel]:not([hidden]) [data-paypal]').forEach(paypalButtons);
 }
 
 // ---- PayPal / card buttons (payments.json "paypalClientId", code in paypal.js); load when the PayPal panel opens ----
+const feeBox = () => $(`[data-panel="${method[currency]}"] [data-fees]`);
+const feeNow = () => { const b = feeBox(); return b && window.payPalFee ? window.payPalFee(total(), JSON.parse(b.dataset.fees)) : 0; };
+
 function paypalButtons(box) {
   const wrap = box.closest('.paypal-box');
   const say = (text, ok) => { const s = $('.status', wrap); s.textContent = text; s.className = `status ${ok ? 'ok' : 'err'}`; };
@@ -208,7 +216,7 @@ function paypalButtons(box) {
       say('');
       return true;
     },
-    order: () => ({ id: orderId(), items: lines().map((l) => ({ name: name(l.p), sku: l.id, qty: l.qty, unit: l.unit })) }),
+    order: () => ({ id: orderId(), items: lines().map((l) => ({ name: name(l.p), sku: l.id, qty: l.qty, unit: l.unit })), fee: feeNow(), feeLabel: wrap.dataset.feeLabel }),
     paid: (info) => submitOrder(wrap, info),
     error: () => say(fill(T.paypal.error, { id: orderId() })),
     // PayPal could not load: show the WhatsApp message instead of an empty box
@@ -272,7 +280,9 @@ async function submitOrder(form, paypal) {
     if (v('message')) data.Message = v('message');
   } else if (paypal) {
     Object.assign(data, paypal.fields);
-    if (paypal.amount !== sum) data['Amount check'] = `PayPal amount differs from the order total ${money(sum)}`;
+    const fee = feeNow();
+    if (fee) Object.assign(data, { 'PayPal fee added': money(fee), 'Buyer paid (order + fee)': money(round(sum + fee)) });
+    if (Math.abs(paypal.amount - round(sum + fee)) > 0.001) data['Amount check'] = `PayPal amount differs from the order total ${money(round(sum + fee))}`;
   } else {
     data['Amount paid (entered by customer)'] = `${v('amount')} ${currency}`;
     if (Number(v('amount')) !== sum) data['Amount check'] = `Entered amount differs from the order total ${money(sum)}`;

@@ -64,6 +64,8 @@
   "orderMessage": "Hello Arafat, I am interested in {service}: {package} ({price}).",
   "paypal": {
     "payLabel": "Pay {price} with PayPal or card",
+    "payLabelFee": "Pay {total} with PayPal or card (incl. {fee} PayPal fee)",
+    "feeLabel": "PayPal fee",
     "note": "Pay the package price now with PayPal or any debit or credit card. We then message you to start the work.",
     "doneTitle": "Payment received",
     "doneText": "Thank you! Your order ID is {id}. We will contact you soon. You can also send this order ID on WhatsApp to start right away.",

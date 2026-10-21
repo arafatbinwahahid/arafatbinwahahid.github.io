@@ -3,10 +3,20 @@
 const list = document.querySelector('.packages[data-service]');
 const D = list.dataset;
 const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? '');
+const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+const feeOf = (box, price) => (box.dataset.fees && window.payPalFee ? window.payPalFee(price, JSON.parse(box.dataset.fees)) : 0);
 const newId = () => {
   const d = new Date();
   return `${D.orderPrefix}-${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 };
+
+// With PayPal fees set, the buttons show the price the buyer pays: price + fee
+list.querySelectorAll('[data-pay-open]').forEach((button) => {
+  const box = button.closest('li').querySelector('.paypal-box');
+  const price = Number(box.dataset.price);
+  const fee = feeOf(box, price);
+  if (fee) button.lastChild.textContent = fill(D.paylabelfee, { total: fmt(price + fee), fee: fmt(fee), price: fmt(price) });
+});
 
 list.querySelectorAll('[data-pay-open]').forEach((button) => button.addEventListener('click', () => {
   const box = button.closest('li').querySelector('.paypal-box');
@@ -16,9 +26,10 @@ list.querySelectorAll('[data-pay-open]').forEach((button) => button.addEventList
   const say = (text, ok) => { const s = box.querySelector('.status'); s.textContent = text; s.className = `status ${ok ? 'ok' : 'err'}`; };
   const pk = box.dataset;
   const price = Number(pk.price);
+  const fee = feeOf(box, price);
   const id = newId();
   window.payPalButtons(box.querySelector('[data-paypal]'), {
-    order: () => ({ id, items: [{ name: `${D.service}: ${pk.package}`, sku: pk.sku, qty: 1, unit: price }] }),
+    order: () => ({ id, items: [{ name: `${D.service}: ${pk.package}`, sku: pk.sku, qty: 1, unit: price }], fee, feeLabel: pk.feeLabel }),
     paid: async (info) => {
       const now = new Date();
       const data = {
@@ -30,11 +41,12 @@ list.querySelectorAll('[data-pay-open]').forEach((button) => button.addEventList
         Service: D.service,
         Package: pk.package,
         'Package price': `USD ${price.toFixed(2)}`,
+        ...(fee && { 'PayPal fee added': `USD ${fee.toFixed(2)}`, 'Buyer paid (price + fee)': `USD ${(price + fee).toFixed(2)}` }),
         ...info.fields,
         'Submitted at': `${now.toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'long' })} (${now.toISOString()})`,
         Page: location.href,
       };
-      if (info.amount !== price) data['Amount check'] = `PayPal amount differs from the package price USD ${price.toFixed(2)}`;
+      if (Math.abs(info.amount - (price + fee)) > 0.001) data['Amount check'] = `PayPal amount differs from the price USD ${(price + fee).toFixed(2)}`;
       try {
         await window.sendToWeb3Forms(data);
       } catch {

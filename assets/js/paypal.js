@@ -2,7 +2,7 @@
 // PayPal's own script loads only the first time buttons are shown.
 //   window.payPalButtons(box, { order, check, paid, error, hide })
 //   box: element with data-paypal="<Client ID>" and data-currency="USD"
-//   order(): { id, items: [{ name, sku, qty, unit }] }   check(): false stops the payment before PayPal opens
+//   order(): { id, items: [{ name, sku, qty, unit }], fee }   check(): false stops the payment before PayPal opens
 //   paid(info): runs after the money is captured        hide(): PayPal could not load
 (() => {
   let sdk = null;
@@ -14,6 +14,34 @@
     document.head.appendChild(s);
   }));
   const money = (code, cents) => ({ currency_code: code, value: (cents / 100).toFixed(2) });
+
+  // PayPal fee to add on top of a price so the full price reaches you (payments.json → PayPal → "fees"):
+  // PayPal keeps percent + international percent + fixed, and conversionPercent is lost when you withdraw in another currency.
+  // gross = (price ÷ (1 − conversion) + fixed) ÷ (1 − percent), rounded up to the cent.
+  window.payPalFee = (price, f) => {
+    if (!f) return 0;
+    const p = ((f.percent || 0) + (f.internationalPercent || 0)) / 100;
+    const c = (f.conversionPercent || 0) / 100;
+    if (!p && !c && !f.fixed) return 0;
+    const gross = (price / (1 - c) + (f.fixed || 0)) / (1 - p);
+    return Math.ceil(Math.round((gross - price) * 1e6) / 1e4) / 100;
+  };
+
+  // What PayPal really charged on this payment (from the capture), so you can set "fees" in payments.json from real numbers
+  const amt = (m) => (m?.value ? `${m.value} ${m.currency_code}` : '');
+  function received(b) {
+    if (!b) return {};
+    const fee = Number(b.paypal_fee?.value || 0);
+    const gross = Number(b.gross_amount?.value || 0);
+    const out = {
+      'PayPal fee charged': amt(b.paypal_fee),
+      'PayPal fee %': gross && fee ? `${((fee / gross) * 100).toFixed(2)}% of ${amt(b.gross_amount)}` : '',
+      'You received (net)': amt(b.net_amount),
+      'Exchange rate used': b.exchange_rate?.value ? `1 ${b.exchange_rate.source_currency} = ${b.exchange_rate.value} ${b.exchange_rate.target_currency}` : '',
+      'Received in your currency': amt(b.receivable_amount),
+    };
+    return Object.fromEntries(Object.entries(out).filter(([, v]) => v));
+  }
 
   window.payPalButtons = (box, { order, check = () => true, paid, error, hide }) => {
     if (box.dataset.ready) return;
@@ -29,6 +57,8 @@
         // The order ID (as Invoice ID) and every line show in your PayPal activity and in both PayPal receipts
         createOrder: (data, actions) => {
           const o = order();
+          // The fee is its own line, so the buyer's receipt and your PayPal activity show it
+          if (o.fee > 0) o.items = [...o.items, { name: o.feeLabel || 'PayPal fee', sku: 'paypal-fee', qty: 1, unit: o.fee }];
           const total = o.items.reduce((n, i) => n + Math.round(i.unit * 100) * i.qty, 0);
           return actions.order.create({
             purchase_units: [{
@@ -53,6 +83,7 @@
               'PayPal status': `${o.status}${cap.status ? ` / ${cap.status}` : ''}`,
               'PayPal amount': `${cap.amount?.value || ''} ${cap.amount?.currency_code || ''}`.trim(),
               'PayPal payer': `${name} <${email}>`,
+              ...received(cap.seller_receivable_breakdown),
             },
           });
         },
