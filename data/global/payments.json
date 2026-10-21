@@ -14,10 +14,10 @@
           "icon": "bank",
           "intro": "Transfer the order total to the bank account below.",
           "details": [
-            { "label": "Bank name", "value": "" },
+            { "label": "Bank name", "value": "Bank Dhofar" },
             { "label": "Account holder", "value": "Arafat Bin Wahahid" },
-            { "label": "Account number", "value": "" },
-            { "label": "IBAN", "value": "" }
+            { "label": "Account number", "value": "0101 5671 80 4001" },
+            { "label": "IBAN", "value": "IBAN OM10 0250 0001 0156 7180 400" }
           ],
           "link": { "label": "", "href": "" },
           "poster": { "src": "", "alt": "Bank transfer details for OMR payments" },
