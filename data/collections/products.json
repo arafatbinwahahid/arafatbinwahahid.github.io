@@ -1,14 +1,28 @@
 [
   {
-    "id": "P005",
-    "slug": "netflix-shared-account",
     "title": "Netflix Shared Account & Standard/Premium",
+    "slug": "netflix-shared-account",
+    "id": "P005",
+    "status": "",
     "category": "Streaming subscriptions",
     "seo": {
       "title": "Buy Netflix Shared Account | Standard & Premium 4K | BD",
       "titleSuffix": false,
       "description": "Affordable Netflix shared accounts, Standard and Premium 4K UHD, with a personal PIN, test account option and full warranty in Bangladesh. Order now.",
-      "keywords": ["Netflix shared account", "cheap Netflix subscription Bangladesh", "Netflix premium profile", "Netflix Standard Plan BD", "buy Netflix account", "Netflix 4K UHD shared screen", "Netflix profile with PIN", "Netflix monthly subscription BD", "reliable Netflix seller", "Netflix private profile", "official Netflix account cheap price", "Netflix test account BD"],
+      "keywords": [
+        "Netflix shared account",
+        "cheap Netflix subscription Bangladesh",
+        "Netflix premium profile",
+        "Netflix Standard Plan BD",
+        "buy Netflix account",
+        "Netflix 4K UHD shared screen",
+        "Netflix profile with PIN",
+        "Netflix monthly subscription BD",
+        "reliable Netflix seller",
+        "Netflix private profile",
+        "official Netflix account cheap price",
+        "Netflix test account BD"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -44,14 +58,60 @@
       "meta": []
     },
     "variants": [
-      {"id": "P005-STD-1M", "name": "Standard 1080p HD · 1 Screen · 1 Month", "prices": {"OMR": 2.3, "USD": 6, "BDT": 730}, "stock": 3},
-      {"id": "P005-STD-3M", "name": "Standard 1080p HD · 1 Screen · 3 Months", "prices": {"OMR": 5.8, "USD": 15, "BDT": 1830}, "stock": 1},
-      {"id": "P005-PRE-1M", "name": "Premium 4K UHD + HDR · 1 Screen · 1 Month", "prices": {"OMR": 3.8, "USD": 10, "BDT": 1220}, "stock": 5},
-      {"id": "P005-PRE-3M", "name": "Premium 4K UHD + HDR · 1 Screen · 3 Months", "prices": {"OMR": 9.6, "USD": 25, "BDT": 3050}, "stock": 10}
+      {
+        "id": "P005-STD-1M",
+        "name": "Standard 1080p HD · 1 Screen · 1 Month",
+        "prices": {
+          "OMR": 2.3,
+          "USD": 1,
+          "BDT": 730
+        },
+        "compareAtPrices": null,
+        "stock": 3
+      },
+      {
+        "id": "P005-STD-3M",
+        "name": "Standard 1080p HD · 1 Screen · 3 Months",
+        "prices": {
+          "OMR": 5.8,
+          "USD": 15,
+          "BDT": 1830
+        },
+        "compareAtPrices": null,
+        "stock": 1
+      },
+      {
+        "id": "P005-PRE-1M",
+        "name": "Premium 4K UHD + HDR · 1 Screen · 1 Month",
+        "prices": {
+          "OMR": 3.8,
+          "USD": 10,
+          "BDT": 1220
+        },
+        "compareAtPrices": null,
+        "stock": 5
+      },
+      {
+        "id": "P005-PRE-3M",
+        "name": "Premium 4K UHD + HDR · 1 Screen · 3 Months",
+        "prices": {
+          "OMR": 9.6,
+          "USD": 25,
+          "BDT": 3050
+        },
+        "compareAtPrices": null,
+        "stock": 10
+      }
     ],
     "images": [
-      {"src": "/assets/images/products/netflix-shared-account-01.jpg", "alt": "Netflix shared accounts sale from arafatbin.com: Standard, Full HD and 4K plans on TV, mobile, laptop and tablet"},
-      {"src": "/assets/images/products/netflix-shared-account-02.jpg", "alt": "Netflix shared account sale poster from arafatbin.com with instant delivery and 24/7 support"}
+      {
+        "src": "/assets/images/products/netflix-shared-account-01.jpg",
+        "alt": "Netflix shared accounts sale from arafatbin.com: Standard, Full HD and 4K plans on TV, mobile, laptop and tablet"
+      },
+      {
+        "src": "/assets/images/products/netflix-shared-account-02.jpg",
+        "alt": "Netflix shared account sale poster from arafatbin.com with instant delivery and 24/7 support"
+      }
     ],
     "summary": "Your own Netflix profile with PIN lock. Standard 1080p or Premium 4K UHD, 1 or 3 months, with a test account before setup.",
     "about": "🎬 Stream your favorite movies & series without breaking the bank! Never miss out on blockbuster Netflix shows again. Get your own secure Netflix Personal Profile complete with PIN protection, flexible plans (Standard & Premium 4K UHD), and a risk-free test account option before final setup.",
@@ -74,24 +134,75 @@
       "❌ Limit to one active device: stick to streaming on 1 device at a time according to your package rules."
     ],
     "features": [
-      {"icon": "user", "text": "1 User, 1 Device: stream smoothly without interruptions on your assigned profile."},
-      {"icon": "lock", "text": "PIN Lock System: keep your watch history private with your own 4-digit security PIN."},
-      {"icon": "tv", "text": "Flexible Streaming Quality: choose HD (Standard) or 4K Ultra HD & HDR (Premium)."},
-      {"icon": "check", "text": "Test First Option: test an active account first; once satisfied, get your personalized custom-named profile."},
-      {"icon": "zap", "text": "Instant Delivery: get your login details within 5–10 minutes of payment confirmation."},
-      {"icon": "shield", "text": "Full Warranty Support: guaranteed service throughout your subscription period."}
+      {
+        "icon": "user",
+        "text": "1 User, 1 Device: stream smoothly without interruptions on your assigned profile."
+      },
+      {
+        "icon": "lock",
+        "text": "PIN Lock System: keep your watch history private with your own 4-digit security PIN."
+      },
+      {
+        "icon": "tv",
+        "text": "Flexible Streaming Quality: choose HD (Standard) or 4K Ultra HD & HDR (Premium)."
+      },
+      {
+        "icon": "check",
+        "text": "Test First Option: test an active account first; once satisfied, get your personalized custom-named profile."
+      },
+      {
+        "icon": "zap",
+        "text": "Instant Delivery: get your login details within 5–10 minutes of payment confirmation."
+      },
+      {
+        "icon": "shield",
+        "text": "Full Warranty Support: guaranteed service throughout your subscription period."
+      }
     ],
     "format": "Netflix login details (email & password) for your assigned profile",
     "faq": [
-      {"q": "What does a \"shared account\" mean?", "a": "It is a primary official Netflix account divided into individual profiles. You will be assigned one exclusive profile that only you will use with your own PIN lock."},
-      {"q": "What is the difference between the Standard and Premium plans?", "a": "The Standard Plan offers Full HD (1080p) video quality, which is ideal for mobiles, tablets and regular screens. The Premium Plan offers Ultra HD (4K) + HDR quality for the ultimate visual experience on 4K TVs and high-res displays."},
-      {"q": "What is your Refund & Return Policy, and can I test before final activation?", "a": "Yes! To ensure complete satisfaction and transparency, we first provide a test account for you to check the streaming quality and service. Once you test it and confirm everything is working smoothly, we will create a brand new custom profile under your name with your own security PIN. If the test account experiences any unresolved technical issue on our end before setup, a full refund will be provided."},
-      {"q": "Can I watch on my mobile and TV at the same time?", "a": "No, a 1-screen package allows streaming on only 1 device at a time. If you want to switch devices, simply pause or log out from the previous device."},
-      {"q": "Can I change the account email or password?", "a": "Absolutely not. Changing the primary email or master password is strictly prohibited and will result in a permanent account block and voided warranty."},
-      {"q": "What happens if the profile stops working or gets locked later?", "a": "We provide full customer support throughout your subscription period. If any technical issue arises, we will quickly resolve it or provide an immediate replacement profile."}
+      {
+        "q": "What does a \"shared account\" mean?",
+        "a": "It is a primary official Netflix account divided into individual profiles. You will be assigned one exclusive profile that only you will use with your own PIN lock."
+      },
+      {
+        "q": "What is the difference between the Standard and Premium plans?",
+        "a": "The Standard Plan offers Full HD (1080p) video quality, which is ideal for mobiles, tablets and regular screens. The Premium Plan offers Ultra HD (4K) + HDR quality for the ultimate visual experience on 4K TVs and high-res displays."
+      },
+      {
+        "q": "What is your Refund & Return Policy, and can I test before final activation?",
+        "a": "Yes! To ensure complete satisfaction and transparency, we first provide a test account for you to check the streaming quality and service. Once you test it and confirm everything is working smoothly, we will create a brand new custom profile under your name with your own security PIN. If the test account experiences any unresolved technical issue on our end before setup, a full refund will be provided."
+      },
+      {
+        "q": "Can I watch on my mobile and TV at the same time?",
+        "a": "No, a 1-screen package allows streaming on only 1 device at a time. If you want to switch devices, simply pause or log out from the previous device."
+      },
+      {
+        "q": "Can I change the account email or password?",
+        "a": "Absolutely not. Changing the primary email or master password is strictly prohibited and will result in a permanent account block and voided warranty."
+      },
+      {
+        "q": "What happens if the profile stops working or gets locked later?",
+        "a": "We provide full customer support throughout your subscription period. If any technical issue arises, we will quickly resolve it or provide an immediate replacement profile."
+      }
     ],
     "reviews": [],
-    "externalLink": {"label": "Ask for a test account on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20Netflix%20test%20account.", "icon": "wa"}
+    "externalLink": {
+      "label": "Ask for a test account on WhatsApp",
+      "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20Netflix%20test%20account.",
+      "icon": "wa"
+    },
+    "brand": "",
+    "sku": "",
+    "deliveryTime": "",
+    "warranty": "",
+    "badge": "",
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "rating": null,
+    "related": []
   },
   {
     "id": "P002",
@@ -102,7 +213,17 @@
       "title": "Custom Vector Portrait from Your Photo | Unlimited Revisions",
       "titleSuffix": false,
       "description": "Turn your photo into a clean vector portrait made in Adobe Illustrator. High resolution PNG and JPG, first draft in 2 days and unlimited revisions. Order now.",
-      "keywords": ["custom vector portrait", "vector portrait from photo", "vector art portrait", "Adobe Illustrator portrait", "cartoon portrait from photo", "vector portrait Fiverr", "profile picture vector art", "vector portrait Oman", "vector portrait Bangladesh"],
+      "keywords": [
+        "custom vector portrait",
+        "vector portrait from photo",
+        "vector art portrait",
+        "Adobe Illustrator portrait",
+        "cartoon portrait from photo",
+        "vector portrait Fiverr",
+        "profile picture vector art",
+        "vector portrait Oman",
+        "vector portrait Bangladesh"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -138,10 +259,27 @@
       "meta": []
     },
     "variants": [
-      {"id": "P002-1", "name": "1 Person · PNG & JPG", "prices": {"OMR": 3.8, "USD": 10, "BDT": 1220}, "compareAtPrices": {"OMR": 5.8, "USD": 15, "BDT": 1830}, "stock": 10}
+      {
+        "id": "P002-1",
+        "name": "1 Person · PNG & JPG",
+        "prices": {
+          "OMR": 3.8,
+          "USD": 10,
+          "BDT": 1220
+        },
+        "compareAtPrices": {
+          "OMR": 5.8,
+          "USD": 15,
+          "BDT": 1830
+        },
+        "stock": 10
+      }
     ],
     "images": [
-      {"src": "/assets/images/products/custom-vector-portrait.jpg", "alt": "Vector portrait example"}
+      {
+        "src": "/assets/images/products/custom-vector-portrait.jpg",
+        "alt": "Vector portrait example"
+      }
     ],
     "summary": "One person, any background colour, delivered as high resolution PNG and JPG.",
     "about": "Your photo redrawn as clean vector art in Adobe Illustrator.",
@@ -157,18 +295,40 @@
       "Receive the final PNG and JPG files."
     ],
     "features": [
-      {"icon": "user", "text": "One person"},
-      {"icon": "image", "text": "Solid colour background"},
-      {"icon": "image", "text": "PNG and JPG"},
-      {"icon": "refresh", "text": "Unlimited revisions"}
+      {
+        "icon": "user",
+        "text": "One person"
+      },
+      {
+        "icon": "image",
+        "text": "Solid colour background"
+      },
+      {
+        "icon": "image",
+        "text": "PNG and JPG"
+      },
+      {
+        "icon": "refresh",
+        "text": "Unlimited revisions"
+      }
     ],
     "format": "PNG, JPG",
     "faq": [
-      {"q": "Which file formats will I receive?", "a": "PNG and JPG."},
-      {"q": "How many revisions are included?", "a": "Unlimited revisions."}
+      {
+        "q": "Which file formats will I receive?",
+        "a": "PNG and JPG."
+      },
+      {
+        "q": "How many revisions are included?",
+        "a": "Unlimited revisions."
+      }
     ],
     "reviews": [],
-    "externalLink": {"label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid", "icon": "globe"}
+    "externalLink": {
+      "label": "Order on Fiverr",
+      "href": "https://www.fiverr.com/arafatwahahid",
+      "icon": "globe"
+    }
   },
   {
     "id": "P003",
@@ -179,7 +339,16 @@
       "title": "Social Media Post Pack: 10 Instagram & Facebook Posts",
       "titleSuffix": false,
       "description": "Get 10 matching social media posts designed in your brand colours, sized for Instagram and Facebook, with editable PSD source files. Order now.",
-      "keywords": ["social media post design", "Instagram post design", "Facebook post design", "social media post pack", "branded social media posts", "PSD social media templates", "social media design Oman", "social media design Bangladesh"],
+      "keywords": [
+        "social media post design",
+        "Instagram post design",
+        "Facebook post design",
+        "social media post pack",
+        "branded social media posts",
+        "PSD social media templates",
+        "social media design Oman",
+        "social media design Bangladesh"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -215,10 +384,22 @@
       "meta": []
     },
     "variants": [
-      {"id": "P003-1", "name": "10 Posts · Instagram & Facebook", "prices": {"OMR": 9.6, "USD": 25, "BDT": 3050}, "stock": 10}
+      {
+        "id": "P003-1",
+        "name": "10 Posts · Instagram & Facebook",
+        "prices": {
+          "OMR": 9.6,
+          "USD": 25,
+          "BDT": 3050
+        },
+        "stock": 10
+      }
     ],
     "images": [
-      {"src": "/assets/images/products/social-media-post-pack.jpg", "alt": "Social media post design sample"}
+      {
+        "src": "/assets/images/products/social-media-post-pack.jpg",
+        "alt": "Social media post design sample"
+      }
     ],
     "summary": "Ten branded posts sized for Instagram and Facebook.",
     "about": "Ten matching social media posts designed for your brand.",
@@ -234,18 +415,40 @@
       "Schedule them on your pages."
     ],
     "features": [
-      {"icon": "image", "text": "10 posts"},
-      {"icon": "globe", "text": "Instagram and Facebook sizes"},
-      {"icon": "pen", "text": "Your logo and colours"},
-      {"icon": "file", "text": "Editable source files"}
+      {
+        "icon": "image",
+        "text": "10 posts"
+      },
+      {
+        "icon": "globe",
+        "text": "Instagram and Facebook sizes"
+      },
+      {
+        "icon": "pen",
+        "text": "Your logo and colours"
+      },
+      {
+        "icon": "file",
+        "text": "Editable source files"
+      }
     ],
     "format": "PNG, PSD",
     "faq": [
-      {"q": "Which file formats will I receive?", "a": "PNG and PSD."},
-      {"q": "Can I edit the posts later?", "a": "Yes. Editable source files are included."}
+      {
+        "q": "Which file formats will I receive?",
+        "a": "PNG and PSD."
+      },
+      {
+        "q": "Can I edit the posts later?",
+        "a": "Yes. Editable source files are included."
+      }
     ],
     "reviews": [],
-    "externalLink": {"label": "Ask a question on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20the%20social%20media%20post%20pack.", "icon": "wa"}
+    "externalLink": {
+      "label": "Ask a question on WhatsApp",
+      "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20the%20social%20media%20post%20pack.",
+      "icon": "wa"
+    }
   },
   {
     "id": "P004",
@@ -256,7 +459,16 @@
       "title": "Excel Data Entry | PDF to Excel, Cleaning & Formatting",
       "titleSuffix": false,
       "description": "Accurate Excel data entry: PDF, image and scanned document to Excel, data cleaning, duplicate removal and formatting. Delivered as XLSX, CSV or Google Sheets.",
-      "keywords": ["Excel data entry service", "PDF to Excel conversion", "data entry Oman", "data entry Bangladesh", "data cleaning service", "spreadsheet formatting", "copy paste data entry", "Google Sheets data entry"],
+      "keywords": [
+        "Excel data entry service",
+        "PDF to Excel conversion",
+        "data entry Oman",
+        "data entry Bangladesh",
+        "data cleaning service",
+        "spreadsheet formatting",
+        "copy paste data entry",
+        "Google Sheets data entry"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -292,10 +504,22 @@
       "meta": []
     },
     "variants": [
-      {"id": "P004-1", "name": "1 Project · XLSX, CSV or Google Sheets", "prices": {"OMR": 5.8, "USD": 15, "BDT": 1830}, "stock": 10}
+      {
+        "id": "P004-1",
+        "name": "1 Project · XLSX, CSV or Google Sheets",
+        "prices": {
+          "OMR": 5.8,
+          "USD": 15,
+          "BDT": 1830
+        },
+        "stock": 10
+      }
     ],
     "images": [
-      {"src": "/assets/images/products/excel-data-entry-service.jpg", "alt": "Professional Excel data entry and spreadsheet management service"}
+      {
+        "src": "/assets/images/products/excel-data-entry-service.jpg",
+        "alt": "Professional Excel data entry and spreadsheet management service"
+      }
     ],
     "summary": "Accurate and professional Excel data entry service for businesses, individuals, and professionals. Get clean, organized, and well-formatted spreadsheets tailored to your needs.",
     "about": "Accurate Excel data entry, cleaning and formatting for your files.",
@@ -310,21 +534,55 @@
       "Receive your organised spreadsheet."
     ],
     "features": [
-      {"icon": "table", "text": "Accurate data entry into Microsoft Excel"},
-      {"icon": "file", "text": "PDF, image, and scanned document to Excel conversion"},
-      {"icon": "refresh", "text": "Copy-paste and data collection tasks"},
-      {"icon": "check", "text": "Data cleaning, sorting, and duplicate removal"},
-      {"icon": "table", "text": "Professional spreadsheet formatting and organization"},
-      {"icon": "table", "text": "Custom Excel tables and basic formulas"},
-      {"icon": "shield", "text": "Confidential handling of client data"},
-      {"icon": "clock", "text": "Timely delivery based on project requirements"}
+      {
+        "icon": "table",
+        "text": "Accurate data entry into Microsoft Excel"
+      },
+      {
+        "icon": "file",
+        "text": "PDF, image, and scanned document to Excel conversion"
+      },
+      {
+        "icon": "refresh",
+        "text": "Copy-paste and data collection tasks"
+      },
+      {
+        "icon": "check",
+        "text": "Data cleaning, sorting, and duplicate removal"
+      },
+      {
+        "icon": "table",
+        "text": "Professional spreadsheet formatting and organization"
+      },
+      {
+        "icon": "table",
+        "text": "Custom Excel tables and basic formulas"
+      },
+      {
+        "icon": "shield",
+        "text": "Confidential handling of client data"
+      },
+      {
+        "icon": "clock",
+        "text": "Timely delivery based on project requirements"
+      }
     ],
     "format": "Microsoft Excel (.xlsx), CSV (.csv), and Google Sheets",
     "faq": [
-      {"q": "Which formats can you deliver?", "a": "Microsoft Excel (.xlsx), CSV (.csv) and Google Sheets."},
-      {"q": "Is my data kept private?", "a": "Yes. Client data is handled confidentially."}
+      {
+        "q": "Which formats can you deliver?",
+        "a": "Microsoft Excel (.xlsx), CSV (.csv) and Google Sheets."
+      },
+      {
+        "q": "Is my data kept private?",
+        "a": "Yes. Client data is handled confidentially."
+      }
     ],
     "reviews": [],
-    "externalLink": {"label": "Ask a question on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20Excel%20data%20entry.", "icon": "wa"}
+    "externalLink": {
+      "label": "Ask a question on WhatsApp",
+      "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20Excel%20data%20entry.",
+      "icon": "wa"
+    }
   }
 ]
