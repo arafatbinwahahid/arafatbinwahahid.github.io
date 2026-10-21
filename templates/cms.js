@@ -144,13 +144,13 @@ const pages = [
     ...['summaryTitle', 'orderIdLabel', 'editCartLabel', 'stockNotice', 'currencyTitle', 'methodTitle', 'payTitle', 'detailsTitle', 'copyLabel', 'copiedLabel', 'stepsTitle', 'locationTitle', 'openMapLabel', 'hoursTitle', 'missingDetails', 'verifyNote', 'noscript'].map((k) => str(k, k)),
     obj('empty', 'Empty cart box', [str('title', 'Title'), txt('text', 'Text'), button()]),
     obj('form', 'Payment form texts', ['nameLabel', 'mobileLabel', 'emailLabel', 'amountLabel', 'transactionLabel', 'dateLabel', 'timeLabel', 'messageLabel', 'submitPayment', 'submitAppointment', 'sending', 'invalidPhone', 'invalidAmount', 'invalidDate', 'invalidTime', 'emptyCart', 'duplicate', 'error'].map((k) => str(k, k))),
-    obj('paypal', 'PayPal box texts', ['title', 'note', 'fallback', 'error', 'paid'].map((k) => str(k, k))),
+    obj('paypal', 'PayPal box texts', ['title', 'note', 'fallback', 'error', 'paid', 'feeLabel'].map((k) => str(k, k))),
     obj('done', 'Thank-you box', [str('title', 'Title'), txt('payment', 'After a payment form', { hint: '{id} = order ID' }), txt('paypal', 'After a PayPal payment'), txt('appointment', 'After an appointment request'), button()]),
   ] },
   { name: 'services', label: 'Services page', icon: 'work', preview_path: 'services/', fields: [
     seo(), hero(), str('fromLabel', '"From" label'), str('orderLabel', 'WhatsApp order button'),
     str('orderMessage', 'WhatsApp message', { hint: '{service}, {package} and {price} are filled in.' }),
-    obj('paypal', 'PayPal on packages', ['payLabel', 'note', 'doneTitle', 'doneText', 'doneWhatsapp', 'error', 'fallback', 'sendError'].map((k) => str(k, k, { hint: k === 'payLabel' ? '{price} = package price' : undefined }))),
+    obj('paypal', 'PayPal on packages', ['payLabel', 'payLabelFee', 'feeLabel', 'note', 'doneTitle', 'doneText', 'doneWhatsapp', 'error', 'fallback', 'sendError'].map((k) => str(k, k, { hint: { payLabel: '{price} = package price', payLabelFee: 'Used when PayPal fees are set: {total} = price + fee, {fee} = the fee' }[k] }))),
     obj('process', '"How it works"', [str('title', 'Title'), list('steps', 'Steps', [str('title', 'Title'), txt('text', 'Text')], { summary: '{{title}}' })]),
     obj('sections', 'Service page headings', ['about', 'description', 'features', 'faq'].map((k) => str(k, k))),
   ] },
@@ -222,8 +222,8 @@ const pages = [
 const variant = () => [
   str('id', 'Plan ID', { required: true, hint: 'Unique, e.g. P005-STD-1M. Never reuse an old ID.' }),
   str('name', 'Plan name', { required: true }),
-  prices('prices', 'Price', 'Fill every currency.'),
-  prices('compareAtPrices', 'Old price (shown crossed out)', 'Optional, for a sale.'),
+  prices('prices', 'Price', 'USD is the main price. A currency with a rate (Settings → Payment methods) is worked out from USD; fill it here only if it has no rate.'),
+  prices('compareAtPrices', 'Old price (shown crossed out)', 'Optional, for a sale. Rates apply here too.'),
   int('stock', 'Stock', { min: 0, default: 0, hint: '0 = sold out' }),
 ];
 const statusField = () => sel('status', 'Status', [{ label: 'Live', value: '' }, { label: 'Draft (hidden from the site)', value: 'draft' }], { default: '', hint: 'Draft hides it from the site, the sitemap and search.' });
@@ -278,6 +278,12 @@ const method = () => [
   str('id', 'Method ID', { required: true, hint: 'e.g. omr-bank. Lowercase and dashes.' }), sel('type', 'Type', ['transfer', 'appointment'], { required: true }),
   bool('enabled', 'Show this method', { default: true }), str('name', 'Name', { required: true }), icon('icon', 'Icon', { required: true }), txt('intro', 'Intro'),
   str('paypalClientId', 'PayPal Client ID', { hint: 'Only for PayPal: the whole Live Client ID (about 80 characters). Never the Secret.' }),
+  obj('fees', 'PayPal fees (added at checkout)', [
+    num('percent', 'Fee % for receiving a payment', { min: 0, max: 50, step: 0.01, hint: 'From your PayPal fee page (Oman account), e.g. the PayPal Checkout or card rate.' }),
+    num('internationalPercent', 'Extra % for buyers in another country', { min: 0, max: 50, step: 0.01, hint: 'Always added, because the site cannot know the buyer’s country.' }),
+    num('fixed', 'Fixed fee per payment (USD)', { min: 0, step: 0.01 }),
+    num('conversionPercent', 'Currency conversion % when you withdraw', { min: 0, max: 50, step: 0.01, hint: 'If PayPal converts USD to OMR when you withdraw to your bank. 0 = no conversion.' }),
+  ], { hint: 'Only for PayPal. All 0 = no fee is added. The buyer pays price + fee, so after PayPal takes its fees you get the full USD price.' }),
   list('details', 'Payment details', [str('label', 'Label'), str('value', 'Value', { hint: 'Empty = hidden, customers are told to ask on WhatsApp.' })], { summary: '{{label}}: {{value}}' }),
   link('link', 'Pay button'), image('poster', 'Poster / QR code', 'payments'),
   obj('location', 'Meeting place (appointments)', [str('name', 'Name'), str('address', 'Address'), str('mapQuery', 'Map location', { hint: 'Coordinates like 16.81,53.47 or a place name' })]),
@@ -322,7 +328,12 @@ const globals = [
   ] },
   { name: 'payments', label: 'Payment methods', icon: 'account_balance', fields: [
     hidden('_help'), sel('defaultCurrency', 'Default currency', CURRENCIES), str('orderPrefix', 'Order ID prefix', { hint: 'e.g. AB → AB-261021-XXXXX' }),
-    list('currencies', 'Currencies', [str('code', 'Code', { required: true }), str('name', 'Name'), list('methods', 'Methods', method(), { summary: '{{name}}' })], { summary: '{{code}} – {{name}}', collapsed: true }),
+    list('currencies', 'Currencies', [
+      str('code', 'Code', { required: true }), str('name', 'Name'),
+      num('rate', 'Rate: 1 USD =', { min: 0, step: 0.0001, hint: 'Your own rate, e.g. 0.385 for OMR or 122 for BDT. With a rate, every product price in this currency is worked out from its USD price. 0 = use the prices written on each product.' }),
+      num('roundTo', 'Round prices up to', { min: 0, step: 0.001, hint: 'e.g. 0.1 for OMR or 5 for BDT. 0 = the smallest coin. Always rounds up, never down.' }),
+      list('methods', 'Methods', method(), { summary: '{{name}}' }),
+    ], { summary: '{{code}} – {{name}}', collapsed: true }),
   ] },
   { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' })] },
   { name: 'icons', label: 'Icons', icon: 'interests', fields: [

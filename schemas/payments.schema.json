@@ -14,6 +14,8 @@
         "required": ["code", "name", "methods"],
         "properties": {
           "code": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "rate": { "type": "number", "minimum": 0, "description": "1 USD in this currency, e.g. 0.385 for OMR. 0 = use the prices written on each product" },
+          "roundTo": { "type": "number", "minimum": 0, "description": "Round worked-out prices up to this step, e.g. 0.1 or 5. 0 = smallest coin" },
           "name": { "$ref": "common#/$defs/text" },
           "methods": {
             "type": "array",
@@ -34,6 +36,17 @@
                 "hours": { "type": "array", "items": { "type": "object", "required": ["days", "time"], "properties": { "days": { "$ref": "common#/$defs/text" }, "time": { "$ref": "common#/$defs/text" } }, "additionalProperties": false } },
                 "timeRange": { "type": "object", "properties": { "start": { "type": "string", "pattern": "^$|^([01][0-9]|2[0-3]):[0-5][0-9]$" }, "end": { "type": "string", "pattern": "^$|^([01][0-9]|2[0-3]):[0-5][0-9]$" } }, "additionalProperties": false },
                 "steps": { "type": "array", "items": { "$ref": "common#/$defs/text" } },
+                "fees": {
+                  "type": "object",
+                  "description": "PayPal fees from your own PayPal fee page. They are added to the price at checkout so the full price reaches you",
+                  "properties": {
+                    "percent": { "type": "number", "minimum": 0, "maximum": 50 },
+                    "internationalPercent": { "type": "number", "minimum": 0, "maximum": 50 },
+                    "fixed": { "type": "number", "minimum": 0 },
+                    "conversionPercent": { "type": "number", "minimum": 0, "maximum": 50 }
+                  },
+                  "additionalProperties": false
+                },
                 "paypalClientId": { "type": "string", "pattern": "^[A-Za-z0-9_-]*$", "description": "Live Client ID from developer.paypal.com (Apps & Credentials). Shows the PayPal / card buttons. Empty = off" }
               },
               "additionalProperties": false

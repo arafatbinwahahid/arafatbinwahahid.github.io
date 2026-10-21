@@ -4,6 +4,8 @@
   "currencies": [
     {
       "code": "OMR",
+      "rate": 0,
+      "roundTo": 0,
       "name": "Omani Rial",
       "methods": [
         {
@@ -80,6 +82,7 @@
           "type": "transfer",
           "enabled": true,
           "name": "PayPal",
+          "fees": { "percent": 0, "internationalPercent": 0, "fixed": 0, "conversionPercent": 0 },
           "paypalClientId": "BAAseXcu6vpR6kzbJZorqAR8N27kNr4GsXnXddV0M-rBWM_36yjlKWnKtLFTuQ5-83x0Ipa4QkfbPUfWNo",
           "icon": "card",
           "intro": "Pay the order total in USD with PayPal.",
@@ -118,6 +121,8 @@
     },
     {
       "code": "BDT",
+      "rate": 0,
+      "roundTo": 0,
       "name": "Bangladeshi Taka",
       "methods": [
         {

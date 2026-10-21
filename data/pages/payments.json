@@ -86,7 +86,8 @@
     "note": "Pay with your PayPal account or any debit or credit card. After you pay, your order is sent to us automatically.",
     "fallback": "PayPal could not load right now. Please try again later, or message us on WhatsApp to pay.",
     "error": "PayPal could not finish the payment. Nothing was charged. Please try again or message us on WhatsApp with your order ID {id}.",
-    "paid": "Paid with PayPal"
+    "paid": "Paid with PayPal",
+    "feeLabel": "PayPal fee"
   },
   "done": {
     "title": "Thank you!",

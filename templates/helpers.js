@@ -46,8 +46,33 @@ export const sitemap = read('global/sitemap.json');
 export const payments = read('global/payments.json');
 export const icons = read('global/icons.json');
 // "status": "draft" hides a product or service from the site (the CMS has a Status field)
-export const products = read('collections/products.json').filter((p) => p.status !== 'draft');
-export const services = read('collections/services.json').filter((s) => s.status !== 'draft');
+// Exchange rates (payments.json → currencies → "rate": 1 USD in that currency, set by hand).
+// A currency with a rate gets every product price worked out from the USD price, rounded UP to "roundTo"
+// (so a rate never makes you lose money); a currency without a rate keeps the prices written by hand.
+const BASE = 'USD';
+const rated = payments.currencies.filter((c) => c.code !== BASE && c.rate > 0);
+const roundUp = (n, step) => Math.round(Math.ceil(n / step - 1e-9) * step * 1000) / 1000;
+const stepOf = (c) => c.roundTo > 0 ? c.roundTo : c.code === 'OMR' ? 0.001 : 0.01;
+function withRates(prices) {
+  if (!prices?.[BASE]) return prices;
+  const out = { ...prices };
+  for (const c of rated) out[c.code] = roundUp(prices[BASE] * c.rate, stepOf(c));
+  return out;
+}
+const ratePrices = (o) => ({ ...o, prices: withRates(o.prices), ...(o.compareAtPrices && { compareAtPrices: withRates(o.compareAtPrices) }) });
+// Service packages without a USD price get one from their own currency's rate (the PayPal button needs USD)
+function packageUsd(prices) {
+  if (prices.USD) return prices;
+  const [code, v] = Object.entries(prices)[0] || [];
+  const c = rated.find((x) => x.code === code);
+  return c ? { ...prices, USD: roundUp(v / c.rate, 0.01) } : prices;
+}
+
+// "status": "draft" hides a product or service from the site (the CMS has a Status field)
+export const products = read('collections/products.json').filter((p) => p.status !== 'draft')
+  .map((p) => (p.variants?.length ? { ...p, variants: p.variants.map(ratePrices) } : ratePrices(p)));
+export const services = read('collections/services.json').filter((s) => s.status !== 'draft')
+  .map((s) => ({ ...s, packages: s.packages.map((pk) => ({ ...pk, prices: packageUsd(pk.prices) })) }));
 export const page = (name) => read(`pages/${name}.json`);
 export const posts = fs
   .readdirSync(path.join(DATA, 'collections/blog'))

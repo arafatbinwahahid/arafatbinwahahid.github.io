@@ -2,7 +2,7 @@
 // PayPal's own script loads only the first time buttons are shown.
 //   window.payPalButtons(box, { order, check, paid, error, hide })
 //   box: element with data-paypal="<Client ID>" and data-currency="USD"
-//   order(): { id, items: [{ name, sku, qty, unit }] }   check(): false stops the payment before PayPal opens
+//   order(): { id, items: [{ name, sku, qty, unit }], fee }   check(): false stops the payment before PayPal opens
 //   paid(info): runs after the money is captured        hide(): PayPal could not load
 (() => {
   let sdk = null;
@@ -14,6 +14,18 @@
     document.head.appendChild(s);
   }));
   const money = (code, cents) => ({ currency_code: code, value: (cents / 100).toFixed(2) });
+
+  // PayPal fee to add on top of a price so the full price reaches you (payments.json → PayPal → "fees"):
+  // PayPal keeps percent + international percent + fixed, and conversionPercent is lost when you withdraw in another currency.
+  // gross = (price ÷ (1 − conversion) + fixed) ÷ (1 − percent), rounded up to the cent.
+  window.payPalFee = (price, f) => {
+    if (!f) return 0;
+    const p = ((f.percent || 0) + (f.internationalPercent || 0)) / 100;
+    const c = (f.conversionPercent || 0) / 100;
+    if (!p && !c && !f.fixed) return 0;
+    const gross = (price / (1 - c) + (f.fixed || 0)) / (1 - p);
+    return Math.ceil(Math.round((gross - price) * 1e6) / 1e4) / 100;
+  };
 
   window.payPalButtons = (box, { order, check = () => true, paid, error, hide }) => {
     if (box.dataset.ready) return;
@@ -29,6 +41,8 @@
         // The order ID (as Invoice ID) and every line show in your PayPal activity and in both PayPal receipts
         createOrder: (data, actions) => {
           const o = order();
+          // The fee is its own line, so the buyer's receipt and your PayPal activity show it
+          if (o.fee > 0) o.items = [...o.items, { name: o.feeLabel || 'PayPal fee', sku: 'paypal-fee', qty: 1, unit: o.fee }];
           const total = o.items.reduce((n, i) => n + Math.round(i.unit * 100) * i.qty, 0);
           return actions.order.create({
             purchase_units: [{
