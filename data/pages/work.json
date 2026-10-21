@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Work", "description": "Portfolio of Arafat Bin Wahahid: Excel sales dashboards and vector portrait art." },
+  "seo": {
+    "title": "Work",
+    "titleSuffix": true,
+    "description": "Portfolio of Arafat Bin Wahahid: Excel sales dashboards and vector portrait art.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Work", "text": "A few recent projects you can hire me for." },
   "projects": [
     {

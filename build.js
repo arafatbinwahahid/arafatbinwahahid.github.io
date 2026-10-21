@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
 import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf, hasSharp } from './templates/helpers.js';
-import { layout } from './templates/layout.js';
+import { layout, isNoindex } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
 import { webmcpScript } from './templates/webmcp.js';
@@ -46,8 +46,10 @@ const pages = allPages();
 for (const p of pages) write(p.file || path.join(p.path, 'index.html'), layout(p));
 
 // sitemap.xml: links from data/global/sitemap.json, then every other page added automatically
-const added = pages.filter((p) => !p.noindex).map((p) => absUrl(p.path)).filter((u) => !sitemap.urls.includes(u));
-const urls = [...sitemap.urls, ...added].map((u) => `  <url><loc>${u}</loc></url>`);
+// Pages marked noindex are left out, even when sitemap.json lists them
+const hidden = new Set(pages.filter(isNoindex).map((p) => absUrl(p.path)));
+const added = pages.filter((p) => !isNoindex(p)).map((p) => absUrl(p.path)).filter((u) => !sitemap.urls.includes(u));
+const urls = [...sitemap.urls.filter((u) => !hidden.has(u)), ...added].map((u) => `  <url><loc>${u}</loc></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 
 // webmcp.js: tools for AI agents in the browser (WebMCP), made from the same data

@@ -6,6 +6,51 @@
   "category": "Work",
   "tags": ["Oman Oil", "HSE", "Career"],
   "excerpt": "Three years on the forecourt taught me a lot about safety, teamwork and customer service.",
+  "seo": {
+    "title": "",
+    "titleSuffix": true,
+    "description": "",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "article": {
+      "publishedTime": "",
+      "modifiedTime": "",
+      "section": "",
+      "tags": []
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "image": { "src": "/assets/images/about/arafat-bin-wahahid-fuel-attendant-oman.jpg", "alt": "Arafat on duty at a fuel pump" },
   "draft": false,
   "content": [

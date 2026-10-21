@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
   site, header, contact, social, products, services, posts, payments, page,
-  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices,
+  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
 
@@ -174,7 +174,8 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
     image: p.images.map((im) => shareUrl(im.src)), brand: { '@type': 'Brand', name: site.name }, offers,
   };
   return {
-    path: url, seo: { title: p.title, description: p.summary, ...p.seo, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
+    path: url, seo: { title: p.title, description: p.summary, image: p.images[0]?.src, ...filled(p.seo) }, crumbs, schema: [schema], cart: true,
+    type: 'product', product: { amount: lowestPrices(p)[DEF], currency: DEF },
     body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery(p.images)}${buy}</div>`)
       + infoSection(p, S) + section(benefits()) + faqSection(p.faq, S.faq) + reviews,
   };
@@ -264,7 +265,7 @@ function servicePage(s) {
     offers: s.packages.map((pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return { '@type': 'Offer', name: pk.name, price: v, priceCurrency: cur, url: absUrl(url) }; }),
   };
   return {
-    path: url, seo: { title: s.title, description: s.summary, ...s.seo, image: s.images[0]?.src }, crumbs, schema: [schema],
+    path: url, seo: { title: s.title, description: s.summary, image: s.images[0]?.src, ...filled(s.seo) }, crumbs, schema: [schema],
     body: pageHero({ title: s.title, text: s.summary }, crumbs) + section(`<div class="split split-top">${gallery(s.images)}${box}</div>`)
       + infoSection(s, T.sections) + faqSection(s.faq, T.sections.faq) + queueSection(),
   };
@@ -382,13 +383,15 @@ const blocks = {
 function postPage(p) {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' }, { label: p.title, href: `/blog/${p.slug}/` });
   const schema = {
-    '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.date,
+    '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.seo?.article?.modifiedTime || p.date,
     author: { '@type': 'Person', name: p.author, url: site.url }, mainEntityOfPage: absUrl(`/blog/${p.slug}/`), ...(p.image && { image: shareUrl(p.image.src) }),
   };
   const body = pageHero({ title: p.title, text: `${blogText.byLabel} ${p.author} · ${formatDate(p.date)}` }, crumbs)
     + section(`<article class="prose">${p.image ? img(p.image, { eager: true }) : ''}${p.content.map((b) => (blocks[b.type] || blocks.p)(b)).join('')}
 <div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`);
-  return { path: `/blog/${p.slug}/`, seo: { title: p.title, description: p.excerpt, image: p.image?.src }, crumbs, schema: [schema], type: 'article', body };
+  const seo = { title: p.title, description: p.excerpt, image: p.image?.src, ...filled(p.seo) };
+  const article = { publishedTime: p.date, author: p.author, section: p.category, tags: p.tags };
+  return { path: `/blog/${p.slug}/`, seo, crumbs, schema: [schema], type: 'article', article, body };
 }
 
 // ---- FAQ, legal, 404 ----

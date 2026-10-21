@@ -6,6 +6,51 @@
   "category": "Excel",
   "tags": ["Excel", "Dashboards"],
   "excerpt": "Simple rules I follow to make Excel dashboards that are easy to read and have zero formula errors.",
+  "seo": {
+    "title": "",
+    "titleSuffix": true,
+    "description": "",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "article": {
+      "publishedTime": "",
+      "modifiedTime": "",
+      "section": "",
+      "tags": []
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "image": { "src": "/assets/images/work/excel-sales-performance-dashboard.jpg", "alt": "Excel sales performance dashboard" },
   "draft": false,
   "content": [

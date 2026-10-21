@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Terms and conditions", "description": "Terms and conditions for using arafatbin.com and ordering services or products." },
+  "seo": {
+    "title": "Terms and conditions",
+    "titleSuffix": true,
+    "description": "Terms and conditions for using arafatbin.com and ordering services or products.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Terms and conditions", "text": "Please read these terms before using this website or placing an order." },
   "updatedLabel": "Last updated",
   "lastUpdated": "2026-10-20",

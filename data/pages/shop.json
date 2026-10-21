@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Shop", "description": "Buy Excel templates, vector portraits, social media post packs and data entry services from Arafat Bin Wahahid. Pay in OMR, USD or BDT." },
+  "seo": {
+    "title": "Shop",
+    "titleSuffix": true,
+    "description": "Buy Excel templates, vector portraits, social media post packs and data entry services from Arafat Bin Wahahid. Pay in OMR, USD or BDT.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Shop", "text": "Ready-made templates, design packs and data services. Pay in OMR, USD or BDT." },
   "productsTitle": "All products",
   "allLabel": "All",

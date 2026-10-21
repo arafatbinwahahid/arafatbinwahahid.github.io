@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "FAQ", "description": "Frequently asked questions about ordering, delivery, revisions and payment." },
+  "seo": {
+    "title": "FAQ",
+    "titleSuffix": true,
+    "description": "Frequently asked questions about ordering, delivery, revisions and payment.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Frequently asked questions", "text": "Quick answers about working with me." },
   "groups": [
     {

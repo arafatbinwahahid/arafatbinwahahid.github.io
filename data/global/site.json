@@ -11,7 +11,8 @@
   "favicon": "/assets/images/brand/arafatbin-logo.png",
   "homeLabel": "Home",
   "googleAnalyticsId": "G-STXXJ4FZ6V",
-  "verification": { "google": "", "bing": "FFA12F3E4F15271D4B78A1CE99298574" },
+  "verification": { "google": "", "bing": "FFA12F3E4F15271D4B78A1CE99298574", "yandex": "", "pinterest": "", "facebook": "", "baidu": "" },
+  "seo": { "author": "Arafat Bin Wahahid", "twitterSite": "", "twitterCreator": "", "facebookAppId": "" },
   "web3formsAccessKey": "b1e59389-809e-408e-8ac3-d14bf9ddcde1",
   "theme": {
     "primary": "#0A6DBF",

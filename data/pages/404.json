@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Page not found", "description": "The page you are looking for does not exist." },
+  "seo": {
+    "title": "Page not found",
+    "titleSuffix": true,
+    "description": "The page you are looking for does not exist.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": false,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "code": "404",
   "title": "Page not found",
   "text": "The page you are looking for has moved or does not exist. Try one of these instead:",

@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Refund and return policy", "description": "Refund and return policy for services and digital products from arafatbin.com." },
+  "seo": {
+    "title": "Refund and return policy",
+    "titleSuffix": true,
+    "description": "Refund and return policy for services and digital products from arafatbin.com.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Refund and return policy", "text": "When and how you can get your money back." },
   "updatedLabel": "Last updated",
   "lastUpdated": "2026-10-20",

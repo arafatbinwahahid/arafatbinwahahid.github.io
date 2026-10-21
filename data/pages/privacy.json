@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Privacy policy", "description": "How arafatbin.com collects, uses and protects your personal data when you place an order, send a message or use the contact forms." },
+  "seo": {
+    "title": "Privacy policy",
+    "titleSuffix": true,
+    "description": "How arafatbin.com collects, uses and protects your personal data when you place an order, send a message or use the contact forms.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Privacy policy", "text": "What data this website collects and how it is used." },
   "updatedLabel": "Last updated",
   "lastUpdated": "2026-10-20",

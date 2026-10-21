@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Blog", "description": "Notes on Excel, graphic design, freelancing and fuel station work by Arafat Bin Wahahid." },
+  "seo": {
+    "title": "Blog",
+    "titleSuffix": true,
+    "description": "Notes on Excel, graphic design, freelancing and fuel station work by Arafat Bin Wahahid.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Blog", "text": "Notes on Excel, design and work." },
   "readMoreLabel": "Read more",
   "backLabel": "Back to blog",

@@ -196,3 +196,16 @@ export const formatDate = (iso) =>
   new Date(iso + 'T00:00:00Z').toLocaleDateString(site.locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 export const whatsapp = (text) => `https://wa.me/${contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 export const absUrl = (p) => new URL(p, site.url).href;
+
+// Drops empty values ("", null, []) from JSON, so empty fields fall back to the automatic ones
+export const filled = (o) => {
+  if (Array.isArray(o)) return o;
+  if (!o || typeof o !== 'object') return o;
+  const out = {};
+  for (const [k, v] of Object.entries(o)) {
+    const f = filled(v);
+    if (f === '' || f == null || (Array.isArray(f) && !f.length) || (typeof f === 'object' && !Array.isArray(f) && !Object.keys(f).length)) continue;
+    out[k] = f;
+  }
+  return out;
+};

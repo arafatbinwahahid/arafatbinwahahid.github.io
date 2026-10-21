@@ -8,7 +8,40 @@
       "title": "Web Development & Custom Website Design | arafatbin.com",
       "titleSuffix": false,
       "description": "Custom, fully responsive websites built for speed, SEO and conversions. Professional web development and website design services by arafatbin.com.",
-      "keywords": ["Professional Web Development Services", "Custom Website Design BD", "E-commerce Website Development", "Full-Stack Web Developer Bangladesh", "Business Website Services", "arafatbin.com", "Responsive Web Design", "SEO-Friendly Website Building", "Website Maintenance Service", "Fast Loading Website", "Custom Web Solutions", "Web Development Test Demo"]
+      "keywords": ["Professional Web Development Services", "Custom Website Design BD", "E-commerce Website Development", "Full-Stack Web Developer Bangladesh", "Business Website Services", "arafatbin.com", "Responsive Web Design", "SEO-Friendly Website Building", "Website Maintenance Service", "Fast Loading Website", "Custom Web Solutions", "Web Development Test Demo"],
+      "canonical": "",
+      "image": "",
+      "imageAlt": "",
+      "author": "",
+      "robots": {
+        "index": true,
+        "follow": true,
+        "nosnippet": false,
+        "noimageindex": false,
+        "notranslate": false,
+        "indexifembedded": false,
+        "maxSnippet": -1,
+        "maxImagePreview": "large",
+        "maxVideoPreview": -1,
+        "unavailableAfter": ""
+      },
+      "googlebot": "",
+      "bingbot": "",
+      "openGraph": {
+        "type": "",
+        "title": "",
+        "description": "",
+        "localeAlternate": []
+      },
+      "twitter": {
+        "card": "",
+        "title": "",
+        "description": "",
+        "creator": ""
+      },
+      "alternates": [],
+      "schema": [],
+      "meta": []
     },
     "packagesTitle": "Service packages & starting prices",
     "priceLabel": "Starting from",
@@ -66,7 +99,40 @@
       "title": "Clash of Clans Account Boosting & Building | arafatbin.com",
       "titleSuffix": false,
       "description": "Max out your Clash of Clans Town Hall, Heroes and Walls fast and safely. Premium CoC account boosting and village building, worldwide, by arafatbin.com.",
-      "keywords": ["Clash of Clans account boosting", "CoC village building service", "CoC base upgrade service", "professional CoC player", "Clash of Clans account maxing", "arafatbin.com", "Trusted CoC booster", "Town Hall maxing service", "CoC hero upgrade service", "safe Clash of Clans management", "CoC trophy pushing"]
+      "keywords": ["Clash of Clans account boosting", "CoC village building service", "CoC base upgrade service", "professional CoC player", "Clash of Clans account maxing", "arafatbin.com", "Trusted CoC booster", "Town Hall maxing service", "CoC hero upgrade service", "safe Clash of Clans management", "CoC trophy pushing"],
+      "canonical": "",
+      "image": "",
+      "imageAlt": "",
+      "author": "",
+      "robots": {
+        "index": true,
+        "follow": true,
+        "nosnippet": false,
+        "noimageindex": false,
+        "notranslate": false,
+        "indexifembedded": false,
+        "maxSnippet": -1,
+        "maxImagePreview": "large",
+        "maxVideoPreview": -1,
+        "unavailableAfter": ""
+      },
+      "googlebot": "",
+      "bingbot": "",
+      "openGraph": {
+        "type": "",
+        "title": "",
+        "description": "",
+        "localeAlternate": []
+      },
+      "twitter": {
+        "card": "",
+        "title": "",
+        "description": "",
+        "creator": ""
+      },
+      "alternates": [],
+      "schema": [],
+      "meta": []
     },
     "packagesTitle": "Pricing & packages",
     "priceLabel": "Price",

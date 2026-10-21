@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Reviews", "description": "Reviews and recommendations for Arafat Bin Wahahid from teammates and clients." },
+  "seo": {
+    "title": "Reviews",
+    "titleSuffix": true,
+    "description": "Reviews and recommendations for Arafat Bin Wahahid from teammates and clients.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Reviews", "text": "What teammates and clients say about working with me." },
   "items": [
     {

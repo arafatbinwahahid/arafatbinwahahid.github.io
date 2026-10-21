@@ -16,7 +16,7 @@ function siteData(pages) {
     currencies: payments.currencies.map((c) => ({ code: c.code, name: c.name, methods: c.methods.filter((m) => m.enabled !== false).map((m) => m.name) })),
     defaultCurrency: payments.defaultCurrency,
     checkout: absUrl('/payments/'),
-    pages: pages.filter((p) => !p.noindex).map((p) => ({ title: p.seo?.title || site.name, url: absUrl(p.path) })),
+    pages: pages.filter((p) => !(p.noindex || p.seo?.robots?.index === false)).map((p) => ({ title: p.seo?.title || site.name, url: absUrl(p.path) })),
     products: products.map((p) => ({
       slug: p.slug, title: p.title, url: absUrl(`/shop/${p.slug}/`), category: p.category, summary: p.summary, about: p.about,
       features: list(p.features).map((f) => f.text), faq: list(p.faq), format: p.format, inStock: stockOf(p) > 0,

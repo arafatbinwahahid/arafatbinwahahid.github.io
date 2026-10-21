@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Payment", "description": "Choose a currency and payment method to complete your order from Arafat Bin Wahahid's shop." },
+  "seo": {
+    "title": "Payment",
+    "titleSuffix": true,
+    "description": "Choose a currency and payment method to complete your order from Arafat Bin Wahahid's shop.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": false,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Payment", "text": "Choose a currency and a payment method, pay, then send the confirmation form." },
   "noscript": "This page needs JavaScript to show your cart. Please turn JavaScript on, or order on WhatsApp.",
   "summaryTitle": "Order summary",

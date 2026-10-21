@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage } from './helpers.js';
+import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -61,25 +61,52 @@ function siteFooter() {
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;
 }
 
-export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false }) {
+// A page is left out of Google and sitemap.xml when the code says so (payments, 404) or its JSON has "robots": { "index": false }
+export const isNoindex = (p) => !!(p.noindex || p.seo?.robots?.index === false);
+
+const meta = (attr, key, content) => (content === '' || content == null ? '' : `\n<meta ${attr}="${esc(key)}" content="${esc(content)}">`);
+
+// <meta name="robots">: index/follow plus the optional Google rules from the page's "seo.robots"
+function robotsContent(r, noindex) {
+  const rules = [noindex ? 'noindex' : 'index', r.follow === false ? 'nofollow' : 'follow'];
+  if (noindex) return rules.join(', ');
+  for (const k of ['nosnippet', 'noimageindex', 'notranslate', 'indexifembedded']) if (r[k]) rules.push(k);
+  if (Number.isInteger(r.maxSnippet)) rules.push(`max-snippet:${r.maxSnippet}`);
+  rules.push(`max-image-preview:${r.maxImagePreview || 'large'}`);
+  if (Number.isInteger(r.maxVideoPreview)) rules.push(`max-video-preview:${r.maxVideoPreview}`);
+  if (r.unavailableAfter) rules.push(`unavailable_after: ${r.unavailableAfter}`);
+  return rules.join(', ');
+}
+
+// Verification codes from site.json "verification" (a pasted <meta> tag also works), on the home page
+const VERIFY = { google: 'google-site-verification', bing: 'msvalidate.01', yandex: 'yandex-verification', pinterest: 'p:domain_verify', facebook: 'facebook-domain-verification', baidu: 'baidu-site-verification' };
+const code = (v) => (String(v || '').match(/content="([^"]+)"/)?.[1] || v || '').trim();
+const verifyTags = () => Object.entries(VERIFY).map(([k, n]) => meta('name', n, code(site.verification?.[k]))).join('');
+
+export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false, article, product }) {
+  const seo = filled(rawSeo) || {};
+  const og = seo.openGraph || {};
+  const tw = seo.twitter || {};
+  const defaults = site.seo || {};
+  noindex = noindex || seo.robots?.index === false;
   // " | Arafat Bin Wahahid" is added unless the title would get longer than Google shows (about 60 characters)
   const withName = `${seo.title}${site.titleSeparator}${site.name}`;
   const title = !seo.title ? site.title : seo.titleSuffix === false || withName.length > 60 ? seo.title : withName;
   const description = seo.description || site.description;
-  const canonical = absUrl(path);
+  const canonical = absUrl(seo.canonical || path);
   const share = shareImage(seo.image || site.defaultImage);
   const image = absUrl(share.src);
+  const imageAlt = seo.imageAlt || title;
+  const ogType = og.type || type;
   const t = site.theme;
-  // Search Console / Bing Webmaster verification, on the home page (site.json "verification"; a pasted <meta> tag also works)
-  const code = (v) => (String(v || '').match(/content="([^"]+)"/)?.[1] || v || '').trim();
-  const { google, bing } = site.verification || {};
-  const verify = path === '/' ? [['google-site-verification', code(google)], ['msvalidate.01', code(bing)]].filter(([, v]) => v).map(([n, v]) => `\n<meta name="${n}" content="${esc(v)}">`).join('') : '';
+  const art = ogType === 'article' ? { ...article, ...seo.article } : null;
   if (crumbs) {
     schema = [...schema, {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',
       itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: absUrl(c.href) })),
     }];
   }
+  schema = [...schema, ...(seo.schema || [])];
   // Google Analytics loads on the first tap, scroll or key press, or 3.5 s after the page has loaded, so it never slows the first paint
   const gaId = esc(site.googleAnalyticsId);
   const ga = gaId
@@ -87,29 +114,55 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
 (function(){var on=0;function go(){if(on)return;on=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${gaId}';document.head.appendChild(s)}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})});addEventListener('load',function(){setTimeout(go,3500)})})();</script>`
     : '';
+  const head = [
+    `<title>${esc(title)}</title>`,
+    meta('name', 'description', description),
+    meta('name', 'keywords', seo.keywords?.join(', ')),
+    meta('name', 'author', seo.author || defaults.author),
+    meta('name', 'robots', robotsContent(seo.robots || {}, noindex)),
+    meta('name', 'googlebot', seo.googlebot),
+    meta('name', 'bingbot', seo.bingbot),
+    noindex ? '' : `\n<link rel="canonical" href="${esc(canonical)}">`,
+    ...(seo.alternates || []).map((a) => `\n<link rel="alternate" hreflang="${esc(a.hreflang)}" href="${esc(absUrl(a.href))}">`),
+    meta('name', 'theme-color', t.dark),
+    path === '/' ? verifyTags() : '',
+    `\n${iconLinks()}`,
+    meta('property', 'og:type', ogType),
+    meta('property', 'og:locale', site.locale.replace('-', '_')),
+    ...(og.localeAlternate || []).map((l) => meta('property', 'og:locale:alternate', l)),
+    meta('property', 'og:site_name', site.name),
+    meta('property', 'og:title', og.title || title),
+    meta('property', 'og:description', og.description || description),
+    meta('property', 'og:url', canonical),
+    meta('property', 'og:image', image),
+    meta('property', 'og:image:width', share.width),
+    meta('property', 'og:image:height', share.height),
+    meta('property', 'og:image:alt', imageAlt),
+    meta('property', 'fb:app_id', defaults.facebookAppId),
+    ...(art ? [
+      meta('property', 'article:published_time', art.publishedTime),
+      meta('property', 'article:modified_time', art.modifiedTime || art.publishedTime),
+      meta('property', 'article:author', art.author),
+      meta('property', 'article:section', art.section),
+      ...(art.tags || []).map((tag) => meta('property', 'article:tag', tag)),
+    ] : []),
+    ...(product ? [meta('property', 'product:price:amount', product.amount), meta('property', 'product:price:currency', product.currency)] : []),
+    meta('name', 'twitter:card', tw.card || 'summary_large_image'),
+    meta('name', 'twitter:site', defaults.twitterSite),
+    meta('name', 'twitter:creator', tw.creator || defaults.twitterCreator),
+    meta('name', 'twitter:title', tw.title || og.title || title),
+    meta('name', 'twitter:description', tw.description || og.description || description),
+    meta('name', 'twitter:image', image),
+    meta('name', 'twitter:image:alt', imageAlt),
+    ...(seo.meta || []).map((m) => (m.property ? meta('property', m.property, m.content) : meta('name', m.name, m.content))),
+  ].join('');
   return `<!DOCTYPE html>
 <html lang="${esc(site.language)}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=no">
-<title>${esc(title)}</title>
-<meta name="description" content="${esc(description)}">${seo.keywords?.length ? `\n<meta name="keywords" content="${esc(seo.keywords.join(', '))}">` : ''}
-<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}">
-${noindex ? '' : `<link rel="canonical" href="${esc(canonical)}">`}
-<meta name="theme-color" content="${esc(t.dark)}">${verify}
-${iconLinks()}
-<meta property="og:type" content="${type}">
-<meta property="og:locale" content="${esc(site.locale.replace('-', '_'))}">
-<meta property="og:site_name" content="${esc(site.name)}">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(description)}">
-<meta property="og:url" content="${esc(canonical)}">
-<meta property="og:image" content="${esc(image)}">${share.width ? `\n<meta property="og:image:width" content="${share.width}">\n<meta property="og:image:height" content="${share.height}">` : ''}
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(title)}">
-<meta name="twitter:description" content="${esc(description)}">
-<meta name="twitter:image" content="${esc(image)}">
+${head.trim()}
 <style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
 ${ga}
