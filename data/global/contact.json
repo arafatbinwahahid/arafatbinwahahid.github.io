@@ -3,11 +3,21 @@
   "whatsappDisplay": "+968 9213 0528",
   "showFloatingWhatsapp": true,
   "phones": [
-    { "label": "Phone, Oman", "number": "+96892130528", "display": "+968 9213 0528" },
-    { "label": "Phone, Bangladesh", "number": "+8801752427601", "display": "+880 1752 427601" }
+    {
+      "label": "Phone, Oman",
+      "display": "+968 9213 0528",
+      "number": "+96892130528"
+    },
+    {
+      "label": "Phone, Bangladesh",
+      "display": "+880 1752 427601",
+      "number": "+8801752427601"
+    }
   ],
   "email": "contact@arafatbin.com",
   "address": "Rakhyut (224), Dhofar Governorate, Salalah, Oman",
   "mapUrl": "https://www.google.com/maps?q=16.8186958,53.4757235",
-  "hours": "Replies within 24 hours, 7 days a week"
+  "hours": "Replies within 24 hours, 7 days a week",
+  "businessHours": [],
+  "responseTime": "Within 8 hours"
 }
