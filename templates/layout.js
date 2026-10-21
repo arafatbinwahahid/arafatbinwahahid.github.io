@@ -81,6 +81,7 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">${seo.keywords?.length ? `\n<meta name="keywords" content="${esc(seo.keywords.join(', '))}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}">
