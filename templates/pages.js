@@ -401,15 +401,6 @@ const blocks = {
   image: (b) => figure(b),
 };
 
-// Giscus comments (site.json "comments"); the widget only loads when the visitor scrolls near it
-function comments() {
-  const g = site.comments || {};
-  if (!g.repo || !g.repoId || !g.categoryId) return '';
-  const attrs = { repo: g.repo, 'repo-id': g.repoId, category: g.category, 'category-id': g.categoryId, lang: g.lang || 'en' };
-  return section(`<div class="narrow"><h2 class="h3">${esc(blogText.commentsTitle)}</h2><p class="muted">${esc(blogText.commentsNote)}</p>
-<div class="giscus" data-giscus${Object.entries(attrs).map(([k, v]) => ` data-${k}="${esc(v)}"`).join('')}></div></div>`, { background: 'soft' });
-}
-
 function postPage(p) {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' }, { label: p.title, href: `/blog/${p.slug}/` });
   const schema = {
@@ -418,8 +409,7 @@ function postPage(p) {
   };
   const body = pageHero({ title: p.title, text: `${blogText.byLabel} ${p.author} · ${formatDate(p.date)}` }, crumbs)
     + section(`<article class="prose">${p.image ? img(p.image, { eager: true }) : ''}${p.content.map((b) => (blocks[b.type] || blocks.p)(b)).join('')}
-<div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`)
-    + comments();
+<div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`);
   const seo = { title: p.title, description: p.excerpt, image: p.image?.src, ...filled(p.seo) };
   const article = { publishedTime: p.date, author: p.author, section: p.category, tags: p.tags };
   return { path: `/blog/${p.slug}/`, seo, crumbs, schema: [schema], type: 'article', article, body };
