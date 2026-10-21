@@ -7,15 +7,28 @@ import { fileURLToPath } from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
 
+// The CMS saves empty fields as "" or null (and empty objects like a link with no text). Treat them as not filled in,
+// so an untouched optional field never fails the checks in schemas/. Lists are kept, even when empty.
+function tidy(v) {
+  if (Array.isArray(v)) return v.map(tidy);
+  if (!v || typeof v !== 'object') return v;
+  for (const k of Object.keys(v)) {
+    const t = tidy(v[k]);
+    if (t === '' || t == null || (typeof t === 'object' && !Array.isArray(t) && !Object.keys(t).length)) delete v[k];
+    else v[k] = t;
+  }
+  return v;
+}
+
 export function read(file) {
   const text = fs.readFileSync(path.join(DATA, file), 'utf8');
   try {
-    return JSON.parse(text);
+    return tidy(JSON.parse(text));
   } catch (e) {
     // Phone keyboards type curly quotes “ ” which JSON does not accept; retry with straight ones
     if (/[“”]/.test(text)) {
       try {
-        const data = JSON.parse(text.replace(/[“”]/g, '"'));
+        const data = tidy(JSON.parse(text.replace(/[“”]/g, '"')));
         console.warn(`  ! data/${file}: curly quotes “ ” were read as straight quotes ". Please use " in JSON.`);
         return data;
       } catch {}
@@ -31,9 +44,10 @@ export const contact = read('global/contact.json');
 export const social = read('global/social.json');
 export const sitemap = read('global/sitemap.json');
 export const payments = read('global/payments.json');
-const icons = read('global/icons.json');
-export const products = read('collections/products.json');
-export const services = read('collections/services.json');
+export const icons = read('global/icons.json');
+// "status": "draft" hides a product or service from the site (the CMS has a Status field)
+export const products = read('collections/products.json').filter((p) => p.status !== 'draft');
+export const services = read('collections/services.json').filter((s) => s.status !== 'draft');
 export const page = (name) => read(`pages/${name}.json`);
 export const posts = fs
   .readdirSync(path.join(DATA, 'collections/blog'))
@@ -75,6 +89,13 @@ function imageSize(src) {
   try {
     const b = fs.readFileSync(path.join(ROOT, decodeURI(src)));
     if (b.readUInt32BE(0) === 0x89504e47) size = [b.readUInt32BE(16), b.readUInt32BE(20)];
+    else if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+      // WebP (the CMS saves uploads as WebP): lossy VP8, lossless VP8L or extended VP8X header
+      const kind = b.toString('ascii', 12, 16);
+      if (kind === 'VP8X') size = [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)];
+      else if (kind === 'VP8L') { const n = b.readUInt32LE(21); size = [1 + (n & 0x3fff), 1 + ((n >> 14) & 0x3fff)]; }
+      else if (kind === 'VP8 ') size = [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff];
+    }
     else if (b[0] === 0xff && b[1] === 0xd8) {
       for (let i = 2; i < b.length - 9; ) {
         if (b[i] !== 0xff || b[i + 1] === 0xff) { i++; continue; }
@@ -104,7 +125,7 @@ const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI
 // Script URL with the same fingerprint, e.g. /assets/js/main.js?v=1a2b3c4d
 export const assetUrl = (file) => `/${file}?v=${fileHash(file)}`;
 export const url = (src) => encodeURI(decodeURI(src || ''));
-const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png)$/i.test(src || '') && imageSize(src);
+const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png|webp)$/i.test(src || '') && imageSize(src);
 
 function webpWidths(src) {
   if (!canResize(src)) return null;

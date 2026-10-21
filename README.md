@@ -18,6 +18,8 @@
 │   ├── layout.js            ← <head> (SEO), header, 3-dot মেনু, footer
 │   ├── pages.js             ← প্রতিটি পেইজের HTML
 │   ├── webmcp.js            ← AI agent-এর tool (/webmcp.js) JSON থেকে বানায়
+│   ├── cms.js               ← CMS-এর ফর্ম (/admin/config.yml বানায়)
+│   ├── cms-check.js         ← প্রতিটি JSON ঘরের জন্য CMS-এ ফর্মের ঘর আছে কিনা দেখে
 │   └── validate.js          ← build-এর আগে সব JSON ফাইল schemas/ দিয়ে যাচাই করে (ajv)
 ├── schemas/                 ← প্রতিটি JSON ফাইলের নিয়ম (কোন ঘর লাগবে, কী ধরনের মান)
 ├── .htmlvalidate.json       ← HTML যাচাইয়ের নিয়ম (html-validate)
@@ -135,6 +137,25 @@
 5. **Stock কমানো:** পেমেন্ট যাচাই হওয়ার পর `products.json`-এ ওই প্রোডাক্টের `stock` নিজে কমিয়ে দিন। সাইট নিজে stock কমায় না, কারণ GitHub Pages-এ কোনো server বা database নেই।
 
 **নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
+
+## CMS: arafatbin.com/admin/ (Sveltia CMS)
+
+JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Blog posts**, **Pages** (প্রতিটি পেইজ আলাদা) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Sitemap, Icons)। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
+
+**প্রথমবার লগইন (Access Token):**
+1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token
+2. Token name: `arafatbin CMS`, Expiration: যেমন ৯০ দিন
+3. Repository access: **Only select repositories** → `arafatbinwahahid.github.io`
+4. Permissions → Repository permissions → **Contents: Read and write** (Metadata নিজে Read-only হয়)
+5. Generate token → কপি করুন → arafatbin.com/admin/ → **Sign In Using Access Token** → paste
+6. Token কাউকে দেবেন না, repo-তে রাখবেন না। মেয়াদ শেষ হলে নতুন বানান। ফাঁস হলে GitHub থেকে সাথে সাথে মুছুন।
+
+**জানা দরকার:**
+- ছবি আপলোড করলে নিজে WebP হয় (সর্বোচ্চ 2000px), নাম ছোট হাতের হয়, আর ঠিক ফোল্ডারে যায় (products, services, blog …)।
+- **Status → Draft** দিলে প্রোডাক্ট/সার্ভিস সাইট, sitemap আর search থেকে লুকায়।
+- "Saved for later" লেখা ঘরগুলো এখন সাইটে দেখায় না, পরে কাজে লাগানোর জন্য রাখা।
+- Icon ঘরে Settings → Icons-এর সব আইকন থেকে বাছা যায়; নতুন আইকন সেখানে যোগ করলে সব জায়গায় পাওয়া যায়।
+- CMS ফর্ম `templates/cms.js`-এ। কোনো JSON-এ নতুন ঘর যোগ করলে সেখানেও যোগ করতে হয়, নাহলে build জানিয়ে দেয় (CMS save করলে সেই ঘর মুছে যেত)।
 
 ## SEO: প্রতিটি পেইজের সব tag
 

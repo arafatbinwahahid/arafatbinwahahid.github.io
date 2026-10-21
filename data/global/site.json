@@ -36,6 +36,6 @@
   },
   "robots": {
     "allow": ["/"],
-    "disallow": ["/404.html"]
+    "disallow": ["/404.html", "/admin/"]
   }
 }

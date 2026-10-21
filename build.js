@@ -9,6 +9,8 @@ import { layout, isNoindex } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
 import { webmcpScript } from './templates/webmcp.js';
+import { cmsConfig, adminHtml } from './templates/cms.js';
+import { checkCms } from './templates/cms-check.js';
 
 const OUT = path.join(ROOT, 'dist');
 
@@ -50,8 +52,17 @@ for (const p of pages) write(p.file || path.join(p.path, 'index.html'), layout(p
 // Pages marked noindex are left out, even when sitemap.json lists them
 const hidden = new Set(pages.filter(isNoindex).map((p) => absUrl(p.path)));
 const added = pages.filter((p) => !isNoindex(p)).map((p) => absUrl(p.path)).filter((u) => !sitemap.urls.includes(u));
-const urls = [...sitemap.urls.filter((u) => !hidden.has(u)), ...added].map((u) => `  <url><loc>${u}</loc></url>`);
+// Links in sitemap.json to a page that no longer exists (e.g. a product set to Draft) are left out too
+const known = new Set(pages.map((p) => absUrl(p.path)));
+const exists = (u) => known.has(u) || (u.startsWith(site.url) && fs.existsSync(path.join(ROOT, decodeURI(new URL(u).pathname))));
+const urls = [...sitemap.urls.filter((u) => !hidden.has(u) && exists(u)), ...added].map((u) => `  <url><loc>${u}</loc></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+
+// /admin/: Sveltia CMS. The config is JSON, which is also valid YAML
+const cms = cmsConfig();
+checkCms(cms);
+write('admin/index.html', adminHtml());
+write('admin/config.yml', `${JSON.stringify(cms, null, 2)}\n`);
 
 // webmcp.js: tools for AI agents in the browser (WebMCP), made from the same data
 write('webmcp.js', webmcpScript(pages));
@@ -94,7 +105,7 @@ fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 for (const u of sitemap.urls) {
   const file = path.join(OUT, decodeURI(new URL(u).pathname));
   const ok = fs.existsSync(file) && (fs.statSync(file).isFile() || fs.existsSync(path.join(file, 'index.html')));
-  if (!u.startsWith(site.url) || !ok) console.warn(`  ! Broken link in sitemap.json: ${u}`);
+  if (!u.startsWith(site.url) || !ok) console.warn(`  ! sitemap.json links to a page that does not exist (left out of sitemap.xml): ${u}`);
 }
 
 console.log(`Built ${pages.length} pages + sitemap.xml + robots.txt into dist/`);

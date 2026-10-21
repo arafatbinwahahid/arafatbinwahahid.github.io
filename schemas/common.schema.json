@@ -101,7 +101,7 @@
           "description": "Other language versions: [{ \"hreflang\": \"bn\", \"href\": \"https://...\" }]",
           "items": { "type": "object", "required": ["hreflang", "href"], "properties": { "hreflang": { "type": "string" }, "href": { "type": "string", "pattern": "^(/|https://)" } }, "additionalProperties": false }
         },
-        "schema": { "type": "array", "description": "Extra JSON-LD objects (schema.org), added next to the automatic ones", "items": { "type": "object" } },
+        "schema": { "type": "array", "description": "Extra JSON-LD objects (schema.org), added next to the automatic ones. JSON text also works", "items": { "type": ["object", "string"] } },
         "meta": {
           "type": "array",
           "description": "Any other tag: [{ \"name\": \"rating\", \"content\": \"adult\" }] or [{ \"property\": \"...\", \"content\": \"...\" }]",
