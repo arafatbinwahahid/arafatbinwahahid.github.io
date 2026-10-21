@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf, hasSharp } from './templates/helpers.js';
+import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf, hasSharp, paypalIdOk } from './templates/helpers.js';
 import { layout, isNoindex } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
@@ -39,6 +39,7 @@ for (const c of payments.currencies) for (const m of c.methods) {
   const empty = (m.details || []).filter((r) => !r.value).map((r) => r.label);
   if (empty.length) console.warn(`  ! Payment ${m.id}: empty details (${empty.join(', ')}), customers are asked to message on WhatsApp`);
   if (m.type === 'appointment' && !m.location?.mapQuery) console.warn(`  ! Payment ${m.id}: no map location set`);
+  if (m.paypalClientId && !paypalIdOk(m.paypalClientId)) console.warn(`  ! Payment ${m.id}: "paypalClientId" is not a PayPal Client ID, so the PayPal buttons are hidden. Copy the whole Client ID of your app with its copy button (developer.paypal.com → Apps & Credentials → Live, about 80 characters); it is ${m.paypalClientId.length} characters now`);
 }
 
 fs.rmSync(OUT, { recursive: true, force: true });

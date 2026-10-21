@@ -203,6 +203,10 @@ export const formatDate = (iso) =>
 export const whatsapp = (text) => `https://wa.me/${contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 export const absUrl = (p) => new URL(p, site.url).href;
 
+// A PayPal app Client ID is about 80 characters (it starts with "A" or "B"). A cut-off ID or the short code of a
+// Pay link / no-code button does not work with the cart buttons, so the site then falls back to paying by hand.
+export const paypalIdOk = (id) => /^[A-Z][\w-]{60,}$/.test(id || '');
+
 // Drops empty values ("", null, []) from JSON, so empty fields fall back to the automatic ones
 export const filled = (o) => {
   if (Array.isArray(o)) return o;

@@ -80,7 +80,7 @@
           "type": "transfer",
           "enabled": true,
           "name": "PayPal",
-          "paypalClientId": "BAAseXcu6vpR6kzbJZo",
+          "paypalClientId": "BAAseXcu6vpR6kzbJZorqAR8N27kNr4GsXnXddV0M-rBWM_36yjlKWnKtLFTuQ5-83x0Ipa4QkfbPUfWNo",
           "icon": "card",
           "intro": "Pay the order total in USD with PayPal.",
           "details": [

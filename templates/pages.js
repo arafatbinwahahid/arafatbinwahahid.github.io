@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
   site, header, contact, social, products, services, posts, payments, page,
-  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled,
+  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled, paypalIdOk,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
 
@@ -209,7 +209,7 @@ function methodPanel(m, c, d) {
   const hours = m.hours?.length ? `<h4>${esc(d.hoursTitle)}</h4><dl class="pay-details">${m.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join('')}</dl>` : '';
   return `<section class="card card-pad method-panel" data-panel="${esc(m.id)}" hidden aria-labelledby="h-${esc(m.id)}">
 <h2 class="h3" id="h-${esc(m.id)}">${esc(d.payTitle)}: ${icon(m.icon)} ${esc(m.name)} (${esc(c.code)})</h2><p>${esc(m.intro)}</p>
-${m.paypalClientId ? `<div class="paypal-box"><h4>${esc(d.paypal.title)}</h4><p class="muted">${esc(d.paypal.note)}</p><div data-paypal="${esc(m.paypalClientId)}" data-currency="${esc(c.code)}"></div><p class="muted">${esc(d.paypal.or)}</p></div>` : ''}
+${paypalIdOk(m.paypalClientId) ? `<div class="paypal-box"><h4>${esc(d.paypal.title)}</h4><p class="muted">${esc(d.paypal.note)}</p><div data-paypal="${esc(m.paypalClientId)}" data-currency="${esc(c.code)}"></div><p class="muted">${esc(d.paypal.or)}</p></div>` : ''}
 ${details ? `<h4>${esc(d.detailsTitle)}</h4>${details}` : ''}${m.link?.href ? btns([{ label: m.link.label, href: m.link.href, icon: 'card' }]) : ''}
 ${m.poster?.src ? `<figure class="poster">${img(m.poster)}</figure>` : ''}${place}${hours}
 ${missing ? `<p class="notice">${esc(d.missingDetails)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>` : ''}
