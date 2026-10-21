@@ -168,8 +168,6 @@
 
 **Microsoft Clarity (heatmap ও session recording):** clarity.microsoft.com-এ project খুলুন → Settings → Overview থেকে Project ID নিন → `site.json` → `"clarityId"`। Google Analytics-এর মতোই প্রথম tap/scroll-এর পর লোড হয়, তাই সাইট ধীর হয় না। ফর্মে লেখা কিছু রেকর্ড হয় না।
 
-**Giscus (ব্লগ পোস্টে কমেন্ট):** এই repo-তে GitHub → Settings → Features → **Discussions** চালু করুন → github.com/apps/giscus থেকে app install করুন → giscus.app-এ repo লিখে "Discussion Category" বেছে নিন → সেখানে দেখানো `data-repo-id` আর `data-category-id` `site.json` → `"comments"`-এ `repoId` ও `categoryId`-তে দিন। কমেন্ট শুধু স্ক্রল করে কাছে এলে লোড হয়।
-
 **PayPal বোতাম (PayPal ও কার্ডে সরাসরি পেমেন্ট):** developer.paypal.com → Apps & Credentials → **Live** → Create App → Client ID কপি করুন → `payments.json`-এ PayPal মেথডের `"paypalClientId"`-তে দিন। তখন Payment পেইজে PayPal/কার্ডের বোতাম আসে; পেমেন্ট হলে অর্ডার (PayPal order ID সহ) Web3Forms-এ নিজে চলে আসে। Client ID থাকলে PayPal প্যানেলে কোনো ফর্ম থাকে না, ক্রেতার নাম ও email PayPal থেকে আসে। সার্ভিসের যে প্যাকেজে `"USD"` দাম আছে (`services.json` → `packages` → `prices`), সেখানে "Order on WhatsApp"-এর পাশে "Pay … with PayPal or card" বোতাম আসে; লেখা `data/pages/services.json` → `paypal`। PayPal শুধু USD-তে (OMR/BDT PayPal সমর্থন করে না)। ডেলিভারির আগে PayPal account-এ টাকা এসেছে কিনা দেখে নিন। Client ID গোপন নয়, কিন্তু **Secret কখনো কোথাও দেবেন না।**
 
 **Site search (Pagefind):** কিছু করতে হয় না। build প্রতিবার সব পেইজের লেখা থেকে খোঁজার index বানায়, `/search/` পেইজে খোঁজা যায়, হেডারে 🔍 আইকন। লেখা `data/pages/search.json`-এ। হেডার থেকে সরাতে `header.json` থেকে `"search"` মুছুন।
