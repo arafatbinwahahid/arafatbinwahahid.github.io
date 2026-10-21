@@ -196,56 +196,24 @@ function renderPayment() {
   $$('[data-panel]:not([hidden]) [data-paypal]').forEach(paypalButtons);
 }
 
-// ---- PayPal / card buttons (payments.json "paypalClientId"); the PayPal script loads only when its panel is open ----
-let paypalSdk = null;
+// ---- PayPal / card buttons (payments.json "paypalClientId", code in paypal.js); load when the PayPal panel opens ----
 function paypalButtons(box) {
-  if (box.dataset.ready) return;
-  box.dataset.ready = '1';
-  const form = $('[data-pay-form]', box.closest('[data-panel]'));
-  const P = T.paypal;
-  const say = (text, ok) => { const s = $('.status', form); s.textContent = text; s.className = `status ${ok ? 'ok' : 'err'}`; };
-  const code = box.dataset.currency;
-  paypalSdk ||= new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(box.dataset.paypal)}&currency=${code}&intent=capture&components=buttons`;
-    s.onload = () => resolve(window.paypal);
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
-  // Any problem loading PayPal (wrong Client ID, blocked script, no buttons after 15 s) hides the box; paying by hand still works
-  const hide = () => { box.closest('.paypal-box').hidden = true; };
-  const timer = setTimeout(() => { if (!box.querySelector('iframe')) hide(); }, 15000);
-  paypalSdk.then((paypal) => { if (!paypal?.Buttons) throw new Error('PayPal not loaded'); return paypal.Buttons({
-    style: { layout: 'vertical', shape: 'rect', label: 'pay' },
-    onClick: (data, actions) => {
-      const v = (n) => form.elements[n]?.value.trim() || '';
+  const wrap = box.closest('.paypal-box');
+  const say = (text, ok) => { const s = $('.status', wrap); s.textContent = text; s.className = `status ${ok ? 'ok' : 'err'}`; };
+  window.payPalButtons?.(box, {
+    check: () => {
       cart = loadCart();
-      if (!cart.length) { say(T.pay.emptyCart); return actions.reject(); }
-      if (store.get('sentOrders', []).includes(orderId())) { say(fill(T.pay.duplicate, { id: orderId() })); return actions.reject(); }
-      if (!v('name') || !v('email') || !/^\+?[0-9 ()-]{7,20}$/.test(v('mobile'))) { say(P.missing); form.reportValidity(); return actions.reject(); }
+      if (!cart.length) { say(T.pay.emptyCart); return false; }
+      if (store.get('sentOrders', []).includes(orderId())) { say(fill(T.pay.duplicate, { id: orderId() })); return false; }
       say('');
-      return actions.resolve();
+      return true;
     },
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{
-        custom_id: orderId(),
-        description: lines().map((l) => `${name(l.p)} x${l.qty}`).join(', ').slice(0, 127),
-        amount: { currency_code: code, value: total().toFixed(2) },
-      }],
-    }),
-    onApprove: async (data, actions) => {
-      const order = await actions.order.capture();
-      const cap = order.purchase_units?.[0]?.payments?.captures?.[0] || {};
-      await submitOrder(form, {
-        'PayPal order ID': order.id,
-        'PayPal capture ID': cap.id || '',
-        'PayPal status': `${order.status}${cap.status ? ` / ${cap.status}` : ''}`,
-        'PayPal amount': `${cap.amount?.value || ''} ${cap.amount?.currency_code || ''}`.trim(),
-        'PayPal payer': `${order.payer?.name?.given_name || ''} ${order.payer?.name?.surname || ''} <${order.payer?.email_address || ''}>`.trim(),
-      });
-    },
-    onError: () => say(fill(P.error, { id: orderId() })),
-  }).render(box); }).catch(() => { clearTimeout(timer); hide(); });
+    order: () => ({ id: orderId(), items: lines().map((l) => ({ name: name(l.p), sku: l.id, qty: l.qty, unit: l.unit })) }),
+    paid: (info) => submitOrder(wrap, info),
+    error: () => say(fill(T.paypal.error, { id: orderId() })),
+    // PayPal could not load: show the WhatsApp message instead of an empty box
+    hide: () => { box.hidden = true; $('[data-paypal-fallback]', wrap).hidden = false; },
+  });
 }
 
 if (pay) {
@@ -260,19 +228,19 @@ if (pay) {
   $$('[data-pay-form]').forEach((form) => form.addEventListener('submit', (e) => { e.preventDefault(); submitOrder(form); }));
 }
 
-// paypal: details of a payment made with the PayPal buttons (the amount check then uses PayPal's amount)
+// form: the payment form, or the PayPal box (no fields) when paypal = { name, email, amount, fields } from paypal.js
 async function submitOrder(form, paypal) {
   const F = T.pay;
   const status = $('.status', form);
   const say = (text, ok) => { status.textContent = text; status.className = `status ${ok ? 'ok' : 'err'}`; };
-  if (sending || form.botcheck.checked) return;
+  if (sending || form.botcheck?.checked) return;
   cart = loadCart(); // check stock again right before sending
   if (!cart.length) return say(F.emptyCart);
   const id = orderId();
   const sent = store.get('sentOrders', []);
   if (sent.includes(id)) return say(fill(F.duplicate, { id }));
-  const v = (name) => form.elements[name]?.value.trim() || '';
-  if (!/^\+?[0-9 ()-]{7,20}$/.test(v('mobile'))) return say(F.invalidPhone);
+  const v = (name) => form.elements?.[name]?.value.trim() || '';
+  if (!paypal && !/^\+?[0-9 ()-]{7,20}$/.test(v('mobile'))) return say(F.invalidPhone);
   const appointment = form.dataset.type === 'appointment';
   if (!appointment && !paypal && !(Number(v('amount')) > 0)) return say(F.invalidAmount);
   if (appointment) {
@@ -288,9 +256,9 @@ async function submitOrder(form, paypal) {
     subject: `${appointment ? 'Appointment request' : paypal ? 'PAID with PayPal' : 'Payment confirmation'} ${id}: ${form.dataset.method} (${currency}) ${money(sum)}`,
     'Order ID': id,
     Status: paypal ? 'Paid with PayPal: check the payment in your PayPal account before delivering' : 'Pending: payment not verified yet',
-    name: v('name'),
-    'Mobile number': v('mobile'),
-    email: v('email'),
+    name: v('name') || paypal?.name,
+    'Mobile number': v('mobile') || 'Not given (paid with PayPal, reply by email)',
+    email: v('email') || paypal?.email,
     'Payment method': form.dataset.method,
     Currency: currency,
     Items: items.map((l, i) => `${i + 1}. ${name(l.p)} (ID ${l.id}) × ${l.qty} @ ${money(l.unit)} = ${money(l.total)}`).join('\n'),
@@ -303,8 +271,8 @@ async function submitOrder(form, paypal) {
     data['Preferred visit time'] = v('time');
     if (v('message')) data.Message = v('message');
   } else if (paypal) {
-    Object.assign(data, paypal);
-    if (Number(paypal['PayPal amount'].split(' ')[0]) !== sum) data['Amount check'] = `PayPal amount differs from the order total ${money(sum)}`;
+    Object.assign(data, paypal.fields);
+    if (paypal.amount !== sum) data['Amount check'] = `PayPal amount differs from the order total ${money(sum)}`;
   } else {
     data['Amount paid (entered by customer)'] = `${v('amount')} ${currency}`;
     if (Number(v('amount')) !== sum) data['Amount check'] = `Entered amount differs from the order total ${money(sum)}`;
@@ -313,7 +281,7 @@ async function submitOrder(form, paypal) {
 
   sending = true;
   const button = $('[type=submit]', form);
-  button.disabled = true;
+  if (button) button.disabled = true;
   say(F.sending, true);
   try {
     await window.sendToWeb3Forms(data);
@@ -327,7 +295,7 @@ async function submitOrder(form, paypal) {
     say(fill(F.error, { id }));
   }
   sending = false;
-  button.disabled = false;
+  if (button) button.disabled = false;
 }
 
 render();

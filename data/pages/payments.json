@@ -83,9 +83,8 @@
   },
   "paypal": {
     "title": "Pay now with PayPal or card",
-    "note": "Fill in your name, mobile and email in the form below first. After you pay, the order is sent to us automatically.",
-    "or": "Or pay by hand with the details below and send the form.",
-    "missing": "Please fill in your name, a valid mobile number and email in the form below, then press the PayPal button again.",
+    "note": "Pay with your PayPal account or any debit or credit card. After you pay, your order is sent to us automatically.",
+    "fallback": "PayPal could not load right now. Please try again later, or message us on WhatsApp to pay.",
     "error": "PayPal could not finish the payment. Nothing was charged. Please try again or message us on WhatsApp with your order ID {id}.",
     "paid": "Paid with PayPal"
   },

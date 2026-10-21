@@ -179,7 +179,7 @@ ${siteFooter()}
 ${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
 ${cart ? cartDrawer() + catalog() : ''}
 <script src="${assetUrl('assets/js/main.js')}" defer></script>
-<script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${cart ? `\n<script src="${assetUrl('assets/js/shop.js')}" defer></script>` : ''}${scripts.map((s) => `\n<script src="${assetUrl(`assets/js/${s}.js`)}" defer></script>`).join('')}
+<script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${scripts.map((s) => `\n<script src="${assetUrl(`assets/js/${s}.js`)}" defer></script>`).join('')}${cart ? `\n<script src="${assetUrl('assets/js/shop.js')}" defer></script>` : ''}
 </body>
 </html>
 `;

@@ -336,6 +336,8 @@ a.card:hover { border-color: var(--primary); }
 .packages { list-style: none; display: grid; gap: .6rem; margin: .6rem 0 0; }
 .packages li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem 1rem; padding: .9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: #fff; }
 .packages li > div { display: grid; gap: .15rem; min-width: 0; }
+.packages li > .pk-btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+.packages .paypal-box { flex-basis: 100%; margin: .2rem 0 0; }
 
 /* Search */
 .search-form { display: flex; gap: .6rem; margin-bottom: 1rem; }

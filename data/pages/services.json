@@ -62,6 +62,16 @@
   },
   "orderLabel": "Order on WhatsApp",
   "orderMessage": "Hello Arafat, I am interested in {service}: {package} ({price}).",
+  "paypal": {
+    "payLabel": "Pay {price} with PayPal or card",
+    "note": "Pay the package price now with PayPal or any debit or credit card. We then message you to start the work.",
+    "doneTitle": "Payment received",
+    "doneText": "Thank you! Your order ID is {id}. We will contact you soon. You can also send this order ID on WhatsApp to start right away.",
+    "doneWhatsapp": "Hello Arafat, I paid for {service}: {package} with PayPal. Order ID {id}.",
+    "error": "PayPal could not finish the payment. Nothing was charged. Please try again or order on WhatsApp.",
+    "fallback": "PayPal could not load right now. Please order on WhatsApp.",
+    "sendError": "Your payment went through (order {id}), but the order message could not be sent. Please send this order ID on WhatsApp."
+  },
   "sections": {
     "about": "About this service",
     "description": "Description",
