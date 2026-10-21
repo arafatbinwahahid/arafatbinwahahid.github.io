@@ -70,6 +70,10 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
   const share = shareImage(seo.image || site.defaultImage);
   const image = absUrl(share.src);
   const t = site.theme;
+  // Search Console / Bing Webmaster verification, on the home page (site.json "verification"; a pasted <meta> tag also works)
+  const code = (v) => (String(v || '').match(/content="([^"]+)"/)?.[1] || v || '').trim();
+  const { google, bing } = site.verification || {};
+  const verify = path === '/' ? [['google-site-verification', code(google)], ['msvalidate.01', code(bing)]].filter(([, v]) => v).map(([n, v]) => `\n<meta name="${n}" content="${esc(v)}">`).join('') : '';
   if (crumbs) {
     schema = [...schema, {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -93,7 +97,7 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
 <meta name="description" content="${esc(description)}">${seo.keywords?.length ? `\n<meta name="keywords" content="${esc(seo.keywords.join(', '))}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}">
 ${noindex ? '' : `<link rel="canonical" href="${esc(canonical)}">`}
-<meta name="theme-color" content="${esc(t.dark)}">
+<meta name="theme-color" content="${esc(t.dark)}">${verify}
 ${iconLinks()}
 <meta property="og:type" content="${type}">
 <meta property="og:locale" content="${esc(site.locale.replace('-', '_'))}">
