@@ -1,15 +1,37 @@
 {
-  "seo": { "title": "Services", "description": "Vector portraits, logo and social media design, Excel dashboards and data entry services by Arafat Bin Wahahid, available remotely.", "image": "/assets/images/Service-ArafatBin-Seo.PNG" },
-  "hero": { "title": "Services", "text": "Remote design and data work, delivered on time." },
+  "seo": {
+    "title": "Services",
+    "description": "Professional web development and custom website design, and Clash of Clans account boosting and village building, by arafatbin.com.",
+    "image": "/assets/images/Service-ArafatBin-Seo.PNG"
+  },
+  "hero": {
+    "title": "Services",
+    "text": "Custom websites and Clash of Clans account boosting, with a test run before you commit."
+  },
   "fromLabel": "From",
-  "deliveryLabel": "Delivery",
-  "includesTitle": "What you get",
   "process": {
     "title": "How it works",
     "steps": [
-      { "title": "Message me", "text": "Tell me what you need on WhatsApp or through the contact form." },
-      { "title": "Get a quote", "text": "I confirm the price, the delivery time and what you will receive." },
-      { "title": "Receive your files", "text": "I deliver the work and make revisions until you are happy." }
+      {
+        "title": "Message me",
+        "text": "Tell me what you need on WhatsApp or through the contact form."
+      },
+      {
+        "title": "Get a quote",
+        "text": "I confirm the price, the delivery time and what you will receive."
+      },
+      {
+        "title": "Get it done",
+        "text": "I deliver the work, share progress and fix anything until you are happy."
+      }
     ]
+  },
+  "orderLabel": "Order on WhatsApp",
+  "orderMessage": "Hello Arafat, I am interested in {service}: {package} ({price}).",
+  "sections": {
+    "about": "About this service",
+    "description": "Description",
+    "features": "Why choose us",
+    "faq": "Frequently asked questions"
   }
 }
