@@ -8,6 +8,7 @@ import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
+import { webmcpScript } from './templates/webmcp.js';
 
 const OUT = path.join(ROOT, 'dist');
 
@@ -49,26 +50,27 @@ const added = pages.filter((p) => !p.noindex).map((p) => absUrl(p.path)).filter(
 const urls = [...sitemap.urls, ...added].map((u) => `  <url><loc>${u}</loc></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 
+// webmcp.js: tools for AI agents in the browser (WebMCP), made from the same data
+write('webmcp.js', webmcpScript(pages));
+
 // robots.txt
 const { allow = [], disallow = [] } = site.robots;
 write('robots.txt', ['User-agent: *', ...allow.map((r) => `Allow: ${r}`), ...disallow.map((r) => `Disallow: ${r}`), '', `Sitemap: ${absUrl('/sitemap.xml')}`, ''].join('\n'));
 
 // Static files. With sharp, pages use the small copies in assets/opt/, so the original uploads in assets/images/ are left out.
 const IMAGES = path.join(ROOT, 'assets/images');
-fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true, filter: (src) => !hasSharp || !src.startsWith(IMAGES) });
+// The CSS is written into every page's <head> (see templates/layout.js), so the file itself is not copied.
+const CSS = path.join(ROOT, 'assets/css');
+fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true, filter: (src) => !src.startsWith(CSS) && (!hasSharp || !src.startsWith(IMAGES)) });
 fs.mkdirSync(path.join(OUT, 'assets/opt'), { recursive: true });
 await buildImages(OUT);
 if (!hasSharp) console.warn('  ! "sharp" is not installed: images are not converted to WebP (run npm install)');
 
-// Minify CSS (edit the readable assets/css/style.css, the site gets the small version)
-const cssFile = path.join(OUT, 'assets/css/style.css');
-const css = fs.readFileSync(cssFile, 'utf8')
-  .replace(/\/\*[\s\S]*?\*\//g, '')
-  .replace(/\s+/g, ' ')
-  .replace(/\s*([{}:;,>])\s*/g, '$1')
-  .replace(/;}/g, '}')
-  .trim();
-fs.writeFileSync(cssFile, css);
+// Minify JS: drop comment lines and indentation (edit the readable files in assets/js/)
+for (const f of fs.readdirSync(path.join(OUT, 'assets/js'))) {
+  const file = path.join(OUT, 'assets/js', f);
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('//')).join('\n'));
+}
 if (fs.existsSync(path.join(ROOT, 'CNAME'))) fs.copyFileSync(path.join(ROOT, 'CNAME'), path.join(OUT, 'CNAME'));
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 

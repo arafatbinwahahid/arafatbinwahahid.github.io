@@ -17,12 +17,13 @@
 │   ├── helpers.js           ← JSON লোড + ছোট HTML helper
 │   ├── layout.js            ← <head> (SEO), header, 3-dot মেনু, footer
 │   ├── pages.js             ← প্রতিটি পেইজের HTML
+│   ├── webmcp.js            ← AI agent-এর tool (/webmcp.js) JSON থেকে বানায়
 │   └── validate.js          ← build-এর আগে সব JSON ফাইল schemas/ দিয়ে যাচাই করে (ajv)
 ├── schemas/                 ← প্রতিটি JSON ফাইলের নিয়ম (কোন ঘর লাগবে, কী ধরনের মান)
 ├── .htmlvalidate.json       ← HTML যাচাইয়ের নিয়ম (html-validate)
 ├── linkinator.config.json   ← ভাঙা লিংক খোঁজার নিয়ম (linkinator)
 ├── assets/
-│   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে minify করে dist-এ দেয়)
+│   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে ছোট করে প্রতিটি পেইজে বসায়)
 │   ├── js/main.js           ← মেনু বন্ধ করা, Contact/Review ফর্ম, Web3Forms-এ পাঠানো
 │   ├── js/shop.js           ← কার্ট, currency, gallery, quantity, পেমেন্ট ফর্ম (শুধু Shop ও Payment পেইজে)
 │   ├── images/              ← সব ছবি, ফোল্ডারে ভাগ করা:
@@ -131,6 +132,30 @@
 5. **Stock কমানো:** পেমেন্ট যাচাই হওয়ার পর `products.json`-এ ওই প্রোডাক্টের `stock` নিজে কমিয়ে দিন। সাইট নিজে stock কমায় না, কারণ GitHub Pages-এ কোনো server বা database নেই।
 
 **নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
+
+## AI agent-এর জন্য WebMCP (`/webmcp.js`)
+
+build প্রতিবার `data/`-এর JSON থেকে নিজে `dist/webmcp.js` বানায়, এটা হাতে এডিট করতে হয় না। নতুন প্রোডাক্ট, সার্ভিস বা পেইজ যোগ করলে এতেও নিজে যোগ হয়।
+যে browser WebMCP চেনে (`document.modelContext`), শুধু সেখানেই ফাইলটা লোড হয়, তাই সাধারণ ভিজিটরের সাইট একটুও ধীর হয় না।
+AI agent এই tool-গুলো ব্যবহার করতে পারে:
+
+| Tool | কাজ |
+|---|---|
+| `get-site-info` | সাইট, যোগাযোগ, currency, পেমেন্ট মেথড, পেইজের তালিকা |
+| `list-products` / `get-product` | প্রোডাক্ট, প্ল্যান, দাম, stock, FAQ |
+| `list-services` / `get-service` | সার্ভিস, প্যাকেজ, দাম, FAQ |
+| `search-site` | প্রোডাক্ট, সার্ভিস, পেইজ ও FAQ-তে খোঁজা |
+| `get-cart` / `add-to-cart` | ভিজিটরের কার্ট দেখা ও যোগ করা (stock-এর বেশি নয়; পেমেন্ট ভিজিটর নিজে করেন) |
+| `whatsapp-link` | লেখা-সহ WhatsApp লিংক বানানো (নিজে কিছু পাঠায় না) |
+
+কোডটা আছে `templates/webmcp.js`-এ।
+
+## দ্রুত লোডের জন্য যা নিজে হয়
+
+- CSS প্রতিটি পেইজের `<head>`-এ ছোট করে বসানো থাকে, আলাদা ফাইল লোড করতে হয় না
+- JS থেকে comment ও ফাঁকা জায়গা বাদ যায়
+- প্রথম ছবি আগে লোড হয়, বাকিগুলো স্ক্রল করলে
+- Google Analytics প্রথম tap/scroll-এ বা পেইজ লোডের 3.5 সেকেন্ড পরে লোড হয়
 
 ## স্বয়ংক্রিয় পরীক্ষা
 

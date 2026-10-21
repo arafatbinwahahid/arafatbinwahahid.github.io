@@ -41,6 +41,14 @@ export const posts = fs
   .filter((p) => !p.draft)
   .sort((a, b) => b.date.localeCompare(a.date));
 
+// The stylesheet, minified, for the <style> tag in every page (edit the readable assets/css/style.css)
+export const css = fs.readFileSync(path.join(ROOT, 'assets/css/style.css'), 'utf8')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\s+/g, ' ')
+  .replace(/\s*([{}:;,>])\s*/g, '$1')
+  .replace(/;}/g, '}')
+  .trim();
+
 // ---- HTML helpers ----
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
@@ -95,7 +103,7 @@ const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png)$/i.test(src |
 function webpWidths(src) {
   if (!canResize(src)) return null;
   const w = imageSize(src)[0];
-  const widths = [...new Set([400, 800, 1200].filter((x) => x < w).concat(Math.min(w, 1600)))];
+  const widths = [...new Set([200, 400, 600, 800, 1200].filter((x) => x < w).concat(Math.min(w, 1600)))];
   widths.forEach((x) => addJob(src, x));
   return widths;
 }
