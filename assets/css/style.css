@@ -72,7 +72,7 @@ button.more { border: 0; background: none; padding: 0; font: inherit; font-weigh
 /* Page hero + breadcrumbs */
 .phero { background: var(--soft); border-bottom: 1px solid var(--border); padding: clamp(2rem, 5vw, 3.2rem) 0; }
 .crumbs { display: flex; flex-wrap: wrap; gap: .4rem; font-size: .88rem; color: var(--muted); margin-bottom: .8rem; }
-.crumbs a { color: var(--muted); }
+.crumbs a { color: var(--muted); display: inline-block; padding: .2rem 0; }
 .crumbs .sep { opacity: .5; }
 
 /* Sections + grids */
@@ -95,7 +95,7 @@ button.more { border: 0; background: none; padding: 0; font: inherit; font-weigh
 a.card:hover { border-color: var(--primary); }
 .card-pad { padding: 1.4rem; }
 .card-accent { background: var(--dark); border-color: var(--dark); color: #cdd6e4; }
-.card-accent h3 { color: #fff; }
+.card-accent :is(h2, h3) { color: #fff; }
 .card-img { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--soft); border-bottom: 1px solid var(--border); }
 .card-img-tall { aspect-ratio: 16 / 11; }
 .card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -108,14 +108,13 @@ a.card:hover { border-color: var(--primary); }
 .card-accent .ic { background: rgba(255, 255, 255, .1); color: var(--accent); }
 .badge { position: absolute; top: .7rem; left: .7rem; padding: .2rem .6rem; border-radius: 999px; background: var(--accent); color: var(--dark); font-size: .75rem; font-weight: 700; }
 .badge-out { background: #c62828; color: #fff; left: auto; right: .7rem; }
-p.badge-out, .badge-inline { position: static; display: inline-block; vertical-align: middle; }
+.badge-inline { position: static; display: inline-block; vertical-align: middle; }
 .price { margin-top: .4rem !important; font-size: 1.05rem; color: var(--dark) !important; }
 .price s { color: var(--muted); font-size: .9em; margin-left: .3rem; }
 .price-lg { font-size: 1.8rem; margin: .2rem 0 1rem !important; }
 .meta { display: flex; flex-wrap: wrap; gap: .4rem 1rem; margin-top: auto; padding-top: .8rem; font-size: .9rem; color: var(--muted); }
 .meta span { display: inline-flex; align-items: center; gap: .3rem; }
 .meta b { color: var(--dark); }
-.meta-lg { font-size: 1.05rem; padding: 0 0 1rem; }
 .list { list-style: none; margin: 1rem 0; display: grid; gap: .45rem; }
 .list li { display: flex; gap: .55rem; align-items: flex-start; }
 .list .i { color: var(--accent); margin-top: .25rem; stroke-width: 3; }
@@ -186,7 +185,7 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 
 /* Prose (blog + legal) */
 .prose { max-width: 760px; margin-inline: auto; }
-.prose > img, .prose > picture img { border-radius: var(--radius); margin-bottom: 1.8rem; width: 100%; }
+.prose > img { border-radius: var(--radius); margin-bottom: 1.8rem; width: 100%; }
 .prose h2 { font-size: 1.45rem; margin: 2.2rem 0 .7rem; }
 .prose h3 { margin: 1.6rem 0 .5rem; }
 .prose p, .prose ul, .prose ol { margin: 0 0 1rem; }
@@ -217,7 +216,8 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .social a { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .18); border-radius: 10px; }
 .social a:hover { background: var(--accent); color: var(--dark); }
 .ftr-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; padding-top: 1.3rem; border-top: 1px solid rgba(255, 255, 255, .12); font-size: .85rem; }
-.ftr-bottom nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+.ftr-bottom nav { display: flex; flex-wrap: wrap; gap: 0 1.2rem; }
+.ftr-bottom nav a { display: inline-block; padding: .3rem 0; }
 @media (max-width: 860px) { .ftr-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; } .ftr-grid > div:first-child, .ftr-grid > div:last-child { grid-column: 1 / -1; } }
 
 /* Floating WhatsApp */
@@ -268,7 +268,7 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .benefits b { display: block; color: var(--dark); }
 .benefits li > span:last-child span { color: var(--muted); font-size: .92rem; }
 .policy { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin-top: 1.2rem; font-size: .88rem; }
-.policy a { color: var(--muted); }
+.policy a { color: var(--muted); display: inline-block; padding: .2rem 0; }
 
 /* Product page */
 .gallery { display: grid; gap: .7rem; }

@@ -6,7 +6,7 @@
   "category": "Excel",
   "tags": ["Excel", "Dashboards"],
   "excerpt": "Simple rules I follow to make Excel dashboards that are easy to read and have zero formula errors.",
-  "image": { "src": "/assets/images/IMAGE06.JPG", "alt": "Excel sales performance dashboard" },
+  "image": { "src": "/assets/images/work/excel-sales-performance-dashboard.jpg", "alt": "Excel sales performance dashboard" },
   "draft": false,
   "content": [
     { "type": "p", "text": "A good dashboard answers one question quickly. These are the rules I use in every workbook I build." },

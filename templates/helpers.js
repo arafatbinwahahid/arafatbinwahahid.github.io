@@ -30,7 +30,7 @@ export const contact = read('global/contact.json');
 export const social = read('global/social.json');
 export const sitemap = read('global/sitemap.json');
 export const payments = read('global/payments.json');
-export const icons = read('global/icons.json');
+const icons = read('global/icons.json');
 export const products = read('collections/products.json');
 export const services = read('collections/services.json');
 export const page = (name) => read(`pages/${name}.json`);
@@ -81,17 +81,22 @@ function imageSize(src) {
 }
 
 // WebP versions are made at build time when the optional "sharp" package is installed (it is on GitHub).
+// The site then only ships these small copies, never the original uploads.
 let sharp = null;
 try { sharp = (await import('sharp')).default; } catch {}
-export const imageJobs = new Map(); // source path -> widths to generate
+export const hasSharp = !!sharp;
+const imageJobs = new Map(); // source path -> widths to generate
+const addJob = (src, w) => imageJobs.set(src, new Set([...(imageJobs.get(src) || []), w]));
 // File names with spaces or capitals become simple names, e.g. "My Logo.PNG" -> my-logo-400.webp
 const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${ext}`;
 export const url = (src) => encodeURI(decodeURI(src || ''));
+const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png)$/i.test(src || '') && imageSize(src);
 
-function webpWidths(src, size) {
-  if (!sharp || !size || isHttp(src) || !/\.(jpe?g|png)$/i.test(src)) return null;
-  const widths = [...new Set([400, 800, 1200].filter((w) => w < size[0]).concat(Math.min(size[0], 1600)))];
-  imageJobs.set(src, new Set([...(imageJobs.get(src) || []), ...widths]));
+function webpWidths(src) {
+  if (!canResize(src)) return null;
+  const w = imageSize(src)[0];
+  const widths = [...new Set([400, 800, 1200].filter((x) => x < w).concat(Math.min(w, 1600)))];
+  widths.forEach((x) => addJob(src, x));
   return widths;
 }
 
@@ -99,14 +104,25 @@ export function img(image, { eager = false, sizes = '(max-width: 800px) 100vw, 5
   if (!image?.src) return '';
   const s = imageSize(image.src);
   const wh = s ? ` width="${s[0]}" height="${s[1]}"` : '';
-  const tag = `<img src="${esc(url(image.src))}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
-  const widths = webpWidths(image.src, s);
-  if (!widths) return tag;
-  return `<picture><source type="image/webp" srcset="${widths.map((w) => `${optPath(image.src, w)} ${w}w`).join(', ')}" sizes="${sizes}">${tag}</picture>`;
+  const widths = webpWidths(image.src);
+  const src = widths
+    ? `${optPath(image.src, widths.find((w) => w >= 800) || widths.at(-1))}" srcset="${widths.map((w) => `${optPath(image.src, w)} ${w}w`).join(', ')}" sizes="${sizes}`
+    : url(image.src);
+  return `<img src="${src}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
 }
 
-// Small image for the cart; falls back to the original file without sharp
-export const thumb = (src) => (webpWidths(src, imageSize(src)) ? optPath(src, Math.min(400, imageSize(src)[0])) : url(src));
+// Small image for the cart, and the largest copy for "open full image" links
+export const thumb = (src) => (webpWidths(src) ? optPath(src, Math.min(400, imageSize(src)[0])) : url(src));
+export const fullImage = (src) => (webpWidths(src) ? optPath(src, Math.min(1600, imageSize(src)[0])) : url(src));
+
+// 1200px JPG for link previews (Facebook, WhatsApp, Google) and structured data
+export function shareImage(src) {
+  if (!canResize(src)) return { src: url(src) };
+  addJob(src, 'og');
+  const [w, h] = imageSize(src);
+  const width = Math.min(1200, w);
+  return { src: optPath(src, 'og', 'jpg'), width, height: Math.round((h * width) / w) };
+}
 
 // Logo: white space around it is cut off, then a 64px-high copy is used in the header and footer
 const LOGO_H = 64;
@@ -118,7 +134,7 @@ export function logoImg() {
   const src = header.logo.image;
   if (!src) return '';
   if (!logoSize) return `<img src="${esc(url(src))}" alt="" height="32">`;
-  imageJobs.set(src, new Set([...(imageJobs.get(src) || []), 'logo']));
+  addJob(src, 'logo');
   const w = Math.round((logoSize.width / logoSize.height) * LOGO_H);
   return `<img src="${optPath(src, 'logo')}" alt="" width="${Math.round(w / 2)}" height="${LOGO_H / 2}">`;
 }
@@ -131,7 +147,7 @@ export const lowestPrices = (p) => Object.fromEntries(Object.keys(optionsOf(p)[0
 // Favicon: a small square PNG made from site.json "favicon" when sharp is available
 export function iconLinks() {
   if (!sharp || isHttp(site.favicon)) return `<link rel="icon" href="${esc(url(site.favicon))}">`;
-  imageJobs.set(site.favicon, new Set([...(imageJobs.get(site.favicon) || []), 'icon']));
+  addJob(site.favicon, 'icon');
   return `<link rel="icon" type="image/png" sizes="48x48" href="${optPath(site.favicon, 48, 'png')}">\n<link rel="apple-touch-icon" href="${optPath(site.favicon, 180, 'png')}">`;
 }
 
@@ -156,6 +172,8 @@ export async function buildImages(outDir) {
           rgba[j + 3] = a;
         }
         await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 90, alphaQuality: 100 }).toFile(path.join(outDir, optPath(src, 'logo')));
+      } else if (w === 'og') {
+        await sharp(input).resize({ width: 1200, withoutEnlargement: true }).flatten({ background: '#ffffff' }).jpeg({ quality: 82, mozjpeg: true }).toFile(path.join(outDir, optPath(src, 'og', 'jpg')));
       } else {
         await sharp(input).resize({ width: w, withoutEnlargement: true }).webp({ quality: 78 }).toFile(path.join(outDir, optPath(src, w)));
       }

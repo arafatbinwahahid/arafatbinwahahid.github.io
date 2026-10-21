@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf } from './templates/helpers.js';
+import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf, hasSharp } from './templates/helpers.js';
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
@@ -53,11 +53,12 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 const { allow = [], disallow = [] } = site.robots;
 write('robots.txt', ['User-agent: *', ...allow.map((r) => `Allow: ${r}`), ...disallow.map((r) => `Disallow: ${r}`), '', `Sitemap: ${absUrl('/sitemap.xml')}`, ''].join('\n'));
 
-// Static files
-fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true });
+// Static files. With sharp, pages use the small copies in assets/opt/, so the original uploads in assets/images/ are left out.
+const IMAGES = path.join(ROOT, 'assets/images');
+fs.cpSync(path.join(ROOT, 'assets'), path.join(OUT, 'assets'), { recursive: true, filter: (src) => !hasSharp || !src.startsWith(IMAGES) });
 fs.mkdirSync(path.join(OUT, 'assets/opt'), { recursive: true });
-const optimised = await buildImages(OUT);
-if (!optimised) console.warn('  ! "sharp" is not installed: images are not converted to WebP (run npm install)');
+await buildImages(OUT);
+if (!hasSharp) console.warn('  ! "sharp" is not installed: images are not converted to WebP (run npm install)');
 
 // Minify CSS (edit the readable assets/css/style.css, the site gets the small version)
 const cssFile = path.join(OUT, 'assets/css/style.css');

@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf } from './helpers.js';
+import { site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -62,10 +62,13 @@ function siteFooter() {
 }
 
 export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false }) {
-  const title = !seo.title ? site.title : seo.titleSuffix === false ? seo.title : `${seo.title}${site.titleSeparator}${site.name}`;
+  // " | Arafat Bin Wahahid" is added unless the title would get longer than Google shows (about 60 characters)
+  const withName = `${seo.title}${site.titleSeparator}${site.name}`;
+  const title = !seo.title ? site.title : seo.titleSuffix === false || withName.length > 60 ? seo.title : withName;
   const description = seo.description || site.description;
   const canonical = absUrl(path);
-  const image = absUrl(seo.image || site.defaultImage);
+  const share = shareImage(seo.image || site.defaultImage);
+  const image = absUrl(share.src);
   const t = site.theme;
   if (crumbs) {
     schema = [...schema, {
@@ -88,13 +91,13 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
 ${noindex ? '' : `<link rel="canonical" href="${esc(canonical)}">`}
 <meta name="theme-color" content="${esc(t.dark)}">
 ${iconLinks()}
-<link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <meta property="og:type" content="${type}">
+<meta property="og:locale" content="${esc(site.locale.replace('-', '_'))}">
 <meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonical)}">
-<meta property="og:image" content="${esc(image)}">
+<meta property="og:image" content="${esc(image)}">${share.width ? `\n<meta property="og:image:width" content="${share.width}">\n<meta property="og:image:height" content="${share.height}">` : ''}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">

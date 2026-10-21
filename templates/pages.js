@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
   site, header, contact, social, products, services, posts, payments, page,
-  esc, icon, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices,
+  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
 
@@ -37,6 +37,9 @@ const priceOf = (o) => `<b>${money(o.prices)}</b>${o.compareAtPrices ? ` <s>${mo
 const priceTag = (p) => (hasPlans(p) ? `<span class="from">${esc(shopText.fromLabel)}</span> <b>${money(lowestPrices(p))}</b>` : priceOf(optionsOf(p)[0]));
 const badges = (p) => `${optionsOf(p).some((o) => o.compareAtPrices) ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${stockOf(p) < 1 ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}`;
 const CARD = '(max-width: 640px) 100vw, 360px';
+// Card titles are h3 under a section heading, and h2 on pages where the cards come straight after the h1
+const cardTitle = (text, h = 3) => (h === 2 ? `<h2 class="h3">${esc(text)}</h2>` : `<h3>${esc(text)}</h3>`);
+const shareUrl = (src) => absUrl(shareImage(src).src);
 
 // Home page card (no cart there)
 const productCard = (p) => `<a class="card" href="/shop/${esc(p.slug)}/">
@@ -65,13 +68,13 @@ const serviceFrom = (s) => {
   const cur = Object.keys(s.packages[0].prices)[0];
   return formatPrice(Math.min(...s.packages.map((p) => p.prices[cur]).filter((v) => v != null)), cur);
 };
-const serviceCard = (s) => `<a class="card" href="/services/${esc(s.slug)}/">
+const serviceCard = (s, h) => `<a class="card" href="/services/${esc(s.slug)}/">
 <div class="card-img">${img(s.images[0], { sizes: CARD })}</div>
-<div class="card-body"><p class="kicker">${esc(s.category)}</p><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><p class="price"><span class="from">${esc(servicesText.fromLabel)}</span> <b>${serviceFrom(s)}</b></p></div></a>`;
+<div class="card-body"><p class="kicker">${esc(s.category)}</p>${cardTitle(s.title, h)}<p>${esc(s.summary)}</p><p class="price"><span class="from">${esc(servicesText.fromLabel)}</span> <b>${serviceFrom(s)}</b></p></div></a>`;
 
-const postCard = (p) => `<a class="card" href="/blog/${esc(p.slug)}/">
+const postCard = (p, h) => `<a class="card" href="/blog/${esc(p.slug)}/">
 <div class="card-img">${img(p.image)}</div>
-<div class="card-body"><p class="kicker">${esc(p.category)} · <time datetime="${esc(p.date)}">${formatDate(p.date)}</time></p><h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p><span class="more">${esc(blogText.readMoreLabel)}${icon('arrow')}</span></div></a>`;
+<div class="card-body"><p class="kicker">${esc(p.category)} · <time datetime="${esc(p.date)}">${formatDate(p.date)}</time></p>${cardTitle(p.title, h)}<p>${esc(p.excerpt)}</p><span class="more">${esc(blogText.readMoreLabel)}${icon('arrow')}</span></div></a>`;
 
 const stars = (n) => {
   const r = Math.max(0, Math.min(5, Math.round(n || 0)));
@@ -88,11 +91,11 @@ const figure = (image) => (image?.src ? `<figure class="fig">${img(image)}${imag
 // ---- Home ----
 const homeSections = {
   products: (s) => section(grid(products.slice(0, s.limit).map(productCard)), s),
-  services: (s) => section(grid(services.slice(0, s.limit).map(serviceCard), 2), s),
+  services: (s) => section(grid(services.slice(0, s.limit).map((x) => serviceCard(x)), 2), s),
   about: (s) => section(`<div class="split"><div>${img(s.image)}</div><div><h2>${esc(s.title)}</h2>${paras(s.text)}${btns(s.buttons)}</div></div>`, { background: s.background }),
   work: (s) => section(grid(workPage.projects.slice(0, s.limit).map(workCard), 2), s),
   reviews: (s) => section(grid(reviewsPage.items.slice(0, s.limit).map(reviewCard)), s),
-  blog: (s) => (posts.length ? section(grid(posts.slice(0, s.limit).map(postCard)), s) : ''),
+  blog: (s) => (posts.length ? section(grid(posts.slice(0, s.limit).map((x) => postCard(x))), s) : ''),
   cta: (s) => section(`<div class="cta"><h2>${esc(s.title)}</h2><p>${esc(s.text)}</p>${btns(s.buttons)}</div>`, { background: s.background }),
 };
 
@@ -106,14 +109,14 @@ function homePage() {
   const body = hero + d.sections.filter((s) => s.show !== false && homeSections[s.type]).map((s) => homeSections[s.type](s)).join('');
   const person = {
     '@context': 'https://schema.org', '@type': 'Person', name: site.name, url: site.url,
-    image: absUrl(site.defaultImage), jobTitle: site.person.jobTitle, email: `mailto:${contact.email}`, telephone: `+${contact.whatsapp}`,
+    image: shareUrl(site.defaultImage), jobTitle: site.person.jobTitle, email: `mailto:${contact.email}`, telephone: `+${contact.whatsapp}`,
     worksFor: { '@type': 'Organization', name: site.person.worksFor },
     address: { '@type': 'PostalAddress', addressLocality: site.person.locality, addressRegion: site.person.region, addressCountry: site.person.country },
     sameAs: social.map((s) => s.url).filter((u) => /linkedin|fiverr/.test(u)),
     knowsAbout: site.person.knowsAbout,
   };
   const website = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url };
-  const org = header.logo.image && { '@context': 'https://schema.org', '@type': 'Organization', name: site.name, url: site.url, logo: absUrl(encodeURI(header.logo.image)) };
+  const org = header.logo.image && { '@context': 'https://schema.org', '@type': 'Organization', name: site.name, url: site.url, logo: shareUrl(header.logo.image) };
   return { path: '/', seo: d.seo, body, schema: [person, website, org].filter(Boolean) };
 }
 
@@ -168,7 +171,7 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
     : { '@type': 'Offer', price: first.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability }));
   const schema = {
     '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.seo?.description || p.summary, sku: p.id, category: p.category,
-    image: p.images.map((im) => absUrl(encodeURI(im.src))), brand: { '@type': 'Brand', name: site.name }, offers,
+    image: p.images.map((im) => shareUrl(im.src)), brand: { '@type': 'Brand', name: site.name }, offers,
   };
   return {
     path: url, seo: { title: p.title, description: p.summary, ...p.seo, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
@@ -240,7 +243,7 @@ function servicesPage() {
   const pr = servicesText.process;
   return {
     path: '/services/', seo: servicesText.seo, crumbs,
-    body: pageHero(servicesText.hero, crumbs) + section(grid(services.map(serviceCard), 2))
+    body: pageHero(servicesText.hero, crumbs) + section(grid(services.map((s) => serviceCard(s, 2)), 2))
       + (pr ? section(`<ol class="steps">${pr.steps.map((st, i) => `<li class="card card-pad"><span class="num">${i + 1}</span><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></li>`).join('')}</ol>`, { title: pr.title, background: 'soft' }) : '')
       + queueSection(),
   };
@@ -257,7 +260,7 @@ function servicePage(s) {
   const box = `<div class="buy"><p class="kicker">${esc(s.category)}</p><p class="price price-lg"><span class="from">${esc(T.fromLabel)}</span> <b>${serviceFrom(s)}</b></p>${packages}${btns(s.buttons)}${policyLinks()}</div>`;
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service', name: s.title, serviceType: s.category, description: s.seo?.description || s.summary,
-    image: s.images.map((im) => absUrl(encodeURI(im.src))), provider: { '@type': 'Person', name: site.name, url: site.url }, areaServed: 'Worldwide',
+    image: s.images.map((im) => shareUrl(im.src)), provider: { '@type': 'Person', name: site.name, url: site.url }, areaServed: 'Worldwide',
     offers: s.packages.map((pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return { '@type': 'Offer', name: pk.name, price: v, priceCurrency: cur, url: absUrl(url) }; }),
   };
   return {
@@ -307,7 +310,7 @@ function workPageFn() {
 function credentialsPage() {
   const d = page('credentials');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/credentials/' });
-  const certs = d.certificates.map((c) => `<a class="card" href="${esc(c.image.src)}" target="_blank" rel="noopener"><div class="card-img card-img-fit">${img(c.image)}</div><div class="card-body"><h3>${esc(c.title)}</h3><p>${esc(c.detail)}</p></div></a>`);
+  const certs = d.certificates.map((c) => `<a class="card" href="${fullImage(c.image.src)}" target="_blank" rel="noopener"><div class="card-img card-img-fit">${img(c.image)}</div><div class="card-body"><h3>${esc(c.title)}</h3><p>${esc(c.detail)}</p></div></a>`);
   const edu = d.education.map((e) => `<div class="card card-pad"><span class="ic">${icon('award')}</span><h3>${esc(e.title)}</h3><p>${esc(e.detail)}</p></div>`);
   return {
     path: '/credentials/', seo: d.seo, crumbs,
@@ -320,7 +323,7 @@ function reviewsPageFn() {
   const d = reviewsPage;
   const f = d.form;
   const crumbs = crumbsOf({ label: d.hero.title, href: '/reviews/' });
-  const fiverr = d.fiverr ? `<div class="card card-pad card-accent"><span class="ic">${icon('star')}</span><h3>${esc(d.fiverr.title)}</h3><p>${esc(d.fiverr.text)}</p>${btns([d.fiverr.button])}</div>` : '';
+  const fiverr = d.fiverr ? `<div class="card card-pad card-accent"><span class="ic">${icon('star')}</span><h2 class="h3">${esc(d.fiverr.title)}</h2><p>${esc(d.fiverr.text)}</p>${btns([d.fiverr.button])}</div>` : '';
   const form = f.show ? section(`<div class="narrow card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
 <form class="form" data-form="review" data-success="${esc(f.success)}" data-rating-error="${esc(f.ratingError)}" data-error="${esc(page('contact').form.error)}">
 <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">
@@ -364,7 +367,7 @@ function contactPage() {
 // ---- Blog ----
 function blogPage() {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' });
-  return { path: '/blog/', seo: blogText.seo, crumbs, body: pageHero(blogText.hero, crumbs) + section(grid(posts.map(postCard))) };
+  return { path: '/blog/', seo: blogText.seo, crumbs, body: pageHero(blogText.hero, crumbs) + section(grid(posts.map((p) => postCard(p, 2)))) };
 }
 
 const blocks = {
@@ -380,7 +383,7 @@ function postPage(p) {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' }, { label: p.title, href: `/blog/${p.slug}/` });
   const schema = {
     '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.date,
-    author: { '@type': 'Person', name: p.author, url: site.url }, mainEntityOfPage: absUrl(`/blog/${p.slug}/`), ...(p.image && { image: absUrl(p.image.src) }),
+    author: { '@type': 'Person', name: p.author, url: site.url }, mainEntityOfPage: absUrl(`/blog/${p.slug}/`), ...(p.image && { image: shareUrl(p.image.src) }),
   };
   const body = pageHero({ title: p.title, text: `${blogText.byLabel} ${p.author} · ${formatDate(p.date)}` }, crumbs)
     + section(`<article class="prose">${p.image ? img(p.image, { eager: true }) : ''}${p.content.map((b) => (blocks[b.type] || blocks.p)(b)).join('')}
