@@ -39,7 +39,7 @@ for (const c of payments.currencies) for (const m of c.methods) {
   const empty = (m.details || []).filter((r) => !r.value).map((r) => r.label);
   if (empty.length) console.warn(`  ! Payment ${m.id}: empty details (${empty.join(', ')}), customers are asked to message on WhatsApp`);
   if (m.type === 'appointment' && !m.location?.mapQuery) console.warn(`  ! Payment ${m.id}: no map location set`);
-  if (m.paypalClientId && !paypalIdOk(m.paypalClientId)) console.warn(`  ! Payment ${m.id}: "paypalClientId" is not a PayPal Client ID, so the PayPal buttons are hidden. Use the Client ID of your app (developer.paypal.com → Apps & Credentials → Live, about 80 characters, starts with "A"), not the code of a Pay link or button ("BAA...")`);
+  if (m.paypalClientId && !paypalIdOk(m.paypalClientId)) console.warn(`  ! Payment ${m.id}: "paypalClientId" is not a PayPal Client ID, so the PayPal buttons are hidden. Copy the whole Client ID of your app with its copy button (developer.paypal.com → Apps & Credentials → Live, about 80 characters); it is ${m.paypalClientId.length} characters now`);
 }
 
 fs.rmSync(OUT, { recursive: true, force: true });
