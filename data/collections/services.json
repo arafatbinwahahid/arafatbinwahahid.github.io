@@ -5,9 +5,9 @@
     "category": "Web development",
     "icon": "code",
     "seo": {
-      "title": "Professional Web Development & Custom Website Design Services | arafatbin.com",
+      "title": "Web Development & Custom Website Design | arafatbin.com",
       "titleSuffix": false,
-      "description": "Elevate your business with high-performing, custom, and fully responsive web development services. Get SEO-optimized, fast-loading websites built for maximum conversions at arafatbin.com!",
+      "description": "Custom, fully responsive websites built for speed, SEO and conversions. Professional web development and website design services by arafatbin.com.",
       "keywords": ["Professional Web Development Services", "Custom Website Design BD", "E-commerce Website Development", "Full-Stack Web Developer Bangladesh", "Business Website Services", "arafatbin.com", "Responsive Web Design", "SEO-Friendly Website Building", "Website Maintenance Service", "Fast Loading Website", "Custom Web Solutions", "Web Development Test Demo"]
     },
     "packagesTitle": "Service packages & starting prices",
@@ -18,8 +18,8 @@
       {"name": "E-commerce / Online Store", "prices": {"OMR": 65}}
     ],
     "images": [
-      {"src": "/assets/images/Professional Web Development Services arafatbin.com 01.PNG", "alt": "Professional web development and custom website design services by arafatbin.com"},
-      {"src": "/assets/images/Professional Web Development Services arafatbin.com 02.PNG", "alt": "Responsive, fast and SEO-friendly websites built by arafatbin.com"}
+      {"src": "/assets/images/services/web-development-01.jpg", "alt": "Professional web development and custom website design services by arafatbin.com"},
+      {"src": "/assets/images/services/web-development-02.jpg", "alt": "Responsive, fast and SEO-friendly websites built by arafatbin.com"}
     ],
     "summary": "Custom, fully responsive, fast and SEO-friendly websites: portfolio, business and e-commerce, with a test demo before launch.",
     "about": "🚀 Ready to take your business to the next level online? Don't settle for a basic template: get a custom, high-performing, fast and visually stunning website tailored specifically to your brand. Powered by arafatbin.com, we deliver end-to-end web development solutions designed to convert visitors into loyal customers.",
@@ -63,9 +63,9 @@
     "category": "Game services",
     "icon": "shield",
     "seo": {
-      "title": "Professional Clash of Clans (CoC) Account Boosting & Building | arafatbin.com",
+      "title": "Clash of Clans Account Boosting & Building | arafatbin.com",
       "titleSuffix": false,
-      "description": "Max out your Clash of Clans Town Hall, Heroes, and Walls fast and safely! Premium CoC account boosting and village building service in whole world at arafatbin.com.",
+      "description": "Max out your Clash of Clans Town Hall, Heroes and Walls fast and safely. Premium CoC account boosting and village building, worldwide, by arafatbin.com.",
       "keywords": ["Clash of Clans account boosting", "CoC village building service", "CoC base upgrade service", "professional CoC player", "Clash of Clans account maxing", "arafatbin.com", "Trusted CoC booster", "Town Hall maxing service", "CoC hero upgrade service", "safe Clash of Clans management", "CoC trophy pushing"]
     },
     "packagesTitle": "Pricing & packages",
@@ -76,8 +76,8 @@
       {"name": "Custom Town Hall Maxing Package", "prices": {"USD": 65}}
     ],
     "images": [
-      {"src": "/assets/images/Clash of Clans account boosting arafatbin.com 01.PNG", "alt": "Clash of Clans account boosting and village building service by arafatbin.com"},
-      {"src": "/assets/images/Clash of Clans account boosting arafatbin.com 02.PNG", "alt": "CoC Town Hall, hero and resource maxing service from arafatbin.com"}
+      {"src": "/assets/images/services/clash-of-clans-account-boosting-01.jpg", "alt": "Clash of Clans account boosting and village building service by arafatbin.com"},
+      {"src": "/assets/images/services/clash-of-clans-account-boosting-02.jpg", "alt": "CoC Town Hall, hero and resource maxing service from arafatbin.com"}
     ],
     "summary": "Manual Clash of Clans account management: resource farming, base and hero upgrades, Town Hall maxing and trophy pushing, with a 24–48 hour test run.",
     "about": "⚔️ Want to max out your Clash of Clans account without the daily grind? Stuck with rushed Town Halls, underleveled Heroes or low resources? Let an expert handle your village! Powered by arafatbin.com, we offer professional Clash of Clans Account Management & Village Building Services to upgrade your base safely, quickly and efficiently.",

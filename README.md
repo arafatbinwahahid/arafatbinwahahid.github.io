@@ -7,7 +7,7 @@
 **SSG (Static Site Generation):** `node build.js` চালালে প্রতিটি পেইজ আগে থেকেই পুরো লেখাসহ HTML ফাইল হয়ে যায়।
 তাই Google বা অন্য search engine পেইজ খুললেই সব লেখা সরাসরি পায়, JavaScript চালাতে হয় না।
 প্রতিটি পেইজে title, description, canonical, Open Graph, breadcrumb আর Schema.org (JSON-LD) ডাটা থাকে।
-ছবির width/height নিজে থেকে বসে যায়, আর build প্রতিটি ছবির ছোট WebP কপি বানায় (`sharp` package দিয়ে, GitHub-এ নিজে থেকে install হয়)। কোনো framework বা animation নেই, তাই সাইট খুব দ্রুত লোড হয়।
+ছবির width/height নিজে থেকে বসে যায়, আর build প্রতিটি ছবির ছোট WebP কপি (400/800/1200/1600px) আর link preview-এর জন্য 1200px JPG বানায় (`sharp` package দিয়ে, GitHub-এ নিজে থেকে install হয়)। সাইটে শুধু এই ছোট কপিগুলো যায়, আসল বড় ছবি নয়। কোনো framework বা animation নেই, তাই সাইট খুব দ্রুত লোড হয়।
 
 ## File structure
 
@@ -25,7 +25,14 @@
 │   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে minify করে dist-এ দেয়)
 │   ├── js/main.js           ← মেনু বন্ধ করা, Contact/Review ফর্ম, Web3Forms-এ পাঠানো
 │   ├── js/shop.js           ← কার্ট, currency, gallery, quantity, পেমেন্ট ফর্ম (শুধু Shop ও Payment পেইজে)
-│   ├── images/              ← সব ছবি
+│   ├── images/              ← সব ছবি, ফোল্ডারে ভাগ করা:
+│   │   ├── brand/           ← লোগো
+│   │   ├── products/        ← Shop-এর প্রোডাক্টের ছবি
+│   │   ├── services/        ← সার্ভিসের ছবি
+│   │   ├── payments/        ← পেমেন্টের poster / QR code
+│   │   ├── about/           ← নিজের ছবি (About, Experience, Home)
+│   │   ├── work/            ← Work পেইজের প্রজেক্ট
+│   │   └── credentials/     ← সার্টিফিকেট
 │   └── files/               ← CV (PDF)
 ├── CNAME                    ← arafatbin.com
 ├── .github/workflows/deploy.yml  ← main-এ push করলে build + পরীক্ষা + gh-pages ব্রাঞ্চে publish
@@ -81,7 +88,7 @@
 | নতুন সার্ভিস | `data/collections/services.json` |
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
-| নতুন ছবি | `assets/images/`-এ রাখুন, JSON-এ লিখুন `"/assets/images/নাম.jpg"` |
+| নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-01.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
 | sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
 | লোগো | `data/global/header.json` → `logo.image` (হেডার ও ফুটার), `data/global/site.json` → `favicon`। build নিজে চারপাশের সাদা অংশ কেটে ছোট কপি বানায় |
