@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb } from './helpers.js';
+import { site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -15,7 +15,7 @@ function catalog() {
     locale: site.locale,
     defaultCurrency: payments.defaultCurrency,
     currencies: payments.currencies.map((c) => c.code),
-    products: products.map((p) => ({ id: p.id, slug: p.slug, title: p.title, prices: p.prices, stock: p.stock, image: thumb(p.images[0]?.src) })),
+    products: products.flatMap((p) => optionsOf(p).map((o) => ({ id: o.id, slug: p.slug, title: p.title, option: o.name, prices: o.prices, stock: o.stock, image: thumb(p.images[0]?.src) }))),
     text: { ...shop.cart, maxStock: shop.maxStockMessage, stock: shop.stockLabel, soldOut: shop.soldOutLabel, pay: payText.form, done: payText.done, copied: payText.copiedLabel, copy: payText.copyLabel, orderPrefix: payments.orderPrefix || 'AB' },
   };
   return `<script type="application/json" id="catalog">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
@@ -42,7 +42,7 @@ function siteHeader(path, cart) {
     .map((c) => `<div><p class="menu-title">${esc(c.title)}</p>${c.links.map((l) => `<a href="${esc(l.href)}"${target(l.href)}${path === l.href ? ' aria-current="page"' : ''}>${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>`)
     .join('');
   return `<header class="hdr"><div class="wrap hdr-in">
-<a class="logo" href="${esc(logo.href)}">${logo.image ? `<img src="${esc(logo.image)}" alt="" width="32" height="32">` : ''}${esc(logo.text)}</a>
+<a class="logo" href="${esc(logo.href)}">${logoImg()}${esc(logo.text)}</a>
 <nav class="nav" aria-label="Main">${navLinks}</nav>
 <div class="hdr-end">${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)}>${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
 <details class="menu"><summary aria-label="${esc(menu.buttonLabel)}" title="${esc(menu.buttonLabel)}">${icon('dots')}</summary><nav class="menu-panel" aria-label="${esc(menu.buttonLabel)}">${menuCols}</nav></details></div>
@@ -57,12 +57,12 @@ function siteFooter() {
 <a href="${esc(contact.mapUrl)}" target="_blank" rel="noopener">${icon('pin')}${esc(contact.address)}</a></div>`;
   const socials = footer.showSocial ? `<div class="social">${social.map((s) => `<a href="${esc(s.url)}"${target(s.url)} aria-label="${esc(s.label)}">${icon(s.icon)}</a>`).join('')}</div>` : '';
   return `<footer class="ftr"><div class="wrap ftr-grid">
-<div><a class="logo" href="/">${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>
+<div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;
 }
 
 export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false }) {
-  const title = seo.title ? `${seo.title}${site.titleSeparator}${site.name}` : site.title;
+  const title = !seo.title ? site.title : seo.titleSuffix === false ? seo.title : `${seo.title}${site.titleSeparator}${site.name}`;
   const description = seo.description || site.description;
   const canonical = absUrl(path);
   const image = absUrl(seo.image || site.defaultImage);
@@ -82,7 +82,7 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<meta name="description" content="${esc(description)}">
+<meta name="description" content="${esc(description)}">${seo.keywords?.length ? `\n<meta name="keywords" content="${esc(seo.keywords.join(', '))}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}">
 ${noindex ? '' : `<link rel="canonical" href="${esc(canonical)}">`}
 <meta name="theme-color" content="${esc(t.dark)}">

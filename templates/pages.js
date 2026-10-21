@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
-  site, contact, social, products, services, posts, payments, page,
-  esc, icon, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl,
+  site, header, contact, social, products, services, posts, payments, page,
+  esc, icon, btns, paras, bullets, img, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
 
@@ -32,8 +32,10 @@ const grid = (items, cols = 3) => `<div class="grid g${cols}">${items.join('')}<
 // Prices: the default currency is written into the HTML, shop.js switches it to the visitor's currency
 const DEF = payments.defaultCurrency;
 const money = (prices) => `<span data-prices="${esc(JSON.stringify(prices))}">${formatPrice(prices[DEF], DEF)}</span>`;
-const priceTag = (p) => `<b>${money(p.prices)}</b>${p.compareAtPrices ? ` <s>${money(p.compareAtPrices)}</s>` : ''}`;
-const badges = (p) => `${p.compareAtPrices ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${p.stock < 1 ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}`;
+const hasPlans = (p) => optionsOf(p).length > 1;
+const priceOf = (o) => `<b>${money(o.prices)}</b>${o.compareAtPrices ? ` <s>${money(o.compareAtPrices)}</s>` : ''}`;
+const priceTag = (p) => (hasPlans(p) ? `<span class="from">${esc(shopText.fromLabel)}</span> <b>${money(lowestPrices(p))}</b>` : priceOf(optionsOf(p)[0]));
+const badges = (p) => `${optionsOf(p).some((o) => o.compareAtPrices) ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${stockOf(p) < 1 ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}`;
 const CARD = '(max-width: 640px) 100vw, 360px';
 
 // Home page card (no cart there)
@@ -41,15 +43,20 @@ const productCard = (p) => `<a class="card" href="/shop/${esc(p.slug)}/">
 <div class="card-img">${img(p.images[0], { sizes: CARD })}${badges(p)}</div>
 <div class="card-body"><p class="kicker">${esc(p.category)}</p><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><p class="price">${priceTag(p)}</p></div></a>`;
 
-const addButton = (p, cls = 'btn-sm') => (p.stock > 0
-  ? `<button class="btn btn-primary ${cls}" type="button" data-add="${esc(p.id)}">${icon('cart')}${esc(shopText.addToCartLabel)}</button>`
+const addButton = (id, stock, cls = 'btn-sm') => (stock > 0
+  ? `<button class="btn btn-primary ${cls}" type="button" data-add="${esc(id)}">${icon('cart')}${esc(shopText.addToCartLabel)}</button>`
   : `<button class="btn btn-outline ${cls}" type="button" disabled>${esc(shopText.soldOutLabel)}</button>`);
+
+// On cards, a product with plans links to its page where the plan is chosen
+const cardButton = (p) => (hasPlans(p) && stockOf(p) > 0
+  ? `<a class="btn btn-primary btn-sm" href="/shop/${esc(p.slug)}/">${esc(shopText.choosePlanLabel)}</a>`
+  : addButton(optionsOf(p)[0].id, stockOf(p)));
 
 // Shop page card with Add to cart
 const shopCard = (p) => `<article class="card" data-cat="${esc(p.category)}">
 <a class="card-link" href="/shop/${esc(p.slug)}/"><div class="card-img">${img(p.images[0], { sizes: CARD })}${badges(p)}</div>
 <div class="card-body"><p class="kicker">${esc(p.category)}</p><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></a>
-<div class="card-foot"><p class="price">${priceTag(p)}</p>${addButton(p)}</div></article>`;
+<div class="card-foot"><p class="price">${priceTag(p)}</p>${cardButton(p)}</div></article>`;
 
 const benefits = () => `<ul class="benefits">${shopText.benefits.map((b) => `<li><span class="ic">${icon(b.icon)}</span><span><b>${esc(b.title)}</b><span>${esc(b.text)}</span></span></li>`).join('')}</ul>`;
 
@@ -101,7 +108,8 @@ function homePage() {
     knowsAbout: site.person.knowsAbout,
   };
   const website = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url };
-  return { path: '/', seo: d.seo, body, schema: [person, website] };
+  const org = header.logo.image && { '@context': 'https://schema.org', '@type': 'Organization', name: site.name, url: site.url, logo: absUrl(encodeURI(header.logo.image)) };
+  return { path: '/', seo: d.seo, body, schema: [person, website, org].filter(Boolean) };
 }
 
 // ---- Shop ----
@@ -128,25 +136,31 @@ function productPage(p) {
   const crumbs = crumbsOf({ label: shopText.hero.title, href: '/shop/' }, { label: p.title, href: url });
   const gallery = `<div class="gallery">${p.images.map((im, i) => `<div class="gallery-main" data-slide="${i}"${i ? ' hidden' : ''}>${img(im, { eager: i === 0 })}</div>`).join('')}${p.images.length > 1
     ? `<div class="thumbs">${p.images.map((im, i) => `<button class="thumb" type="button" data-thumb="${i}" aria-label="Image ${i + 1}"${i ? '' : ' aria-current="true"'}>${img(im, { sizes: '96px' })}</button>`).join('')}</div>` : ''}</div>`;
-  const qty = p.stock > 0
-    ? `<div class="qty-row"><div class="qty"><button type="button" data-step="-1" aria-label="${esc(shopText.cart.decreaseLabel)}">${icon('minus')}</button><input id="qty-${esc(p.id)}" type="number" inputmode="numeric" min="1" max="${p.stock}" value="1" data-qty aria-label="${esc(shopText.quantityLabel)}"><button type="button" data-step="1" aria-label="${esc(shopText.cart.increaseLabel)}">${icon('plus')}</button></div>${addButton(p, '')}</div><p class="status" role="status" data-buy-status></p>`
-    : addButton(p, '');
-  const buy = `<div class="buy" data-buy="${esc(p.id)}"><p class="kicker">${esc(p.category)}</p><p class="price price-lg">${priceTag(p)}</p>${currencySelect()}
-<p class="stock${p.stock > 0 ? '' : ' stock-out'}">${esc(p.stock > 0 ? shopText.stockLabel.replace('{n}', p.stock) : shopText.soldOutLabel)}</p>${qty}
-${p.externalLink ? btns([{ ...p.externalLink, style: 'outline', icon: 'globe' }]) : ''}<p class="muted">${esc(shopText.formatLabel)}: ${esc(p.format)}</p>${policyLinks()}</div>`;
+  const opts = optionsOf(p);
+  const first = opts.find((o) => o.stock > 0) || opts[0];
+  const stockText = (o) => (o.stock > 0 ? shopText.stockLabel.replace('{n}', o.stock) : shopText.soldOutLabel);
+  const plans = hasPlans(p) ? `<fieldset class="choice plans"><legend class="h3">${esc(shopText.choosePlanLabel)}</legend><div class="opts opts-col">${opts.map((o) => `<label class="opt"><input type="radio" name="plan-${esc(p.id)}" value="${esc(o.id)}" data-plan="${esc(JSON.stringify(o.prices))}"${o.id === first.id ? ' checked' : ''}${o.stock < 1 ? ' disabled' : ''}><span><b>${esc(o.name)}</b><span class="plan-price">${money(o.prices)}${o.stock < 1 ? ` · ${esc(shopText.soldOutLabel)}` : ''}</span></span></label>`).join('')}</div></fieldset>` : '';
+  const qty = stockOf(p) > 0
+    ? `<div class="qty-row"><div class="qty"><button type="button" data-step="-1" aria-label="${esc(shopText.cart.decreaseLabel)}">${icon('minus')}</button><input id="qty-${esc(p.id)}" type="number" inputmode="numeric" min="1" max="${first.stock}" value="1" data-qty aria-label="${esc(shopText.quantityLabel)}"><button type="button" data-step="1" aria-label="${esc(shopText.cart.increaseLabel)}">${icon('plus')}</button></div>${addButton(first.id, first.stock, '')}</div><p class="status" role="status" data-buy-status></p>`
+    : addButton(first.id, 0, '');
+  const buy = `<div class="buy" data-buy="${esc(first.id)}"><p class="kicker">${esc(p.category)}</p><p class="price price-lg" data-main-price>${priceOf(first)}</p>${plans}${currencySelect()}
+<p class="stock${first.stock > 0 ? '' : ' stock-out'}" data-stock-text>${esc(stockText(first))}</p>${qty}
+${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]) : ''}<p class="muted">${esc(shopText.formatLabel)}: ${esc(p.format)}</p>${policyLinks()}</div>`;
   const info = `<div class="split split-top"><div class="prose-sm"><h2>${esc(S.about)}</h2><p>${esc(p.about)}</p>
-<h3>${esc(S.description)}</h3>${paras(p.description)}${p.usage?.length ? `<h3>${esc(S.usage)}</h3><ol class="steps-list">${p.usage.map((u) => `<li>${esc(u)}</li>`).join('')}</ol>` : ''}</div>
+<h3>${esc(S.description)}</h3>${paras(p.description)}${p.usage?.length ? `<h3>${esc(p.usageTitle || S.usage)}</h3>${p.usageIntro ? `<p>${esc(p.usageIntro)}</p>` : ''}<ol class="steps-list">${p.usage.map((u) => `<li>${esc(u)}</li>`).join('')}</ol>` : ''}</div>
 <div><h2>${esc(S.features)}</h2><ul class="features">${p.features.map((f) => `<li><span class="ic">${icon(f.icon || 'check')}</span><span>${esc(f.text)}</span></li>`).join('')}</ul></div></div>`;
   const faq = p.faq?.length ? section(`<div class="faq narrow">${p.faq.map((i) => `<details><summary>${esc(i.q)}</summary><p>${esc(i.a)}</p></details>`).join('')}</div>`, { title: S.faq }) : '';
   const reviews = p.reviews?.length ? section(grid(p.reviews.map(reviewCard)), { title: S.reviews, background: 'soft' }) : '';
-  const availability = `https://schema.org/${p.stock > 0 ? 'InStock' : 'OutOfStock'}`;
+  const availability = `https://schema.org/${stockOf(p) > 0 ? 'InStock' : 'OutOfStock'}`;
+  const offers = payments.currencies.map((c) => (hasPlans(p)
+    ? { '@type': 'AggregateOffer', priceCurrency: c.code, lowPrice: Math.min(...opts.map((o) => o.prices[c.code])), highPrice: Math.max(...opts.map((o) => o.prices[c.code])), offerCount: opts.length, url: absUrl(url), availability }
+    : { '@type': 'Offer', price: first.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability }));
   const schema = {
-    '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.summary, sku: p.id, category: p.category,
-    image: p.images.map((im) => absUrl(im.src)), brand: { '@type': 'Brand', name: site.name },
-    offers: payments.currencies.map((c) => ({ '@type': 'Offer', price: p.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability })),
+    '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.seo?.description || p.summary, sku: p.id, category: p.category,
+    image: p.images.map((im) => absUrl(encodeURI(im.src))), brand: { '@type': 'Brand', name: site.name }, offers,
   };
   return {
-    path: url, seo: { title: p.title, description: p.summary, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
+    path: url, seo: { title: p.title, description: p.summary, ...p.seo, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
     body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery}${buy}</div>`)
       + section(info, { background: 'soft' }) + section(benefits()) + faq + reviews,
   };
