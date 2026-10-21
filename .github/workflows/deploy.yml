@@ -2,8 +2,8 @@ name: Build and publish
 
 # Pull requests: build and check only.
 # main: build, check, then publish dist/ to the gh-pages branch.
-# GitHub Pages should serve the gh-pages branch (Settings -> Pages -> Deploy from a branch -> gh-pages / root).
-# The "deploy" job below keeps the site working until that setting is changed; remove it afterwards.
+# GitHub Pages serves the gh-pages branch (Settings -> Pages -> Deploy from a branch -> gh-pages / root),
+# so there is only one thing publishing the site.
 
 on:
   push:
@@ -14,8 +14,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: ${{ github.event_name == 'pull_request' && format('check-{0}', github.ref) || 'publish' }}
@@ -35,10 +33,6 @@ jobs:
       - run: node build.js
       # HTML errors (html-validate) and broken internal links (linkinator)
       - run: npm test
-      - if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
       # Replace the gh-pages branch with the freshly built site (one commit, no old history)
       - name: Publish to gh-pages
         if: github.event_name != 'pull_request'
@@ -51,14 +45,3 @@ jobs:
           git commit -q -m "Publish ${GITHUB_SHA::7}"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
 
-  # Temporary: deploys the same files the old way until Pages is switched to the gh-pages branch
-  deploy:
-    if: github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
