@@ -1,0 +1,7 @@
+{
+  "title": "data/global/sitemap.json",
+  "type": "object",
+  "required": ["urls"],
+  "properties": { "_help": { "type": "string" }, "urls": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^https://" } } },
+  "additionalProperties": false
+}

@@ -70,11 +70,11 @@ const postCard = (p) => `<a class="card" href="/blog/${esc(p.slug)}/">
 
 const stars = (n) => {
   const r = Math.max(0, Math.min(5, Math.round(n || 0)));
-  return r ? `<p class="stars" aria-label="${r} out of 5 stars">${'★'.repeat(r)}${'☆'.repeat(5 - r)}</p>` : '';
+  return r ? `<p class="stars"><span aria-hidden="true">${'★'.repeat(r)}${'☆'.repeat(5 - r)}</span><span class="sr">${r} out of 5 stars</span></p>` : '';
 };
 const reviewCard = (r) => `<figure class="card card-pad review">${stars(r.rating)}<blockquote>“${esc(r.text)}”</blockquote>
-<figcaption><b>${esc(r.name)}</b><span>${esc([r.role, r.date].filter(Boolean).join(', '))}</span></figcaption>
-${r.link ? `<a class="more" href="${esc(r.link.href)}"${target(r.link.href)}>${esc(r.link.label)}${icon('arrow')}</a>` : ''}</figure>`;
+<figcaption><b>${esc(r.name)}</b><span>${esc([r.role, r.date].filter(Boolean).join(', '))}</span>
+${r.link ? `<a class="more" href="${esc(r.link.href)}"${target(r.link.href)}>${esc(r.link.label)}${icon('arrow')}</a>` : ''}</figcaption></figure>`;
 
 const workCard = (p) => `<article class="card"><div class="card-img card-img-tall">${img(p.image)}</div><div class="card-body"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></article>`;
 
@@ -171,15 +171,15 @@ const enabledMethods = (c) => c.methods.filter((m) => m.enabled !== false);
 
 function payForm(m, c, f) {
   const field = (label, input) => `<label>${esc(label)}${input}</label>`;
-  const who = `${field(f.nameLabel, '<input name="name" autocomplete="name" required maxlength="100">')}
+  const who = `${field(f.nameLabel, '<input type="text" name="name" autocomplete="name" required maxlength="100">')}
 <div class="row2">${field(f.mobileLabel, '<input name="mobile" type="tel" autocomplete="tel" required maxlength="25">')}${field(f.emailLabel, '<input name="email" type="email" autocomplete="email" required maxlength="120">')}</div>`;
   const tr = m.timeRange || {};
   const extra = m.type === 'appointment'
     ? `<div class="row2">${field(f.dateLabel, '<input name="date" type="date" required data-date>')}${field(f.timeLabel, `<input name="time" type="time" required${tr.start ? ` min="${esc(tr.start)}"` : ''}${tr.end ? ` max="${esc(tr.end)}"` : ''}>`)}</div>
 ${field(f.messageLabel, '<textarea name="message" rows="3" maxlength="1000"></textarea>')}`
-    : `<div class="row2">${field(`${f.amountLabel} (${c.code})`, '<input name="amount" type="number" inputmode="decimal" min="0" step="any" required data-amount>')}${field(f.transactionLabel, '<input name="transaction" maxlength="100">')}</div>`;
+    : `<div class="row2">${field(`${f.amountLabel} (${c.code})`, '<input name="amount" type="number" inputmode="decimal" min="0" step="any" required data-amount>')}${field(f.transactionLabel, '<input type="text" name="transaction" maxlength="100">')}</div>`;
   return `<form class="form" data-pay-form data-type="${esc(m.type)}" data-method="${esc(m.name)}" data-currency="${esc(c.code)}">
-<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">${who}${extra}
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">${who}${extra}
 <button class="btn btn-primary" type="submit">${icon(m.type === 'appointment' ? 'calendar' : 'mail')}${esc(m.type === 'appointment' ? f.submitAppointment : f.submitPayment)}</button><p class="status" role="status"></p></form>`;
 }
 
@@ -304,8 +304,8 @@ function reviewsPageFn() {
   const fiverr = d.fiverr ? `<div class="card card-pad card-accent"><span class="ic">${icon('star')}</span><h3>${esc(d.fiverr.title)}</h3><p>${esc(d.fiverr.text)}</p>${btns([d.fiverr.button])}</div>` : '';
   const form = f.show ? section(`<div class="narrow card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
 <form class="form" data-form="review" data-success="${esc(f.success)}" data-rating-error="${esc(f.ratingError)}" data-error="${esc(page('contact').form.error)}">
-<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-<div class="row2"><label>${esc(f.nameLabel)}<input name="name" autocomplete="name" required></label><label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email"></label></div>
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">
+<div class="row2"><label>${esc(f.nameLabel)}<input type="text" name="name" autocomplete="name" required></label><label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email"></label></div>
 <fieldset class="rating"><legend>${esc(f.ratingLabel)}</legend>${[5, 4, 3, 2, 1].map((n) => `<input type="radio" id="r${n}" name="rating" value="${n}"><label for="r${n}" title="${n}">★<span class="sr">${n} stars</span></label>`).join('')}</fieldset>
 <label>${esc(f.messageLabel)}<textarea name="message" rows="5" required></textarea></label>
 <label class="check"><input type="checkbox" name="allow_public" value="Yes">${esc(f.allowLabel)}</label>
@@ -321,7 +321,7 @@ function contactPage() {
   const row = (ic, label, value, href) => `<li><a href="${esc(href)}"${target(href)}><span class="ic">${icon(ic)}</span><span><small>${esc(label)}</small><b>${esc(value)}</b></span></a></li>`;
   const items = [
     row('wa', L.whatsapp, contact.whatsappDisplay, whatsapp()),
-    ...contact.phones.map((p) => row('phone', p.label, p.display, `tel:${p.number}`)),
+    ...contact.phones.map((p) => row('phone', p.label, p.display.replace(/ /g, '\u00a0'), `tel:${p.number}`)),
     row('mail', L.email, contact.email, `mailto:${contact.email}`),
     ...social.filter((s) => !/wa\.me|mailto:/.test(s.url)).map((s) => row(s.icon, s.label, s.display, s.url)),
     row('pin', L.address, contact.address, contact.mapUrl),
@@ -329,8 +329,8 @@ function contactPage() {
   ].join('');
   const form = `<div class="card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
 <form class="form" data-form="contact" data-success="${esc(f.success)}" data-error="${esc(f.error)}">
-<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-<label>${esc(f.nameLabel)}<input name="name" autocomplete="name" required></label>
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">
+<label>${esc(f.nameLabel)}<input type="text" name="name" autocomplete="name" required></label>
 <label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email" required></label>
 <label>${esc(f.messageLabel)}<textarea name="message" rows="6" required></textarea></label>
 <div class="btns"><button class="btn btn-primary" type="submit">${icon('mail')}${esc(f.submitLabel)}</button><button class="btn btn-outline" type="button" data-wa="${esc(contact.whatsapp)}">${icon('wa')}${esc(f.whatsappLabel)}</button></div>

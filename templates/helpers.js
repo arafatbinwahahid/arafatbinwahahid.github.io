@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
 
-function read(file) {
+export function read(file) {
   const text = fs.readFileSync(path.join(DATA, file), 'utf8');
   try {
     return JSON.parse(text);
@@ -99,7 +99,7 @@ export function img(image, { eager = false, sizes = '(max-width: 800px) 100vw, 5
   if (!image?.src) return '';
   const s = imageSize(image.src);
   const wh = s ? ` width="${s[0]}" height="${s[1]}"` : '';
-  const tag = `<img src="${esc(url(image.src))}" alt=""${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
+  const tag = `<img src="${esc(url(image.src))}" alt="${esc(image.alt)}"${wh}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">`;
   const widths = webpWidths(image.src, s);
   if (!widths) return tag;
   return `<picture><source type="image/webp" srcset="${widths.map((w) => `${optPath(image.src, w)} ${w}w`).join(', ')}" sizes="${sizes}">${tag}</picture>`;

@@ -131,8 +131,9 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 
 /* Reviews */
 .review blockquote { font-size: 1.05rem; color: var(--dark); margin: .3rem 0 1rem; }
-.review figcaption { display: flex; flex-direction: column; margin-bottom: .8rem; }
+.review figcaption { display: flex; flex-direction: column; align-items: flex-start; }
 .review figcaption span { color: var(--muted); font-size: .88rem; }
+.review figcaption .more { margin-top: .8rem; }
 .stars { color: #f2a900; letter-spacing: .1em; }
 
 /* Timeline (experience) */

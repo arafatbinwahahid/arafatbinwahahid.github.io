@@ -1,0 +1,19 @@
+{
+  "title": "data/global/site.json",
+  "type": "object",
+  "required": ["name", "title", "titleSeparator", "description", "url", "language", "locale", "currency", "defaultImage", "favicon", "homeLabel", "web3formsAccessKey", "theme", "person", "robots"],
+  "properties": {
+    "url": { "type": "string", "pattern": "^https://[^/]+$", "description": "No slash at the end, e.g. https://arafatbin.com" },
+    "googleAnalyticsId": { "type": "string", "pattern": "^$|^G-[A-Z0-9]+$" },
+    "web3formsAccessKey": { "type": "string", "pattern": "^[0-9a-f-]{36}$" },
+    "defaultImage": { "$ref": "common#/$defs/imagePath" },
+    "favicon": { "$ref": "common#/$defs/imagePath" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "theme": {
+      "type": "object",
+      "required": ["primary", "accent", "dark", "text", "muted", "background", "soft", "border", "radius"],
+      "additionalProperties": { "type": "string" }
+    },
+    "robots": { "type": "object", "required": ["allow", "disallow"], "properties": { "allow": { "type": "array", "items": { "type": "string" } }, "disallow": { "type": "array", "items": { "type": "string" } } } }
+  }
+}

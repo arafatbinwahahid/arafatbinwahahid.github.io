@@ -1,0 +1,21 @@
+{
+  "title": "data/collections/services.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["slug", "title", "icon", "summary", "description", "includes"],
+    "properties": {
+      "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+      "title": { "$ref": "common#/$defs/text" },
+      "icon": { "type": "string" },
+      "summary": { "$ref": "common#/$defs/text" },
+      "image": { "$ref": "common#/$defs/image" },
+      "priceFrom": { "type": "number", "exclusiveMinimum": 0 },
+      "delivery": { "type": "string" },
+      "description": { "type": "array", "items": { "$ref": "common#/$defs/text" } },
+      "includes": { "type": "array", "items": { "$ref": "common#/$defs/text" } },
+      "buttons": { "$ref": "common#/$defs/buttons" }
+    },
+    "additionalProperties": false
+  }
+}

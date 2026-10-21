@@ -7,6 +7,7 @@ import http from 'node:http';
 import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf } from './templates/helpers.js';
 import { layout } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
+import { validateData } from './templates/validate.js';
 
 const OUT = path.join(ROOT, 'dist');
 
@@ -16,7 +17,8 @@ function write(file, content) {
   fs.writeFileSync(full, content);
 }
 
-// Check shop data before building: a wrong price or stock should stop the build, not reach customers
+// Check every data file against schemas/, then the rules that need more than one file
+await validateData();
 const codes = payments.currencies.map((c) => c.code);
 const ids = new Set();
 for (const p of products) {
@@ -27,10 +29,8 @@ for (const p of products) {
   }
   for (const o of optionsOf(p)) {
     const what = o.name ? `${where}, plan "${o.name}"` : where;
-    for (const c of codes) if (!(o.prices?.[c] > 0)) throw new Error(`${what}: "prices" needs a ${c} price above 0`);
-    if (!Number.isInteger(o.stock) || o.stock < 0) throw new Error(`${what}: "stock" must be a whole number, 0 or more`);
+    for (const c of codes) if (!(o.prices?.[c] > 0)) throw new Error(`${what}: "prices" needs a ${c} price above 0 (currencies come from payments.json)`);
   }
-  if (!p.images?.length) throw new Error(`${where}: add at least one image in "images"`);
 }
 if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);
 for (const c of payments.currencies) for (const m of c.methods) {

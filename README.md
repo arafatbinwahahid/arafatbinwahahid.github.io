@@ -16,7 +16,11 @@
 ├── templates/
 │   ├── helpers.js           ← JSON লোড + ছোট HTML helper
 │   ├── layout.js            ← <head> (SEO), header, 3-dot মেনু, footer
-│   └── pages.js             ← প্রতিটি পেইজের HTML
+│   ├── pages.js             ← প্রতিটি পেইজের HTML
+│   └── validate.js          ← build-এর আগে সব JSON ফাইল schemas/ দিয়ে যাচাই করে (ajv)
+├── schemas/                 ← প্রতিটি JSON ফাইলের নিয়ম (কোন ঘর লাগবে, কী ধরনের মান)
+├── .htmlvalidate.json       ← HTML যাচাইয়ের নিয়ম (html-validate)
+├── linkinator.config.json   ← ভাঙা লিংক খোঁজার নিয়ম (linkinator)
 ├── assets/
 │   ├── css/style.css        ← ডিজাইন (এখানে এডিট করুন; build নিজে minify করে dist-এ দেয়)
 │   ├── js/main.js           ← মেনু বন্ধ করা, Contact/Review ফর্ম, Web3Forms-এ পাঠানো
@@ -121,12 +125,25 @@
 
 **নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
 
+## স্বয়ংক্রিয় পরীক্ষা
+
+প্রতিটি push আর Pull Request-এ GitHub নিজে তিনটি পরীক্ষা চালায়। কোনোটা ব্যর্থ হলে সাইট deploy হয় না, তাই ভাঙা সাইট লাইভে যায় না।
+
+| টুল | কী ধরে | কোথায় দেখবেন |
+| --- | --- | --- |
+| **ajv** | JSON-এর ভুল: ঘরের নামে বানান ভুল (`"prise"`), বাদ পড়া ঘর, সংখ্যার জায়গায় লেখা (`"stock": "5"`), ভুল ছবির পথ, ভুল বাটন style | build লগে, যেমন: `data/collections/products.json › [netflix-shared-profile] › variants › 1: unknown field "prise"` |
+| **html-validate** | ভুল HTML (ভাঙা attribute, ভুল ক্রম ইত্যাদি) | `npm test` লগে |
+| **linkinator** | সাইটের ভেতরের ভাঙা লিংক আর হারানো ছবি বা ফাইল | `npm test` লগে, যেমন `[404] dist/experiance/` |
+
+Pull Request-এ লাল ❌ দেখালে **Details**-এ গিয়ে লগ দেখুন। লম্বা title (৭০ অক্ষরের বেশি) শুধু সতর্কবার্তা দেয়, deploy আটকায় না। বাইরের সাইটের লিংক (WhatsApp, Fiverr ইত্যাদি) পরীক্ষা করা হয় না, কারণ ওই সাইটগুলো প্রায়ই স্বয়ংক্রিয় পরীক্ষা আটকে দেয়।
+
 ## চালানো ও publish
 
 ```bash
 npm install              # একবার (sharp, ছবি WebP করার জন্য)
 node build.js            # dist/ ফোল্ডারে সাইট তৈরি
 node build.js --serve    # তৈরি করে http://localhost:8080 এ দেখুন
+npm run check            # build + HTML যাচাই + ভাঙা লিংক খোঁজা
 ```
 
 GitHub Pages: রিপোর **Settings → Pages → Source** = **GitHub Actions**।
