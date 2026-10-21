@@ -1,0 +1,55 @@
+{
+  "title": "data/pages/*.json",
+  "type": "object",
+  "required": [
+    "seo"
+  ],
+  "properties": {
+    "seo": {
+      "$ref": "common#/$defs/seo"
+    },
+    "hero": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "common#/$defs/text"
+        }
+      }
+    }
+  },
+  "$ref": "#/$defs/node",
+  "$defs": {
+    "node": {
+      "description": "Any part of a page file: every \"buttons\" list and \"button\" inside it is checked",
+      "if": {
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "buttons": {
+            "$ref": "common#/$defs/buttons"
+          },
+          "button": {
+            "$ref": "common#/$defs/button"
+          }
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/node"
+        }
+      },
+      "else": {
+        "if": {
+          "type": "array"
+        },
+        "then": {
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        }
+      }
+    }
+  }
+}

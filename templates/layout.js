@@ -5,7 +5,7 @@ const shop = page('shop');
 const payText = page('payments');
 
 // Links to Privacy, Terms and Refund (data/pages/shop.json "policyLinks")
-export const policyLinks = () => `<nav class="policy" aria-label="Policies">${shop.policyLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav>`;
+export const policyLinks = () => `<p class="policy">${shop.policyLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</p>`;
 
 export const currencySelect = () => `<label class="cur">${esc(shop.currencyLabel)} <select data-currency-select>${payments.currencies.map((c) => `<option value="${esc(c.code)}">${esc(c.code)} · ${esc(c.name)}</option>`).join('')}</select></label>`;
 
@@ -76,7 +76,7 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
   const ga = site.googleAnalyticsId
     ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(site.googleAnalyticsId)}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(site.googleAnalyticsId)}');</script>`
     : '';
-  return `<!doctype html>
+  return `<!DOCTYPE html>
 <html lang="${esc(site.language)}">
 <head>
 <meta charset="utf-8">

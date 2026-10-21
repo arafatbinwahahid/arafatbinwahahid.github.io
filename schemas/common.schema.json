@@ -1,0 +1,52 @@
+{
+  "$id": "common",
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "href": { "type": "string", "pattern": "^(/|https?://|mailto:|tel:|#)" },
+    "imagePath": { "type": "string", "pattern": "^(/assets/|https?://)", "description": "Starts with /assets/images/... and the file name must match exactly, including .PNG/.png" },
+    "image": {
+      "type": "object",
+      "required": ["src", "alt"],
+      "properties": { "src": { "$ref": "#/$defs/imagePath" }, "alt": { "type": "string" }, "caption": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "required": ["label", "href"],
+      "properties": { "label": { "$ref": "#/$defs/text" }, "href": { "$ref": "#/$defs/href" }, "icon": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "button": {
+      "type": "object",
+      "required": ["label", "href"],
+      "properties": {
+        "label": { "$ref": "#/$defs/text" },
+        "href": { "$ref": "#/$defs/href" },
+        "style": { "enum": ["primary", "outline", "light"] },
+        "icon": { "type": "string" },
+        "download": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "buttons": { "type": "array", "items": { "$ref": "#/$defs/button" } },
+    "prices": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Z]{3}$" },
+      "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }
+    },
+    "seo": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "title": { "type": "string" },
+        "titleSuffix": { "type": "boolean" },
+        "description": { "$ref": "#/$defs/text" },
+        "image": { "$ref": "#/$defs/imagePath" },
+        "keywords": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+      },
+      "additionalProperties": false
+    },
+    "faq": { "type": "array", "items": { "type": "object", "required": ["q", "a"], "properties": { "q": { "$ref": "#/$defs/text" }, "a": { "$ref": "#/$defs/text" } }, "additionalProperties": false } }
+  }
+}

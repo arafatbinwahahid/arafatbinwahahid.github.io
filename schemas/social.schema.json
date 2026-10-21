@@ -1,0 +1,5 @@
+{
+  "title": "data/global/social.json",
+  "type": "array",
+  "items": { "type": "object", "required": ["label", "url", "icon"], "properties": { "label": { "type": "string" }, "url": { "$ref": "common#/$defs/href" }, "icon": { "type": "string" }, "display": { "type": "string" } }, "additionalProperties": false }
+}

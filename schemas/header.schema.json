@@ -1,0 +1,20 @@
+{
+  "title": "data/global/header.json",
+  "type": "object",
+  "required": ["logo", "links", "menu"],
+  "properties": {
+    "logo": { "type": "object", "required": ["text", "href"], "properties": { "text": { "$ref": "common#/$defs/text" }, "image": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/imagePath" }] }, "href": { "$ref": "common#/$defs/href" } }, "additionalProperties": false },
+    "links": { "type": "array", "items": { "$ref": "common#/$defs/link" } },
+    "button": { "$ref": "common#/$defs/button" },
+    "menu": {
+      "type": "object",
+      "required": ["buttonLabel", "columns"],
+      "properties": {
+        "buttonLabel": { "$ref": "common#/$defs/text" },
+        "columns": { "type": "array", "items": { "type": "object", "required": ["title", "links"], "properties": { "title": { "type": "string" }, "links": { "type": "array", "items": { "$ref": "common#/$defs/link" } } }, "additionalProperties": false } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

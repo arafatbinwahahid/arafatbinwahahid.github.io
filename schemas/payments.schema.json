@@ -1,0 +1,47 @@
+{
+  "title": "data/global/payments.json",
+  "type": "object",
+  "required": ["defaultCurrency", "currencies"],
+  "properties": {
+    "_help": { "type": "string" },
+    "defaultCurrency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "orderPrefix": { "type": "string", "pattern": "^[A-Z0-9]{1,6}$" },
+    "currencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["code", "name", "methods"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "name": { "$ref": "common#/$defs/text" },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "name", "icon", "intro"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+                "type": { "enum": ["transfer", "appointment"] },
+                "enabled": { "type": "boolean" },
+                "name": { "$ref": "common#/$defs/text" },
+                "icon": { "type": "string" },
+                "intro": { "$ref": "common#/$defs/text" },
+                "details": { "type": "array", "items": { "type": "object", "required": ["label", "value"], "properties": { "label": { "$ref": "common#/$defs/text" }, "value": { "type": "string" } }, "additionalProperties": false } },
+                "link": { "type": "object", "properties": { "label": { "type": "string" }, "href": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/href" }] } }, "additionalProperties": false },
+                "poster": { "type": "object", "properties": { "src": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/imagePath" }] }, "alt": { "type": "string" } }, "additionalProperties": false },
+                "location": { "type": "object", "properties": { "name": { "type": "string" }, "address": { "type": "string" }, "mapQuery": { "type": "string" } }, "additionalProperties": false },
+                "hours": { "type": "array", "items": { "type": "object", "required": ["days", "time"], "properties": { "days": { "$ref": "common#/$defs/text" }, "time": { "$ref": "common#/$defs/text" } }, "additionalProperties": false } },
+                "timeRange": { "type": "object", "properties": { "start": { "type": "string", "pattern": "^$|^([01][0-9]|2[0-3]):[0-5][0-9]$" }, "end": { "type": "string", "pattern": "^$|^([01][0-9]|2[0-3]):[0-5][0-9]$" } }, "additionalProperties": false },
+                "steps": { "type": "array", "items": { "$ref": "common#/$defs/text" } }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
