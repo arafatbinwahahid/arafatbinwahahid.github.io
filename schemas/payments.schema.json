@@ -27,7 +27,7 @@
                 "name": { "$ref": "common#/$defs/text" },
                 "icon": { "type": "string" },
                 "intro": { "$ref": "common#/$defs/text" },
-                "details": { "type": "array", "items": { "type": "object", "required": ["label", "value"], "properties": { "label": { "$ref": "common#/$defs/text" }, "value": { "type": "string" } }, "additionalProperties": false } },
+                "details": { "type": "array", "items": { "type": "object", "required": ["label"], "properties": { "label": { "$ref": "common#/$defs/text" }, "value": { "type": "string" } }, "additionalProperties": false } },
                 "link": { "type": "object", "properties": { "label": { "type": "string" }, "href": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/href" }] } }, "additionalProperties": false },
                 "poster": { "type": "object", "properties": { "src": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/imagePath" }] }, "alt": { "type": "string" } }, "additionalProperties": false },
                 "location": { "type": "object", "properties": { "name": { "type": "string" }, "address": { "type": "string" }, "mapQuery": { "type": "string" } }, "additionalProperties": false },

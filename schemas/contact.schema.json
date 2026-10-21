@@ -1,16 +1,88 @@
 {
   "title": "data/global/contact.json",
   "type": "object",
-  "required": ["whatsapp", "whatsappDisplay", "phones", "email", "address", "mapUrl"],
+  "required": [
+    "whatsapp",
+    "whatsappDisplay",
+    "phones",
+    "email",
+    "address",
+    "mapUrl"
+  ],
   "properties": {
-    "whatsapp": { "type": "string", "pattern": "^[0-9]{8,15}$", "description": "Country code and number, digits only, e.g. 96892130528" },
-    "whatsappDisplay": { "type": "string" },
-    "showFloatingWhatsapp": { "type": "boolean" },
-    "phones": { "type": "array", "items": { "type": "object", "required": ["label", "number", "display"], "properties": { "label": { "type": "string" }, "number": { "type": "string", "pattern": "^\\+[0-9]{8,15}$", "description": "Start with + and the country code, digits only, e.g. +96892130528" }, "display": { "type": "string" } }, "additionalProperties": false } },
-    "email": { "type": "string", "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", "description": "Must be an email address like name@example.com" },
-    "address": { "type": "string" },
-    "mapUrl": { "$ref": "common#/$defs/href" },
-    "hours": { "type": "string" }
+    "whatsapp": {
+      "type": "string",
+      "pattern": "^[0-9]{8,15}$",
+      "description": "Country code and number, digits only, e.g. 96892130528"
+    },
+    "whatsappDisplay": {
+      "type": "string"
+    },
+    "showFloatingWhatsapp": {
+      "type": "boolean"
+    },
+    "phones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "number",
+          "display"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string",
+            "pattern": "^\\+[0-9]{8,15}$",
+            "description": "Start with + and the country code, digits only, e.g. +96892130528"
+          },
+          "display": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "description": "Must be an email address like name@example.com"
+    },
+    "address": {
+      "type": "string"
+    },
+    "mapUrl": {
+      "$ref": "common#/$defs/href"
+    },
+    "hours": {
+      "type": "string"
+    },
+    "businessHours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "string"
+          },
+          "open": {
+            "type": "string"
+          },
+          "close": {
+            "type": "string"
+          },
+          "closed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "responseTime": {
+      "type": "string"
+    }
   },
   "additionalProperties": false
 }

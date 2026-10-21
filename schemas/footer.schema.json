@@ -1,14 +1,71 @@
 {
   "title": "data/global/footer.json",
   "type": "object",
-  "required": ["about", "columns", "contactTitle", "copyright", "bottomLinks"],
+  "required": [
+    "about",
+    "columns",
+    "contactTitle",
+    "copyright",
+    "bottomLinks"
+  ],
   "properties": {
-    "about": { "type": "string" },
-    "showSocial": { "type": "boolean" },
-    "columns": { "type": "array", "items": { "type": "object", "required": ["title", "links"], "properties": { "title": { "type": "string" }, "links": { "type": "array", "items": { "$ref": "common#/$defs/link" } } }, "additionalProperties": false } },
-    "contactTitle": { "type": "string" },
-    "copyright": { "type": "string" },
-    "bottomLinks": { "type": "array", "items": { "$ref": "common#/$defs/link" } }
+    "about": {
+      "type": "string"
+    },
+    "showSocial": {
+      "type": "boolean"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "links"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "common#/$defs/link"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "contactTitle": {
+      "type": "string"
+    },
+    "copyright": {
+      "type": "string"
+    },
+    "bottomLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "common#/$defs/link"
+      }
+    },
+    "newsletter": {
+      "type": "object"
+    },
+    "paymentIcons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          }
+        }
+      }
+    }
   },
   "additionalProperties": false
 }

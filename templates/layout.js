@@ -106,7 +106,8 @@ export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type
       itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: absUrl(c.href) })),
     }];
   }
-  schema = [...schema, ...(seo.schema || [])];
+  // Extra JSON-LD from the page's "seo.schema": objects, or JSON text from the CMS code editor
+  schema = [...schema, ...(seo.schema || []).map((s) => (typeof s === 'string' ? JSON.parse(s) : s))];
   // Google Analytics and Microsoft Clarity load on the first tap, scroll or key press, or 3.5 s after the page has loaded, so they never slow the first paint
   const gaId = esc(site.googleAnalyticsId || '');
   const clarityId = esc(site.clarityId || '');

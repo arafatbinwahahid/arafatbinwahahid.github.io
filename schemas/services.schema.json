@@ -3,41 +3,187 @@
   "type": "array",
   "items": {
     "type": "object",
-    "required": ["slug", "title", "category", "icon", "packagesTitle", "priceLabel", "packages", "images", "summary", "about", "description", "features"],
+    "required": [
+      "slug",
+      "title",
+      "category",
+      "icon",
+      "packagesTitle",
+      "priceLabel",
+      "packages",
+      "images",
+      "summary",
+      "about",
+      "description",
+      "features"
+    ],
     "properties": {
-      "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Lowercase letters, numbers and dashes only, used in the page address" },
-      "title": { "$ref": "common#/$defs/text" },
-      "category": { "$ref": "common#/$defs/text" },
-      "icon": { "type": "string" },
-      "seo": { "$ref": "common#/$defs/seo" },
-      "packagesTitle": { "$ref": "common#/$defs/text" },
-      "priceLabel": { "$ref": "common#/$defs/text" },
+      "slug": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+        "description": "Lowercase letters, numbers and dashes only, used in the page address"
+      },
+      "title": {
+        "$ref": "common#/$defs/text"
+      },
+      "category": {
+        "$ref": "common#/$defs/text"
+      },
+      "icon": {
+        "type": "string"
+      },
+      "seo": {
+        "$ref": "common#/$defs/seo"
+      },
+      "packagesTitle": {
+        "$ref": "common#/$defs/text"
+      },
+      "priceLabel": {
+        "$ref": "common#/$defs/text"
+      },
       "packages": {
         "type": "array",
         "minItems": 1,
         "items": {
           "type": "object",
-          "required": ["name", "prices"],
+          "required": [
+            "name",
+            "prices"
+          ],
           "properties": {
-            "name": { "$ref": "common#/$defs/text" },
-            "prices": { "$ref": "common#/$defs/prices" }
+            "name": {
+              "$ref": "common#/$defs/text"
+            },
+            "prices": {
+              "$ref": "common#/$defs/prices"
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deliveryTime": {
+              "type": "string"
+            },
+            "revisions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "popular": {
+              "type": "boolean"
+            }
           },
           "additionalProperties": false
         }
       },
-      "images": { "type": "array", "minItems": 1, "items": { "$ref": "common#/$defs/image" } },
-      "summary": { "$ref": "common#/$defs/text" },
-      "about": { "$ref": "common#/$defs/text" },
-      "description": { "type": "array", "items": { "$ref": "common#/$defs/text" } },
-      "usageTitle": { "$ref": "common#/$defs/text" },
-      "usageIntro": { "$ref": "common#/$defs/text" },
-      "usage": { "type": "array", "items": { "$ref": "common#/$defs/text" } },
+      "images": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "common#/$defs/image"
+        }
+      },
+      "summary": {
+        "$ref": "common#/$defs/text"
+      },
+      "about": {
+        "$ref": "common#/$defs/text"
+      },
+      "description": {
+        "type": "array",
+        "items": {
+          "$ref": "common#/$defs/text"
+        }
+      },
+      "usageTitle": {
+        "$ref": "common#/$defs/text"
+      },
+      "usageIntro": {
+        "$ref": "common#/$defs/text"
+      },
+      "usage": {
+        "type": "array",
+        "items": {
+          "$ref": "common#/$defs/text"
+        }
+      },
       "features": {
         "type": "array",
-        "items": { "type": "object", "required": ["text"], "properties": { "icon": { "type": "string" }, "text": { "$ref": "common#/$defs/text" } }, "additionalProperties": false }
+        "items": {
+          "type": "object",
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "icon": {
+              "type": "string"
+            },
+            "text": {
+              "$ref": "common#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        }
       },
-      "faq": { "$ref": "common#/$defs/faq" },
-      "buttons": { "$ref": "common#/$defs/buttons" }
+      "faq": {
+        "$ref": "common#/$defs/faq"
+      },
+      "buttons": {
+        "$ref": "common#/$defs/buttons"
+      },
+      "status": {
+        "enum": [
+          "",
+          "draft"
+        ],
+        "description": "draft = hidden from the site"
+      },
+      "deliveryTime": {
+        "type": "string"
+      },
+      "revisions": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "featured": {
+        "type": "boolean"
+      },
+      "highlights": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "videoUrl": {
+        "type": "string"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "portfolio": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "src": {
+              "type": "string"
+            },
+            "alt": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "related": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
     },
     "additionalProperties": false
   }
