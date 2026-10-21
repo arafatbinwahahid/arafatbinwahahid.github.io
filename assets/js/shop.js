@@ -212,7 +212,10 @@ function paypalButtons(box) {
     s.onerror = reject;
     document.head.appendChild(s);
   });
-  paypalSdk.then((paypal) => paypal.Buttons({
+  // Any problem loading PayPal (wrong Client ID, blocked script, no buttons after 15 s) hides the box; paying by hand still works
+  const hide = () => { box.closest('.paypal-box').hidden = true; };
+  const timer = setTimeout(() => { if (!box.querySelector('iframe')) hide(); }, 15000);
+  paypalSdk.then((paypal) => { if (!paypal?.Buttons) throw new Error('PayPal not loaded'); return paypal.Buttons({
     style: { layout: 'vertical', shape: 'rect', label: 'pay' },
     onClick: (data, actions) => {
       const v = (n) => form.elements[n]?.value.trim() || '';
@@ -242,7 +245,7 @@ function paypalButtons(box) {
       });
     },
     onError: () => say(fill(P.error, { id: orderId() })),
-  }).render(box)).catch(() => { box.hidden = true; });
+  }).render(box); }).catch(() => { clearTimeout(timer); hide(); });
 }
 
 if (pay) {
