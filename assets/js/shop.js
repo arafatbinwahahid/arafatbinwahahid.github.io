@@ -226,13 +226,20 @@ function paypalButtons(box) {
       say('');
       return actions.resolve();
     },
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{
-        custom_id: orderId(),
-        description: lines().map((l) => `${name(l.p)} x${l.qty}`).join(', ').slice(0, 127),
-        amount: { currency_code: code, value: total().toFixed(2) },
-      }],
-    }),
+    // The order ID (as Invoice ID) and every product line show in your PayPal activity and in both PayPal receipts
+    createOrder: (data, actions) => {
+      const items = lines().map((l) => ({ name: name(l.p).slice(0, 127), sku: l.id, quantity: String(l.qty), unit_amount: { currency_code: code, value: l.unit.toFixed(2) }, category: 'DIGITAL_GOODS' }));
+      const sum = lines().reduce((n, l) => n + Math.round(l.unit * 100) * l.qty, 0) / 100;
+      return actions.order.create({
+        purchase_units: [{
+          invoice_id: orderId(),
+          custom_id: orderId(),
+          description: `Order ${orderId()}: ${lines().map((l) => `${name(l.p)} x${l.qty}`).join(', ')}`.slice(0, 127),
+          amount: { currency_code: code, value: sum.toFixed(2), breakdown: { item_total: { currency_code: code, value: sum.toFixed(2) } } },
+          items,
+        }],
+      });
+    },
     onApprove: async (data, actions) => {
       const order = await actions.order.capture();
       const cap = order.purchase_units?.[0]?.payments?.captures?.[0] || {};
