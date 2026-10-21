@@ -1,8 +1,42 @@
 {
   "seo": {
     "title": "Services",
+    "titleSuffix": true,
     "description": "Professional web development and custom website design, and Clash of Clans account boosting and village building, by arafatbin.com.",
-    "image": "/assets/images/services/graphic-design-services.jpg"
+    "keywords": [],
+    "canonical": "",
+    "image": "/assets/images/services/graphic-design-services.jpg",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
   },
   "hero": {
     "title": "Services",

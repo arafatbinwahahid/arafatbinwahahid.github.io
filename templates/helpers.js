@@ -1,5 +1,6 @@
 // Loads every JSON file in data/ and provides small HTML helpers.
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -96,7 +97,12 @@ export const hasSharp = !!sharp;
 const imageJobs = new Map(); // source path -> widths to generate
 const addJob = (src, w) => imageJobs.set(src, new Set([...(imageJobs.get(src) || []), w]));
 // File names with spaces or capitals become simple names, e.g. "My Logo.PNG" -> my-logo-400.webp
-const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${ext}`;
+// A short fingerprint of the file is part of the name, so a changed image always gets a new URL (safe to cache for a long time)
+const hashes = {};
+const fileHash = (file) => (hashes[file] ??= crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, file))).digest('hex').slice(0, 8));
+const optPath = (src, w, ext = 'webp') => `/assets/opt/${path.basename(decodeURI(src)).replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${w}.${fileHash(decodeURI(src))}.${ext}`;
+// Script URL with the same fingerprint, e.g. /assets/js/main.js?v=1a2b3c4d
+export const assetUrl = (file) => `/${file}?v=${fileHash(file)}`;
 export const url = (src) => encodeURI(decodeURI(src || ''));
 const canResize = (src) => sharp && !isHttp(src) && /\.(jpe?g|png)$/i.test(src || '') && imageSize(src);
 
@@ -196,3 +202,16 @@ export const formatDate = (iso) =>
   new Date(iso + 'T00:00:00Z').toLocaleDateString(site.locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 export const whatsapp = (text) => `https://wa.me/${contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 export const absUrl = (p) => new URL(p, site.url).href;
+
+// Drops empty values ("", null, []) from JSON, so empty fields fall back to the automatic ones
+export const filled = (o) => {
+  if (Array.isArray(o)) return o;
+  if (!o || typeof o !== 'object') return o;
+  const out = {};
+  for (const [k, v] of Object.entries(o)) {
+    const f = filled(v);
+    if (f === '' || f == null || (Array.isArray(f) && !f.length) || (typeof f === 'object' && !Array.isArray(f) && !Object.keys(f).length)) continue;
+    out[k] = f;
+  }
+  return out;
+};

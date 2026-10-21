@@ -10,6 +10,7 @@
     "category": { "type": "string" },
     "tags": { "type": "array", "items": { "type": "string" } },
     "excerpt": { "$ref": "common#/$defs/text" },
+    "seo": { "$ref": "common#/$defs/seo" },
     "image": { "$ref": "common#/$defs/image" },
     "draft": { "type": "boolean" },
     "content": {

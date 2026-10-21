@@ -11,6 +11,7 @@
     { "label": "About", "href": "/about/" },
     { "label": "Contact", "href": "/contact/" }
   ],
+  "search": { "label": "Search", "href": "/search/" },
   "button": { "label": "WhatsApp", "href": "https://wa.me/96892130528", "icon": "wa", "style": "primary" },
   "menu": {
     "buttonLabel": "All pages",
@@ -26,7 +27,8 @@
           { "label": "Skills", "href": "/skills/", "icon": "tool" },
           { "label": "Work", "href": "/work/", "icon": "image" },
           { "label": "Credentials", "href": "/credentials/", "icon": "award" },
-          { "label": "Reviews", "href": "/reviews/", "icon": "star" }
+          { "label": "Reviews", "href": "/reviews/", "icon": "star" },
+          { "label": "Search", "href": "/search/", "icon": "search" }
         ]
       },
       {

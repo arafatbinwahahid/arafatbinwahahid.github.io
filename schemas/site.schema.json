@@ -4,11 +4,35 @@
   "required": ["name", "title", "titleSeparator", "description", "url", "language", "locale", "currency", "defaultImage", "favicon", "homeLabel", "web3formsAccessKey", "theme", "person", "robots"],
   "properties": {
     "url": { "type": "string", "pattern": "^https://[^/]+$", "description": "No slash at the end, e.g. https://arafatbin.com" },
+    "comments": {
+      "type": "object",
+      "description": "Giscus comments on blog posts (values from giscus.app). Empty repoId or categoryId = off",
+      "properties": {
+        "repo": { "type": "string", "pattern": "^$|^[\\w.-]+/[\\w.-]+$" },
+        "repoId": { "type": "string" },
+        "category": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "lang": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "clarityId": { "type": "string", "pattern": "^$|^[a-z0-9]+$", "description": "Microsoft Clarity project ID (clarity.microsoft.com → Settings → Overview). Empty = off" },
     "googleAnalyticsId": { "type": "string", "pattern": "^$|^G-[A-Z0-9]+$" },
     "verification": {
       "type": "object",
-      "description": "Codes from Google Search Console and Bing Webmaster Tools (HTML meta tag method). The code alone or the whole <meta> tag both work.",
-      "properties": { "google": { "type": "string" }, "bing": { "type": "string" } },
+      "description": "Codes from Google Search Console, Bing Webmaster Tools, Yandex, Pinterest, Facebook and Baidu (HTML meta tag method). The code alone or the whole <meta> tag both work.",
+      "properties": { "google": { "type": "string" }, "bing": { "type": "string" }, "yandex": { "type": "string" }, "pinterest": { "type": "string" }, "facebook": { "type": "string" }, "baidu": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "seo": {
+      "type": "object",
+      "description": "Defaults for every page",
+      "properties": {
+        "author": { "type": "string" },
+        "twitterSite": { "type": "string", "description": "@username of the site on X (Twitter)" },
+        "twitterCreator": { "type": "string" },
+        "facebookAppId": { "type": "string" }
+      },
       "additionalProperties": false
     },
     "web3formsAccessKey": { "type": "string", "pattern": "^[0-9a-f-]{36}$" },

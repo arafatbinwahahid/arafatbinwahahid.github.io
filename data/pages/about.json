@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "About", "description": "About Arafat Bin Wahahid, fuel attendant at Oman Oil (OQ) in Dhofar and freelance graphic designer." },
+  "seo": {
+    "title": "About",
+    "titleSuffix": true,
+    "description": "About Arafat Bin Wahahid, fuel attendant at Oman Oil (OQ) in Dhofar and freelance graphic designer.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "About me", "text": "Safe, steady, and always learning." },
   "image": { "src": "/assets/images/about/arafat-bin-wahahid-fuel-attendant-oman.jpg", "alt": "Arafat in his blue Oman Oil uniform on duty at a fuel pump" },
   "paragraphs": [

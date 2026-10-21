@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Skills", "description": "Skills of Arafat Bin Wahahid: fuel station operations, HSE, Microsoft Excel, graphic design and digital marketing." },
+  "seo": {
+    "title": "Skills",
+    "titleSuffix": true,
+    "description": "Skills of Arafat Bin Wahahid: fuel station operations, HSE, Microsoft Excel, graphic design and digital marketing.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Skills", "text": "Skills from the forecourt, the computer and the design desk." },
   "groups": [
     { "title": "On the forecourt", "icon": "shield", "items": ["Safe fueling", "HSE compliance", "Shift supervision", "Staff training", "Cash handling and invoicing", "Inventory checks", "Customer service"] },

@@ -1,7 +1,42 @@
 {
   "seo": {
     "title": "",
-    "description": "Buy Netflix shared accounts, vector portraits and social media posts, or hire Arafat Bin Wahahid for web development, Excel data entry and CoC boosting."
+    "titleSuffix": true,
+    "description": "Buy Netflix shared accounts, vector portraits and social media posts, or hire Arafat Bin Wahahid for web development, Excel data entry and CoC boosting.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
   },
   "hero": {
     "eyebrow": "Shop & services",

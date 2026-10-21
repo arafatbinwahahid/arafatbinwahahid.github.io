@@ -37,13 +37,76 @@
     },
     "seo": {
       "type": "object",
-      "required": ["description"],
+      "description": "Every field is optional. Leave a field empty (\"\", [] or the default) and the build fills it in automatically.",
       "properties": {
-        "title": { "type": "string" },
-        "titleSuffix": { "type": "boolean" },
-        "description": { "$ref": "#/$defs/text" },
-        "image": { "$ref": "#/$defs/imagePath" },
-        "keywords": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+        "title": { "type": "string", "description": "<title>, og:title, twitter:title. About 60 characters" },
+        "titleSuffix": { "type": "boolean", "description": "false = do not add \" | Arafat Bin Wahahid\"" },
+        "description": { "type": "string", "description": "<meta name=description>. 70 to 155 characters (empty = summary, excerpt or the site description)" },
+        "keywords": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+        "canonical": { "type": "string", "pattern": "^$|^(/|https://)", "description": "Only when this page is a copy of another URL" },
+        "image": { "type": "string", "pattern": "^$|^(/assets/|https?://)", "description": "Share image for Facebook, WhatsApp, X" },
+        "imageAlt": { "type": "string" },
+        "author": { "type": "string" },
+        "robots": {
+          "type": "object",
+          "properties": {
+            "index": { "type": "boolean", "description": "false = noindex (hidden from Google, also left out of sitemap.xml)" },
+            "follow": { "type": "boolean", "description": "false = nofollow" },
+            "nosnippet": { "type": "boolean" },
+            "noimageindex": { "type": "boolean" },
+            "notranslate": { "type": "boolean" },
+            "indexifembedded": { "type": "boolean" },
+            "maxSnippet": { "type": "integer", "minimum": -1, "description": "-1 = no limit" },
+            "maxImagePreview": { "enum": ["", "none", "standard", "large"] },
+            "maxVideoPreview": { "type": "integer", "minimum": -1, "description": "-1 = no limit" },
+            "unavailableAfter": { "type": "string", "description": "Date after which Google should drop the page, e.g. 2027-12-31" }
+          },
+          "additionalProperties": false
+        },
+        "googlebot": { "type": "string", "description": "Extra rules for Google only, e.g. \"nosnippet\"" },
+        "bingbot": { "type": "string", "description": "Extra rules for Bing only" },
+        "openGraph": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "description": "website, article, product, profile ... (empty = automatic)" },
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "localeAlternate": { "type": "array", "items": { "type": "string", "pattern": "^[a-z]{2}_[A-Z]{2}$" } }
+          },
+          "additionalProperties": false
+        },
+        "twitter": {
+          "type": "object",
+          "properties": {
+            "card": { "enum": ["", "summary", "summary_large_image"] },
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "creator": { "type": "string", "description": "@username" }
+          },
+          "additionalProperties": false
+        },
+        "article": {
+          "type": "object",
+          "description": "Blog posts: empty fields come from the post's date, category and tags",
+          "properties": {
+            "publishedTime": { "type": "string" },
+            "modifiedTime": { "type": "string" },
+            "section": { "type": "string" },
+            "tags": { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        },
+        "alternates": {
+          "type": "array",
+          "description": "Other language versions: [{ \"hreflang\": \"bn\", \"href\": \"https://...\" }]",
+          "items": { "type": "object", "required": ["hreflang", "href"], "properties": { "hreflang": { "type": "string" }, "href": { "type": "string", "pattern": "^(/|https://)" } }, "additionalProperties": false }
+        },
+        "schema": { "type": "array", "description": "Extra JSON-LD objects (schema.org), added next to the automatic ones", "items": { "type": "object" } },
+        "meta": {
+          "type": "array",
+          "description": "Any other tag: [{ \"name\": \"rating\", \"content\": \"adult\" }] or [{ \"property\": \"...\", \"content\": \"...\" }]",
+          "items": { "type": "object", "required": ["content"], "properties": { "name": { "type": "string" }, "property": { "type": "string" }, "content": { "type": "string" } }, "additionalProperties": false }
+        }
       },
       "additionalProperties": false
     },

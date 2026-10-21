@@ -1,5 +1,43 @@
 {
-  "seo": { "title": "Payment", "description": "Choose a currency and payment method to complete your order from Arafat Bin Wahahid's shop." },
+  "seo": {
+    "title": "Payment",
+    "titleSuffix": true,
+    "description": "Choose a currency and payment method to complete your order from Arafat Bin Wahahid's shop.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": false,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
   "hero": { "title": "Payment", "text": "Choose a currency and a payment method, pay, then send the confirmation form." },
   "noscript": "This page needs JavaScript to show your cart. Please turn JavaScript on, or order on WhatsApp.",
   "summaryTitle": "Order summary",
@@ -43,9 +81,18 @@
     "duplicate": "This order was already sent. Order ID: {id}",
     "error": "Could not send. Please try again, or message us on WhatsApp with your order ID {id}."
   },
+  "paypal": {
+    "title": "Pay now with PayPal or card",
+    "note": "Fill in your name, mobile and email in the form below first. After you pay, the order is sent to us automatically.",
+    "or": "Or pay by hand with the details below and send the form.",
+    "missing": "Please fill in your name, a valid mobile number and email in the form below, then press the PayPal button again.",
+    "error": "PayPal could not finish the payment. Nothing was charged. Please try again or message us on WhatsApp with your order ID {id}.",
+    "paid": "Paid with PayPal"
+  },
   "done": {
     "title": "Thank you!",
     "payment": "We received your payment confirmation for order {id}. We will check the payment and contact you soon.",
+    "paypal": "Payment received for order {id}. Thank you! We will contact you soon with your order.",
     "appointment": "We received your appointment request for order {id}. We will confirm the date and time with you soon.",
     "button": { "label": "Back to the shop", "href": "/shop/", "style": "outline" }
   }

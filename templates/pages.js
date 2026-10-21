@@ -1,7 +1,7 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
   site, header, contact, social, products, services, posts, payments, page,
-  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices,
+  esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
 
@@ -174,7 +174,8 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
     image: p.images.map((im) => shareUrl(im.src)), brand: { '@type': 'Brand', name: site.name }, offers,
   };
   return {
-    path: url, seo: { title: p.title, description: p.summary, ...p.seo, image: p.images[0]?.src }, crumbs, schema: [schema], cart: true,
+    path: url, seo: { title: p.title, description: p.summary, image: p.images[0]?.src, ...filled(p.seo) }, crumbs, schema: [schema], cart: true,
+    type: 'product', product: { amount: lowestPrices(p)[DEF], currency: DEF },
     body: pageHero({ title: p.title, text: p.summary }, crumbs) + section(`<div class="split split-top">${gallery(p.images)}${buy}</div>`)
       + infoSection(p, S) + section(benefits()) + faqSection(p.faq, S.faq) + reviews,
   };
@@ -192,7 +193,7 @@ function payForm(m, c, f) {
     ? `<div class="row2">${field(f.dateLabel, '<input name="date" type="date" required data-date>')}${field(f.timeLabel, `<input name="time" type="time" required${tr.start ? ` min="${esc(tr.start)}"` : ''}${tr.end ? ` max="${esc(tr.end)}"` : ''}>`)}</div>
 ${field(f.messageLabel, '<textarea name="message" rows="3" maxlength="1000"></textarea>')}`
     : `<div class="row2">${field(`${f.amountLabel} (${c.code})`, '<input name="amount" type="number" inputmode="decimal" min="0" step="any" required data-amount>')}${field(f.transactionLabel, '<input type="text" name="transaction" maxlength="100">')}</div>`;
-  return `<form class="form" data-pay-form data-type="${esc(m.type)}" data-method="${esc(m.name)}" data-currency="${esc(c.code)}">
+  return `<form class="form" data-clarity-mask="true" data-pay-form data-type="${esc(m.type)}" data-method="${esc(m.name)}" data-currency="${esc(c.code)}">
 <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">${who}${extra}
 <button class="btn btn-primary" type="submit">${icon(m.type === 'appointment' ? 'calendar' : 'mail')}${esc(m.type === 'appointment' ? f.submitAppointment : f.submitPayment)}</button><p class="status" role="status"></p></form>`;
 }
@@ -208,6 +209,7 @@ function methodPanel(m, c, d) {
   const hours = m.hours?.length ? `<h4>${esc(d.hoursTitle)}</h4><dl class="pay-details">${m.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join('')}</dl>` : '';
   return `<section class="card card-pad method-panel" data-panel="${esc(m.id)}" hidden aria-labelledby="h-${esc(m.id)}">
 <h2 class="h3" id="h-${esc(m.id)}">${esc(d.payTitle)}: ${icon(m.icon)} ${esc(m.name)} (${esc(c.code)})</h2><p>${esc(m.intro)}</p>
+${m.paypalClientId ? `<div class="paypal-box"><h4>${esc(d.paypal.title)}</h4><p class="muted">${esc(d.paypal.note)}</p><div data-paypal="${esc(m.paypalClientId)}" data-currency="${esc(c.code)}"></div><p class="muted">${esc(d.paypal.or)}</p></div>` : ''}
 ${details ? `<h4>${esc(d.detailsTitle)}</h4>${details}` : ''}${m.link?.href ? btns([{ label: m.link.label, href: m.link.href, icon: 'card' }]) : ''}
 ${m.poster?.src ? `<figure class="poster">${img(m.poster)}</figure>` : ''}${place}${hours}
 ${missing ? `<p class="notice">${esc(d.missingDetails)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>` : ''}
@@ -230,10 +232,11 @@ ${curs.flatMap((c) => enabledMethods(c).map((m) => methodPanel(m, c, d))).join('
   const e = d.empty;
   return {
     path: '/payments/', seo: d.seo, crumbs, noindex: true, cart: true,
-    body: pageHero(d.hero, crumbs) + section(`<noscript><p class="notice">${esc(d.noscript)}</p></noscript>
+    // .pay-area keeps the footer below the screen while the script decides what to show, so nothing jumps
+    body: pageHero(d.hero, crumbs) + section(`<div class="pay-area"><noscript><p class="notice">${esc(d.noscript)}</p></noscript>
 <div class="card card-pad narrow center" data-pay-empty hidden><h2 class="h3">${esc(e.title)}</h2><p>${esc(e.text)}</p>${btns([e.button])}</div>
 <div class="card card-pad narrow center" data-pay-done hidden><h2 class="h3">${esc(d.done.title)}</h2><p data-done-text></p>${btns([d.done.button])}</div>
-<div class="pay" data-pay-main>${summary}<div class="pay-steps">${choose}</div></div>`),
+<div class="pay" data-pay-main>${summary}<div class="pay-steps">${choose}</div></div></div>`),
   };
 }
 
@@ -264,7 +267,7 @@ function servicePage(s) {
     offers: s.packages.map((pk) => { const [cur, v] = Object.entries(pk.prices)[0]; return { '@type': 'Offer', name: pk.name, price: v, priceCurrency: cur, url: absUrl(url) }; }),
   };
   return {
-    path: url, seo: { title: s.title, description: s.summary, ...s.seo, image: s.images[0]?.src }, crumbs, schema: [schema],
+    path: url, seo: { title: s.title, description: s.summary, image: s.images[0]?.src, ...filled(s.seo) }, crumbs, schema: [schema],
     body: pageHero({ title: s.title, text: s.summary }, crumbs) + section(`<div class="split split-top">${gallery(s.images)}${box}</div>`)
       + infoSection(s, T.sections) + faqSection(s.faq, T.sections.faq) + queueSection(),
   };
@@ -325,7 +328,7 @@ function reviewsPageFn() {
   const crumbs = crumbsOf({ label: d.hero.title, href: '/reviews/' });
   const fiverr = d.fiverr ? `<div class="card card-pad card-accent"><span class="ic">${icon('star')}</span><h2 class="h3">${esc(d.fiverr.title)}</h2><p>${esc(d.fiverr.text)}</p>${btns([d.fiverr.button])}</div>` : '';
   const form = f.show ? section(`<div class="narrow card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
-<form class="form" data-form="review" data-success="${esc(f.success)}" data-rating-error="${esc(f.ratingError)}" data-error="${esc(page('contact').form.error)}">
+<form class="form" data-clarity-mask="true" data-form="review" data-success="${esc(f.success)}" data-rating-error="${esc(f.ratingError)}" data-error="${esc(page('contact').form.error)}">
 <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">
 <div class="row2"><label>${esc(f.nameLabel)}<input type="text" name="name" autocomplete="name" required></label><label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email"></label></div>
 <fieldset class="rating"><legend>${esc(f.ratingLabel)}</legend>${[5, 4, 3, 2, 1].map((n) => `<input type="radio" id="r${n}" name="rating" value="${n}"><label for="r${n}" title="${n}">★<span class="sr">${n} stars</span></label>`).join('')}</fieldset>
@@ -350,7 +353,7 @@ function contactPage() {
     d.cv.show ? row('download', L.cv, d.cv.label, d.cv.href) : '',
   ].join('');
   const form = `<div class="card card-pad"><h2 class="h3">${esc(f.title)}</h2><p>${esc(f.text)}</p>
-<form class="form" data-form="contact" data-success="${esc(f.success)}" data-error="${esc(f.error)}">
+<form class="form" data-clarity-mask="true" data-form="contact" data-success="${esc(f.success)}" data-error="${esc(f.error)}">
 <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true">
 <label>${esc(f.nameLabel)}<input type="text" name="name" autocomplete="name" required></label>
 <label>${esc(f.emailLabel)}<input name="email" type="email" autocomplete="email" required></label>
@@ -379,16 +382,40 @@ const blocks = {
   image: (b) => figure(b),
 };
 
+// Giscus comments (site.json "comments"); the widget only loads when the visitor scrolls near it
+function comments() {
+  const g = site.comments || {};
+  if (!g.repo || !g.repoId || !g.categoryId) return '';
+  const attrs = { repo: g.repo, 'repo-id': g.repoId, category: g.category, 'category-id': g.categoryId, lang: g.lang || 'en' };
+  return section(`<div class="narrow"><h2 class="h3">${esc(blogText.commentsTitle)}</h2><p class="muted">${esc(blogText.commentsNote)}</p>
+<div class="giscus" data-giscus${Object.entries(attrs).map(([k, v]) => ` data-${k}="${esc(v)}"`).join('')}></div></div>`, { background: 'soft' });
+}
+
 function postPage(p) {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' }, { label: p.title, href: `/blog/${p.slug}/` });
   const schema = {
-    '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.date,
+    '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.seo?.article?.modifiedTime || p.date,
     author: { '@type': 'Person', name: p.author, url: site.url }, mainEntityOfPage: absUrl(`/blog/${p.slug}/`), ...(p.image && { image: shareUrl(p.image.src) }),
   };
   const body = pageHero({ title: p.title, text: `${blogText.byLabel} ${p.author} · ${formatDate(p.date)}` }, crumbs)
     + section(`<article class="prose">${p.image ? img(p.image, { eager: true }) : ''}${p.content.map((b) => (blocks[b.type] || blocks.p)(b)).join('')}
-<div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`);
-  return { path: `/blog/${p.slug}/`, seo: { title: p.title, description: p.excerpt, image: p.image?.src }, crumbs, schema: [schema], type: 'article', body };
+<div class="tags">${(p.tags || []).map((t) => `<span>${esc(t)}</span>`).join('')}</div><p><a class="more" href="/blog/">← ${esc(blogText.backLabel)}</a></p></article>`)
+    + comments();
+  const seo = { title: p.title, description: p.excerpt, image: p.image?.src, ...filled(p.seo) };
+  const article = { publishedTime: p.date, author: p.author, section: p.category, tags: p.tags };
+  return { path: `/blog/${p.slug}/`, seo, crumbs, schema: [schema], type: 'article', article, body };
+}
+
+// ---- Search (Pagefind index made by build.js) ----
+function searchPage() {
+  const d = page('search');
+  const crumbs = crumbsOf({ label: d.hero.title, href: '/search/' });
+  const form = `<form class="search-form" action="/search/" method="get" role="search" data-search
+ data-results-label="${esc(d.resultsLabel)}" data-no-results="${esc(d.noResults)}" data-loading="${esc(d.loading)}" data-unavailable="${esc(d.unavailable)}">
+<label class="sr" for="q">${esc(d.buttonLabel)}</label><input id="q" name="q" type="search" placeholder="${esc(d.placeholder)}" autocomplete="off" enterkeyhint="search">
+<button class="btn btn-primary" type="submit">${icon('search')}${esc(d.buttonLabel)}</button></form>
+<p class="muted" role="status" data-search-status></p><ol class="search-results" data-search-results></ol>`;
+  return { path: '/search/', seo: d.seo, crumbs, scripts: ['search'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
 }
 
 // ---- FAQ, legal, 404 ----
@@ -425,6 +452,6 @@ export function allPages() {
     reviewsPageFn(), contactPage(),
     blogPage(), ...posts.map(postPage),
     legalPage('terms', '/terms-and-conditions/'), legalPage('privacy', '/privacy-policy/'), legalPage('refund', '/refund-policy/'),
-    faqPage(), notFoundPage(),
+    faqPage(), searchPage(), notFoundPage(),
   ];
 }
