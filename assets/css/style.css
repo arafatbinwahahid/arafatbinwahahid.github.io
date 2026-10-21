@@ -53,7 +53,8 @@ button.more { border: 0; background: none; padding: 0; font: inherit; font-weigh
 .menu-panel a:hover, .menu-panel a[aria-current] { background: var(--soft); color: var(--primary); }
 .menu-title { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 .55rem .3rem; }
 @media (max-width: 900px) { .nav { display: none; } .hdr-end { margin-left: auto; } }
-@media (max-width: 420px) { .hdr-end .btn span { display: none; } .menu-panel { gap: .2rem .4rem; padding: .8rem; } .menu-panel a { font-size: .88rem; padding: .45rem .4rem; } }
+@media (max-width: 480px) { .hdr-in { gap: .75rem; } .hdr-end .btn span { display: none; } .logo { font-size: 1rem; line-height: 1.15; } }
+@media (max-width: 420px) { .menu-panel { gap: .2rem .4rem; padding: .8rem; } .menu-panel a { font-size: .88rem; padding: .45rem .4rem; } }
 
 /* Hero (home) */
 .hero { background: linear-gradient(180deg, var(--soft), var(--bg)); padding: clamp(2.5rem, 7vw, 5rem) 0; border-bottom: 1px solid var(--border); }
@@ -319,6 +320,7 @@ p.badge-out, .badge-inline { position: static; display: inline-block; vertical-a
 .logo img { height: 32px; width: auto; }
 .from { font-size: .85em; color: var(--muted); font-weight: 500; }
 .plans { margin-top: 1rem; }
+.buy .cur { margin-top: 1.25rem; }
 .opts-col { grid-template-columns: 1fr; }
 .opts-col .opt > span { justify-content: space-between; flex-wrap: wrap; }
 .plan-price { color: var(--primary); font-weight: 700; }

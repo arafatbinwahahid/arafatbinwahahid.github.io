@@ -65,9 +65,15 @@
     "slug": "custom-vector-portrait",
     "title": "Custom vector portrait",
     "category": "Design",
-    "prices": {"OMR": 3.8, "USD": 10, "BDT": 1220},
-    "compareAtPrices": {"OMR": 5.8, "USD": 15, "BDT": 1830},
-    "stock": 10,
+    "seo": {
+      "title": "Custom Vector Portrait from Your Photo | Unlimited Revisions",
+      "titleSuffix": false,
+      "description": "Turn your photo into a clean vector portrait made in Adobe Illustrator. High resolution PNG and JPG, first draft in 2 days and unlimited revisions. Order now.",
+      "keywords": ["custom vector portrait", "vector portrait from photo", "vector art portrait", "Adobe Illustrator portrait", "cartoon portrait from photo", "vector portrait Fiverr", "profile picture vector art", "vector portrait Oman", "vector portrait Bangladesh"]
+    },
+    "variants": [
+      {"id": "P002-1", "name": "1 Person · PNG & JPG", "prices": {"OMR": 3.8, "USD": 10, "BDT": 1220}, "compareAtPrices": {"OMR": 5.8, "USD": 15, "BDT": 1830}, "stock": 10}
+    ],
     "images": [
       {"src": "/assets/images/IMAGE05.PNG", "alt": "Vector portrait example"}
     ],
@@ -76,6 +82,8 @@
     "description": [
       "Send a clear photo after ordering. You get a draft in 2 days and unlimited revisions."
     ],
+    "usageTitle": "How it works",
+    "usageIntro": "Getting your vector portrait is simple:",
     "usage": [
       "Place your order and send a clear photo.",
       "Review the first draft (sent within 2 days).",
@@ -94,15 +102,22 @@
       {"q": "How many revisions are included?", "a": "Unlimited revisions."}
     ],
     "reviews": [],
-    "externalLink": {"label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid"}
+    "externalLink": {"label": "Order on Fiverr", "href": "https://www.fiverr.com/arafatwahahid", "icon": "globe"}
   },
   {
     "id": "P003",
     "slug": "social-media-post-pack",
     "title": "Social media post pack (10 posts)",
     "category": "Design",
-    "prices": {"OMR": 9.6, "USD": 25, "BDT": 3050},
-    "stock": 10,
+    "seo": {
+      "title": "Social Media Post Pack: 10 Branded Instagram & Facebook Posts",
+      "titleSuffix": false,
+      "description": "Get 10 matching social media posts designed in your brand colours, sized for Instagram and Facebook, with editable PSD source files. Order now.",
+      "keywords": ["social media post design", "Instagram post design", "Facebook post design", "social media post pack", "branded social media posts", "PSD social media templates", "social media design Oman", "social media design Bangladesh"]
+    },
+    "variants": [
+      {"id": "P003-1", "name": "10 Posts · Instagram & Facebook", "prices": {"OMR": 9.6, "USD": 25, "BDT": 3050}, "stock": 10}
+    ],
     "images": [
       {"src": "/assets/images/IMAGE10.PNG", "alt": "Social media post design sample"}
     ],
@@ -111,6 +126,8 @@
     "description": [
       "Tell me your brand colours and topics. I design ten matching posts you can schedule straight away."
     ],
+    "usageTitle": "How it works",
+    "usageIntro": "From order to ready-to-post designs:",
     "usage": [
       "Place your order and tell me your brand colours and topics.",
       "Send your logo.",
@@ -128,15 +145,23 @@
       {"q": "Which file formats will I receive?", "a": "PNG and PSD."},
       {"q": "Can I edit the posts later?", "a": "Yes. Editable source files are included."}
     ],
-    "reviews": []
+    "reviews": [],
+    "externalLink": {"label": "Ask a question on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20the%20social%20media%20post%20pack.", "icon": "wa"}
   },
   {
     "id": "P004",
     "slug": "excel-data-entry-service",
     "title": "Professional Excel Data Entry Service",
     "category": "Excel Services",
-    "prices": {"OMR": 5.8, "USD": 15, "BDT": 1830},
-    "stock": 10,
+    "seo": {
+      "title": "Excel Data Entry Service | PDF to Excel, Cleaning & Formatting",
+      "titleSuffix": false,
+      "description": "Accurate Excel data entry: PDF, image and scanned document to Excel, data cleaning, duplicate removal and formatting. Delivered as XLSX, CSV or Google Sheets.",
+      "keywords": ["Excel data entry service", "PDF to Excel conversion", "data entry Oman", "data entry Bangladesh", "data cleaning service", "spreadsheet formatting", "copy paste data entry", "Google Sheets data entry"]
+    },
+    "variants": [
+      {"id": "P004-1", "name": "1 Project · XLSX, CSV or Google Sheets", "prices": {"OMR": 5.8, "USD": 15, "BDT": 1830}, "stock": 10}
+    ],
     "images": [
       {"src": "/assets/images/IMAGE9.PNG", "alt": "Professional Excel data entry and spreadsheet management service"}
     ],
@@ -145,6 +170,8 @@
     "description": [
       "Need help entering, organizing, or formatting data in Excel? I provide reliable Excel data entry services to help you save time and keep your data organized. From PDF-to-Excel conversion and copy-paste tasks to data cleaning and spreadsheet formatting, your data will be handled with care and attention to detail."
     ],
+    "usageTitle": "How it works",
+    "usageIntro": "Send your files and get an organised spreadsheet back:",
     "usage": [
       "Place your order and send your files (PDF, images or scanned documents).",
       "Tell me the format you need: Excel, CSV or Google Sheets.",
@@ -165,6 +192,7 @@
       {"q": "Which formats can you deliver?", "a": "Microsoft Excel (.xlsx), CSV (.csv) and Google Sheets."},
       {"q": "Is my data kept private?", "a": "Yes. Client data is handled confidentially."}
     ],
-    "reviews": []
+    "reviews": [],
+    "externalLink": {"label": "Ask a question on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20Excel%20data%20entry.", "icon": "wa"}
   }
 ]
