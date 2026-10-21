@@ -28,7 +28,7 @@
 │   ├── images/              ← সব ছবি
 │   └── files/               ← CV (PDF)
 ├── CNAME                    ← arafatbin.com
-├── .github/workflows/deploy.yml  ← main-এ push করলে GitHub Pages-এ auto publish
+├── .github/workflows/deploy.yml  ← main-এ push করলে build + পরীক্ষা + gh-pages ব্রাঞ্চে publish
 │
 └── data/                    ★ শুধু এই ফোল্ডার এডিট করবেন ★
     ├── global/              ← পুরো সাইটের common অংশ
@@ -146,5 +146,6 @@ node build.js --serve    # তৈরি করে http://localhost:8080 এ দ�
 npm run check            # build + HTML যাচাই + ভাঙা লিংক খোঁজা
 ```
 
-GitHub Pages: রিপোর **Settings → Pages → Source** = **GitHub Actions**।
-এরপর `main`-এ push করলেই সাইট নিজে থেকে build হয়ে publish হবে।
+**Publish:** `main`-এ push করলে GitHub Actions সাইট build করে, সব পরীক্ষা চালায়, পাস করলে তৈরি সাইটটা `gh-pages` ব্রাঞ্চে রাখে। GitHub Pages এই ব্রাঞ্চ থেকেই সাইট দেখায়:
+**Settings → Pages → Build and deployment → Source = Deploy from a branch → Branch = `gh-pages` / `(root)`**।
+`gh-pages` ব্রাঞ্চ নিজে এডিট করবেন না, প্রতিটি publish-এ এটা নতুন করে লেখা হয়। সব পরিবর্তন `main`-এ করুন।
