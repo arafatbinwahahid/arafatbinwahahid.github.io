@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage } from './helpers.js';
+import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -44,7 +44,7 @@ function siteHeader(path, cart) {
   return `<header class="hdr"><div class="wrap hdr-in">
 <a class="logo" href="${esc(logo.href)}">${logoImg()}${esc(logo.text)}</a>
 <nav class="nav" aria-label="Main">${navLinks}</nav>
-<div class="hdr-end">${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)}>${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
+<div class="hdr-end">${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)} aria-label="${esc(button.label)}">${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
 <details class="menu"><summary aria-label="${esc(menu.buttonLabel)}" title="${esc(menu.buttonLabel)}">${icon('dots')}</summary><nav class="menu-panel" aria-label="${esc(menu.buttonLabel)}">${menuCols}</nav></details></div>
 </div></header>`;
 }
@@ -76,8 +76,12 @@ export function layout({ path, seo = {}, body, schema = [], crumbs, type = 'webs
       itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: absUrl(c.href) })),
     }];
   }
-  const ga = site.googleAnalyticsId
-    ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(site.googleAnalyticsId)}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(site.googleAnalyticsId)}');</script>`
+  // Google Analytics loads on the first tap, scroll or key press, or 3.5 s after the page has loaded, so it never slows the first paint
+  const gaId = esc(site.googleAnalyticsId);
+  const ga = gaId
+    ? `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaId}');
+(function(){var on=0;function go(){if(on)return;on=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${gaId}';document.head.appendChild(s)}
+['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})});addEventListener('load',function(){setTimeout(go,3500)})})();</script>`
     : '';
   return `<!DOCTYPE html>
 <html lang="${esc(site.language)}">
@@ -102,8 +106,7 @@ ${iconLinks()}
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${esc(image)}">
-<style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}</style>
-<link rel="stylesheet" href="/assets/css/style.css">
+<style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
 ${ga}
 </head>
@@ -116,7 +119,8 @@ ${body}
 ${siteFooter()}
 ${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
 ${cart ? cartDrawer() + catalog() : ''}
-<script src="/assets/js/main.js" defer></script>${cart ? '\n<script src="/assets/js/shop.js" defer></script>' : ''}
+<script src="/assets/js/main.js" defer></script>
+<script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${cart ? '\n<script src="/assets/js/shop.js" defer></script>' : ''}
 </body>
 </html>
 `;

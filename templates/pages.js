@@ -36,7 +36,7 @@ const hasPlans = (p) => optionsOf(p).length > 1;
 const priceOf = (o) => `<b>${money(o.prices)}</b>${o.compareAtPrices ? ` <s>${money(o.compareAtPrices)}</s>` : ''}`;
 const priceTag = (p) => (hasPlans(p) ? `<span class="from">${esc(shopText.fromLabel)}</span> <b>${money(lowestPrices(p))}</b>` : priceOf(optionsOf(p)[0]));
 const badges = (p) => `${optionsOf(p).some((o) => o.compareAtPrices) ? `<span class="badge">${esc(shopText.saleLabel)}</span>` : ''}${stockOf(p) < 1 ? `<span class="badge badge-out">${esc(shopText.soldOutLabel)}</span>` : ''}`;
-const CARD = '(max-width: 640px) 100vw, 360px';
+const CARD = '(max-width: 640px) calc(100vw - 2rem), 360px';
 // Card titles are h3 under a section heading, and h2 on pages where the cards come straight after the h1
 const cardTitle = (text, h = 3) => (h === 2 ? `<h2 class="h3">${esc(text)}</h2>` : `<h3>${esc(text)}</h3>`);
 const shareUrl = (src) => absUrl(shareImage(src).src);
@@ -56,8 +56,8 @@ const cardButton = (p) => (hasPlans(p) && stockOf(p) > 0
   : addButton(optionsOf(p)[0].id, stockOf(p)));
 
 // Shop page card with Add to cart
-const shopCard = (p) => `<article class="card" data-cat="${esc(p.category)}">
-<a class="card-link" href="/shop/${esc(p.slug)}/"><div class="card-img">${img(p.images[0], { sizes: CARD })}${badges(p)}</div>
+const shopCard = (p, i) => `<article class="card" data-cat="${esc(p.category)}">
+<a class="card-link" href="/shop/${esc(p.slug)}/"><div class="card-img">${img(p.images[0], { sizes: CARD, eager: i === 0 })}${badges(p)}</div>
 <div class="card-body"><p class="kicker">${esc(p.category)}</p><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></a>
 <div class="card-foot"><p class="price">${priceTag(p)}</p>${cardButton(p)}</div></article>`;
 
@@ -68,12 +68,12 @@ const serviceFrom = (s) => {
   const cur = Object.keys(s.packages[0].prices)[0];
   return formatPrice(Math.min(...s.packages.map((p) => p.prices[cur]).filter((v) => v != null)), cur);
 };
-const serviceCard = (s, h) => `<a class="card" href="/services/${esc(s.slug)}/">
-<div class="card-img">${img(s.images[0], { sizes: CARD })}</div>
+const serviceCard = (s, { h, eager } = {}) => `<a class="card" href="/services/${esc(s.slug)}/">
+<div class="card-img">${img(s.images[0], { sizes: '(max-width: 640px) calc(100vw - 2rem), 600px', eager })}</div>
 <div class="card-body"><p class="kicker">${esc(s.category)}</p>${cardTitle(s.title, h)}<p>${esc(s.summary)}</p><p class="price"><span class="from">${esc(servicesText.fromLabel)}</span> <b>${serviceFrom(s)}</b></p></div></a>`;
 
-const postCard = (p, h) => `<a class="card" href="/blog/${esc(p.slug)}/">
-<div class="card-img">${img(p.image)}</div>
+const postCard = (p, { h, eager } = {}) => `<a class="card" href="/blog/${esc(p.slug)}/">
+<div class="card-img">${img(p.image, { sizes: CARD, eager })}</div>
 <div class="card-body"><p class="kicker">${esc(p.category)} · <time datetime="${esc(p.date)}">${formatDate(p.date)}</time></p>${cardTitle(p.title, h)}<p>${esc(p.excerpt)}</p><span class="more">${esc(blogText.readMoreLabel)}${icon('arrow')}</span></div></a>`;
 
 const stars = (n) => {
@@ -243,7 +243,7 @@ function servicesPage() {
   const pr = servicesText.process;
   return {
     path: '/services/', seo: servicesText.seo, crumbs,
-    body: pageHero(servicesText.hero, crumbs) + section(grid(services.map((s) => serviceCard(s, 2)), 2))
+    body: pageHero(servicesText.hero, crumbs) + section(grid(services.map((s, i) => serviceCard(s, { h: 2, eager: i === 0 })), 2))
       + (pr ? section(`<ol class="steps">${pr.steps.map((st, i) => `<li class="card card-pad"><span class="num">${i + 1}</span><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></li>`).join('')}</ol>`, { title: pr.title, background: 'soft' }) : '')
       + queueSection(),
   };
@@ -310,7 +310,7 @@ function workPageFn() {
 function credentialsPage() {
   const d = page('credentials');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/credentials/' });
-  const certs = d.certificates.map((c) => `<a class="card" href="${fullImage(c.image.src)}" target="_blank" rel="noopener"><div class="card-img card-img-fit">${img(c.image)}</div><div class="card-body"><h3>${esc(c.title)}</h3><p>${esc(c.detail)}</p></div></a>`);
+  const certs = d.certificates.map((c, i) => `<a class="card" href="${fullImage(c.image.src)}" target="_blank" rel="noopener"><div class="card-img card-img-fit">${img(c.image, { sizes: '(max-width: 640px) calc(100vw - 2rem), 280px', eager: i === 0 })}</div><div class="card-body"><h3>${esc(c.title)}</h3><p>${esc(c.detail)}</p></div></a>`);
   const edu = d.education.map((e) => `<div class="card card-pad"><span class="ic">${icon('award')}</span><h3>${esc(e.title)}</h3><p>${esc(e.detail)}</p></div>`);
   return {
     path: '/credentials/', seo: d.seo, crumbs,
@@ -367,7 +367,7 @@ function contactPage() {
 // ---- Blog ----
 function blogPage() {
   const crumbs = crumbsOf({ label: blogText.hero.title, href: '/blog/' });
-  return { path: '/blog/', seo: blogText.seo, crumbs, body: pageHero(blogText.hero, crumbs) + section(grid(posts.map((p) => postCard(p, 2)))) };
+  return { path: '/blog/', seo: blogText.seo, crumbs, body: pageHero(blogText.hero, crumbs) + section(grid(posts.map((p, i) => postCard(p, { h: 2, eager: i === 0 })))) };
 }
 
 const blocks = {
