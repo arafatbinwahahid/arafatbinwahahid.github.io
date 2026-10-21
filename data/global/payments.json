@@ -19,8 +19,8 @@
             { "label": "Account number", "value": "0101 5671 80 4001" },
             { "label": "IBAN", "value": "IBAN OM10 0250 0001 0156 7180 400" }
           ],
-          "link": { "label": "direct transfer", "href": "facebook.com/arafatbinwahahid" },
-          "poster": { "src": "assets/images/arafatbin.com bank dhofar qr code.jpg", "alt": "Bank transfer details for OMR payments" },
+          "link": { "label": "direct transfer", "href": "https://facebook.com/arafatbinwahahid" },
+          "poster": { "src": "/assets/images/arafatbin.com bank dhofar qr code.jpg", "alt": "Bank transfer details for OMR payments" },
           "steps": [
             "Copy the account details above.",
             "Transfer the exact order total in OMR from your bank app.",
