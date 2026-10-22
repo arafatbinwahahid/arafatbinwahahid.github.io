@@ -1,0 +1,49 @@
+{
+  "seo": {
+    "title": "Free Online Tools",
+    "titleSuffix": true,
+    "description": "Free tools that run in your browser: website cost calculator and an OMR, BDT, USD, SAR and AED currency converter. No sign-up, nothing uploaded.",
+    "keywords": [],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
+  "hero": {
+    "title": "Free tools",
+    "text": "Quick, free tools that run in your browser. No sign-up, and nothing you type leaves your device."
+  },
+  "openLabel": "Open tool",
+  "howTitle": "How to use it",
+  "faqTitle": "Questions",
+  "freeLabel": "Free"
+}

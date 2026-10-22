@@ -1,6 +1,6 @@
 // Every page of the site. Each function returns { path, seo, body, schema, crumbs }.
 import {
-  site, header, contact, social, products, services, posts, payments, page,
+  site, header, contact, social, products, services, posts, payments, page, tools, rates,
   esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled, paypalIdOk,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
@@ -96,6 +96,7 @@ const homeSections = {
   work: (s) => section(grid(workPage.projects.slice(0, s.limit).map(workCard), 2), s),
   reviews: (s) => section(grid(reviewsPage.items.slice(0, s.limit).map(reviewCard)), s),
   blog: (s) => (posts.length ? section(grid(posts.slice(0, s.limit).map((x) => postCard(x))), s) : ''),
+  tools: (s) => (tools.length ? section(grid(tools.slice(0, s.limit).map((x) => toolCard(x)), 2), s) : ''),
   cta: (s) => section(`<div class="cta"><h2>${esc(s.title)}</h2><p>${esc(s.text)}</p>${btns(s.buttons)}</div>`, { background: s.background }),
 };
 
@@ -418,6 +419,112 @@ function postPage(p) {
   return { path: `/blog/${p.slug}/`, seo, crumbs, schema: [schema], type: 'article', article, body };
 }
 
+// ---- Free tools: /tools/, one page per tool, and a page per currency pair (data/collections/tools.json) ----
+const toolsText = page('tools');
+const rateOf = Object.fromEntries(rates.currencies.map((c) => [c.code, c]));
+// rates.json holds units per 1 USD, so any pair goes through USD
+const convert = (n, from, to) => (n / rateOf[from].rate) * rateOf[to].rate;
+const fmtCur = (n, code) => {
+  const c = rateOf[code] || {};
+  const d = c.decimals ?? 2;
+  return new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+};
+const fmtRate = (n) => new Intl.NumberFormat('en-US', { maximumFractionDigits: n < 1 ? 6 : 4 }).format(n);
+const fillT = (text, v) => String(text || '').replace(/\{(\w+)\}/g, (_, k) => v[k] ?? '');
+const toolUrl = (t) => `/tools/${t.slug}/`;
+// The converter's starting pair is the main page itself, so it gets no second page with the same content
+const isStartPair = (t, p) => p.from === t.converter.from && p.to === t.converter.to;
+const pairUrl = (t, p) => (isStartPair(t, p) ? toolUrl(t) : `${toolUrl(t)}${p.from.toLowerCase()}-to-${p.to.toLowerCase()}/`);
+const toolData = (data) => `<script type="application/json" id="tool-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+
+const toolCard = (t, { h } = {}) => `<a class="card card-pad tool-card" href="${toolUrl(t)}"><span class="ic">${icon(t.icon)}</span>
+<p class="kicker">${esc(t.category)} · ${esc(toolsText.freeLabel)}</p>${cardTitle(t.title, h)}<p>${esc(t.summary)}</p><span class="more">${esc(toolsText.openLabel)}${icon('arrow')}</span></a>`;
+
+function toolsPage() {
+  const crumbs = crumbsOf({ label: toolsText.hero.title, href: '/tools/' });
+  const list = { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: tools.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: absUrl(toolUrl(t)), name: t.title })) };
+  return { path: '/tools/', seo: toolsText.seo, crumbs, schema: [list], body: pageHero(toolsText.hero, crumbs) + section(grid(tools.map((t) => toolCard(t, { h: 2 })), 2)) };
+}
+
+// Website cost calculator: packages and their prices come from the linked service, extras from tools.json
+function calculatorWidget(t) {
+  const K = t.calculator;
+  const L = K.labels;
+  const svc = services.find((s) => s.slug === K.service);
+  const cur = K.currency;
+  const pkgs = svc.packages.map((pk) => ({ name: pk.name, price: pk.prices[cur] }));
+  const extras = K.extras.map((x) => `<label class="extra"><span><b>${esc(x.name)}</b><small>${fmtCur(x.price, cur)}${x.unit ? ` ${esc(fillT(L.perLabel, { unit: x.unit }))}` : ''}</small></span>${x.unit
+    ? `<input type="number" inputmode="numeric" min="0" max="${x.max || 99}" value="0" data-extra="${esc(x.id)}" aria-label="${esc(x.name)}">`
+    : `<input type="checkbox" data-extra="${esc(x.id)}">`}</label>`).join('');
+  const curOpts = rates.currencies.map((c) => `<option value="${esc(c.code)}"${c.code === cur ? ' selected' : ''}>${esc(c.code)} · ${esc(c.name)}</option>`).join('');
+  return `<div class="card card-pad calc" data-calc>
+<fieldset class="choice"><legend class="h3">${esc(L.packageTitle)}</legend><div class="opts opts-col">${pkgs.map((pk, i) => `<label class="opt"><input type="radio" name="pkg" value="${i}"${i ? '' : ' checked'}><span><b>${esc(pk.name)}</b><span class="plan-price">${fmtCur(pk.price, cur)}</span></span></label>`).join('')}</div></fieldset>
+<fieldset class="choice"><legend class="h3">${esc(L.extrasTitle)}</legend><div class="extras">${extras}</div></fieldset>
+<label class="cur"><span>${esc(L.currencyLabel)}</span> <select data-calc-currency>${curOpts}</select></label>
+<ul class="sum-list" data-calc-lines></ul><p class="cart-total" role="status"><span>${esc(L.totalLabel)}</span><b data-calc-total>${fmtCur(pkgs[0].price, cur)}</b></p>
+<div class="btns"><a class="btn btn-primary" href="${esc(whatsapp())}" target="_blank" rel="noopener" data-calc-wa>${icon('wa')}${esc(L.whatsappLabel)}</a></div>
+<p class="note">${esc(fillT(L.note, { currency: cur, date: formatDate(rates.updated) }))}</p>
+${toolData({ base: cur, packages: pkgs, extras: K.extras, rates: rates.currencies, labels: L, whatsapp: contact.whatsapp })}</div>`;
+}
+
+// Currency converter: the default (or the pair page's) result and tables are written into the HTML, the script updates them
+function converterWidget(t, pair) {
+  const C = t.converter;
+  const L = C.labels;
+  const from = pair?.from || C.from;
+  const to = pair?.to || C.to;
+  const a = C.amount;
+  const opts = (sel) => rates.currencies.map((c) => `<option value="${esc(c.code)}"${c.code === sel ? ' selected' : ''}>${esc(c.code)} · ${esc(c.name)}</option>`).join('');
+  const all = rates.currencies.filter((c) => c.code !== from).map((c) => `<li><span>${esc(c.name)}</span><b>${fmtCur(convert(a, from, c.code), c.code)}</b></li>`).join('');
+  const r = convert(1, from, to);
+  return `<div class="card card-pad conv" data-conv>
+<div class="conv-grid"><label class="conv-amount">${esc(L.amountLabel)}<input type="number" inputmode="decimal" min="0" step="any" value="${a}" data-conv-amount></label>
+<label>${esc(L.fromLabel)}<select data-conv-from>${opts(from)}</select></label>
+<button class="icon-btn conv-swap" type="button" data-conv-swap aria-label="${esc(L.swapLabel)}" title="${esc(L.swapLabel)}">${icon('swap')}</button>
+<label>${esc(L.toLabel)}<select data-conv-to>${opts(to)}</select></label></div>
+<p class="conv-result" role="status"><span data-conv-in>${fmtCur(a, from)} =</span> <b data-conv-out>${fmtCur(convert(a, from, to), to)}</b></p>
+<p class="muted" data-conv-rate>1 ${esc(from)} = ${fmtRate(r)} ${esc(to)} · 1 ${esc(to)} = ${fmtRate(1 / r)} ${esc(from)}</p>
+<p class="conv-words" data-conv-words-row hidden><small>${esc(L.wordsLabel)}:</small> <span data-conv-words></span></p>
+<details class="conv-own"><summary>${esc(L.ownRateTitle)}</summary><label class="conv-own-row"><span data-conv-own-from>1 ${esc(from)} =</span><input type="number" inputmode="decimal" min="0" step="any" data-conv-own><span data-conv-own-to>${esc(to)}</span></label><p class="muted">${esc(L.ownRateHint)}</p></details>
+<label class="check"><input type="checkbox" data-conv-bn>${esc(L.banglaLabel)}</label>
+<h2 class="h3">${esc(L.allTitle)}</h2><ul class="sum-list conv-all" data-conv-all>${all}</ul>
+<p class="note">${esc(L.updatedLabel)}: <time datetime="${esc(rates.updated)}">${formatDate(rates.updated)}</time>. ${esc(rates.note)}</p>
+${toolData({ rates: rates.currencies, labels: L })}</div>`;
+}
+
+const rateTable = (C, a, b) => `<div><h2 class="h3">${esc(fillT(C.labels.tableTitle, { from: a, to: b, fromName: rateOf[a].name, toName: rateOf[b].name }))}</h2><table class="conv-table"><thead><tr><th scope="col">${esc(a)}</th><th scope="col">${esc(b)}</th></tr></thead><tbody>${C.amounts.map((n) => `<tr><td>${fmtCur(n, a)}</td><td>${fmtCur(convert(n, a, b), b)}</td></tr>`).join('')}</tbody></table></div>`;
+
+function toolPage(t, pair) {
+  const base = toolUrl(t);
+  const L = t.converter?.labels || {};
+  const pv = pair && { from: pair.from, to: pair.to, fromName: rateOf[pair.from].name, toName: rateOf[pair.to].name };
+  const url = pair ? pairUrl(t, pair) : base;
+  const title = pair ? fillT(L.pairTitle, pv) : t.title;
+  const summary = pair ? fillT(L.pairText, pv) : t.summary;
+  const crumbs = crumbsOf({ label: toolsText.hero.title, href: '/tools/' }, { label: t.title, href: base }, ...(pair ? [{ label: title, href: url }] : []));
+  const isConv = t.type === 'currency';
+  const widget = isConv ? converterWidget(t, pair) : calculatorWidget(t);
+  const C = t.converter;
+  const tables = isConv ? (() => { const p = pair || C; return section(`<div class="grid g2">${rateTable(C, p.from, p.to)}${rateTable(C, p.to, p.from)}</div>`); })() : '';
+  // Links to the other pairs (the starting pair links to the main page), never to this page itself
+  const links = isConv ? [...new Map([[base, t.title], ...C.pairs.map((p) => [pairUrl(t, p), `${p.from} → ${p.to}`])]).entries()].filter(([href]) => href !== url) : [];
+  const others = links.length ? section(`<ul class="tags pair-links">${links.map(([href, label]) => `<li><a href="${href}">${esc(label)}</a></li>`).join('')}</ul>`, { title: L.otherTitle }) : '';
+  const steps = t.steps?.length ? `<h2 class="h3">${esc(toolsText.howTitle)}</h2><ol class="steps-list">${t.steps.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>` : '';
+  const how = t.intro?.length || steps ? section(`<div class="split split-top"><div class="prose-sm">${paras(t.intro)}</div><div>${steps}</div></div>`, { background: 'soft' }) : '';
+  const c = t.cta || {};
+  const cta = c.title || c.text || c.buttons?.length ? section(`<div class="cta">${c.title ? `<h2>${esc(c.title)}</h2>` : ''}${c.text ? `<p>${esc(c.text)}</p>` : ''}${btns(c.buttons)}</div>`) : '';
+  // The same questions are on every pair page, so only the main tool page marks them up (as Google asks)
+  const faq = !pair && t.faq?.length && { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: t.faq.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) };
+  // Pair pages follow the tool's robots setting, so hiding the converter from Google hides its pair pages too
+  const seo = pair ? { ...(t.seo?.robots && { robots: t.seo.robots }), title, description: fillT(L.pairDescription, pv) } : { title: t.title, description: t.summary, ...filled(t.seo) };
+  return {
+    path: url, seo, crumbs, schema: [faq].filter(Boolean), scripts: [isConv ? 'tool-currency' : 'tool-website-cost'],
+    body: pageHero({ title, text: summary }, crumbs) + section(`<div class="narrow">${widget}</div>`) + tables + how + faqSection(t.faq, toolsText.faqTitle) + others + cta,
+  };
+}
+
+const toolPages = () => tools.flatMap((t) => [toolPage(t), ...(t.type === 'currency' ? t.converter.pairs.filter((p) => !isStartPair(t, p)).map((p) => toolPage(t, p)) : [])]);
+
 // ---- Search (Pagefind index made by build.js) ----
 function searchPage() {
   const d = page('search');
@@ -460,6 +567,7 @@ export function allPages() {
     homePage(),
     shopPage(), ...products.map(productPage), paymentsPage(),
     servicesPage(), ...services.map(servicePage),
+    toolsPage(), ...toolPages(),
     aboutPage(), experiencePage(), skillsPage(), workPageFn(), credentialsPage(),
     reviewsPageFn(), contactPage(),
     blogPage(), ...posts.map(postPage),

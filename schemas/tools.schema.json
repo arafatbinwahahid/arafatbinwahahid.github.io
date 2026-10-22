@@ -1,0 +1,350 @@
+{
+  "title": "data/collections/tools.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "slug",
+      "type",
+      "title",
+      "icon",
+      "summary"
+    ],
+    "properties": {
+      "slug": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "type": {
+        "enum": [
+          "website-cost",
+          "currency"
+        ]
+      },
+      "status": {
+        "enum": [
+          "",
+          "draft"
+        ]
+      },
+      "title": {
+        "$ref": "common#/$defs/text"
+      },
+      "category": {
+        "type": "string"
+      },
+      "icon": {
+        "type": "string"
+      },
+      "seo": {
+        "$ref": "common#/$defs/seo"
+      },
+      "summary": {
+        "$ref": "common#/$defs/text"
+      },
+      "intro": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "faq": {
+        "$ref": "common#/$defs/faq"
+      },
+      "cta": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "buttons": {
+            "$ref": "common#/$defs/buttons"
+          }
+        },
+        "additionalProperties": false
+      },
+      "calculator": {
+        "type": "object",
+        "required": [
+          "service",
+          "currency",
+          "extras",
+          "labels"
+        ],
+        "properties": {
+          "service": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "The currency the extras' prices are written in"
+          },
+          "extras": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "price"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+$"
+                },
+                "name": {
+                  "$ref": "common#/$defs/text"
+                },
+                "price": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "max": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "labels": {
+            "type": "object",
+            "required": [
+              "packageTitle",
+              "extrasTitle",
+              "currencyLabel",
+              "totalLabel",
+              "perLabel",
+              "noExtras",
+              "whatsappLabel",
+              "whatsappMessage",
+              "note"
+            ],
+            "properties": {
+              "packageTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "extrasTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "currencyLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "totalLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "perLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "noExtras": {
+                "type": "string",
+                "minLength": 1
+              },
+              "whatsappLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "whatsappMessage": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "converter": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "amount",
+          "pairs",
+          "amounts",
+          "labels"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "pairs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{3}$"
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{3}$"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "amounts": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "labels": {
+            "type": "object",
+            "required": [
+              "amountLabel",
+              "fromLabel",
+              "toLabel",
+              "swapLabel",
+              "ownRateTitle",
+              "ownRateHint",
+              "banglaLabel",
+              "allTitle",
+              "wordsLabel",
+              "updatedLabel",
+              "tableTitle",
+              "otherTitle",
+              "pairTitle",
+              "pairText",
+              "pairDescription"
+            ],
+            "properties": {
+              "amountLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fromLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "toLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "swapLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ownRateTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ownRateHint": {
+                "type": "string",
+                "minLength": 1
+              },
+              "banglaLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "allTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "wordsLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "updatedLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tableTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "otherTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairText": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairDescription": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "website-cost"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "calculator"
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "currency"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "converter"
+          ]
+        }
+      }
+    ],
+    "additionalProperties": false
+  }
+}

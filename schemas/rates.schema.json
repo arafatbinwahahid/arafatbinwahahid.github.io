@@ -1,0 +1,73 @@
+{
+  "title": "data/global/rates.json",
+  "type": "object",
+  "required": [
+    "updated",
+    "currencies"
+  ],
+  "properties": {
+    "_help": {
+      "type": "string"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "YYYY-MM-DD"
+    },
+    "note": {
+      "type": "string"
+    },
+    "currencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "rate"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "name": {
+            "$ref": "common#/$defs/text"
+          },
+          "rate": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Units of this currency per 1 USD"
+          },
+          "decimals": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "unit": {
+            "type": "string"
+          },
+          "units": {
+            "type": "string"
+          },
+          "subunit": {
+            "type": "string"
+          },
+          "subunits": {
+            "type": "string"
+          },
+          "subunitPer": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "lakh": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

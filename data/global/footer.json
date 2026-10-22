@@ -3,7 +3,7 @@
   "showSocial": true,
   "columns": [
     {
-      "title": "Shop & services",
+      "title": "Shop, services & tools",
       "links": [
         {
           "label": "Shop",
@@ -12,6 +12,10 @@
         {
           "label": "Services",
           "href": "/services/"
+        },
+        {
+          "label": "Free tools",
+          "href": "/tools/"
         },
         {
           "label": "Work",

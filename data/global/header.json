@@ -8,6 +8,7 @@
     { "label": "Home", "href": "/" },
     { "label": "Shop", "href": "/shop/" },
     { "label": "Services", "href": "/services/" },
+    { "label": "Tools", "href": "/tools/" },
     { "label": "About", "href": "/about/" },
     { "label": "Contact", "href": "/contact/" }
   ],
@@ -22,6 +23,7 @@
           { "label": "Home", "href": "/", "icon": "home" },
           { "label": "Shop", "href": "/shop/", "icon": "cart" },
           { "label": "Services", "href": "/services/", "icon": "briefcase" },
+          { "label": "Free tools", "href": "/tools/", "icon": "calculator" },
           { "label": "About", "href": "/about/", "icon": "user" },
           { "label": "Experience", "href": "/experience/", "icon": "clock" },
           { "label": "Skills", "href": "/skills/", "icon": "tool" },

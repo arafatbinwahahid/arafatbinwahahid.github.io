@@ -1,12 +1,13 @@
 // Builds /webmcp.js: tools that AI agents in the browser can use through WebMCP (document.modelContext).
 // Everything comes from data/*.json at build time, so new products, services and pages show up automatically.
 // Pages load the file only when the browser supports WebMCP, so normal visitors never download it.
-import { site, contact, products, services, payments, page, absUrl, whatsapp, optionsOf, stockOf } from './helpers.js';
+import { site, contact, products, services, tools, rates, payments, page, absUrl, whatsapp, optionsOf, stockOf } from './helpers.js';
 
 const list = (a) => [].concat(a || []).filter(Boolean);
 
 function siteData(pages) {
   const faq = page('faq');
+  const converter = tools.find((t) => t.type === 'currency');
   return {
     site: { name: site.name, url: site.url, description: site.description },
     contact: {
@@ -26,6 +27,11 @@ function siteData(pages) {
       slug: s.slug, title: s.title, url: absUrl(`/services/${s.slug}/`), category: s.category, summary: s.summary, about: s.about,
       features: list(s.features).map((f) => f.text), faq: list(s.faq), packages: s.packages.map((pk) => ({ name: pk.name, prices: pk.prices })),
     })),
+    tools: tools.map((t) => ({ slug: t.slug, title: t.title, url: absUrl(`/tools/${t.slug}/`), summary: t.summary })),
+    // The currency converter's own rates (units per 1 USD), only when that tool is on the site
+    rates: converter
+      ? { updated: rates.updated, note: rates.note, url: absUrl(`/tools/${converter.slug}/`), currencies: rates.currencies.map((c) => ({ code: c.code, name: c.name, perUsd: c.rate, decimals: c.decimals })) }
+      : null,
     faq: faq.groups.flatMap((g) => g.items),
   };
 }
@@ -45,10 +51,10 @@ function client(D) {
   const tools = [
     {
       name: 'get-site-info',
-      description: `About ${D.site.name}: what the site offers, contact details (WhatsApp, email, phone), currencies, payment methods and the list of pages.`,
+      description: `About ${D.site.name}: what the site offers, contact details (WhatsApp, email, phone), currencies, payment methods, free tools and the list of pages.`,
       inputSchema: { type: 'object', properties: {} },
       annotations: readOnly,
-      execute: async () => reply({ site: D.site, contact: D.contact, currencies: D.currencies, defaultCurrency: D.defaultCurrency, pages: D.pages }),
+      execute: async () => reply({ site: D.site, contact: D.contact, currencies: D.currencies, defaultCurrency: D.defaultCurrency, tools: D.tools, pages: D.pages }),
     },
     {
       name: 'list-products',
@@ -80,7 +86,7 @@ function client(D) {
     },
     {
       name: 'search-site',
-      description: 'Search products, services, pages and FAQ answers by keyword. Returns matching items with links.',
+      description: 'Search products, services, free tools, pages and FAQ answers by keyword. Returns matching items with links.',
       inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'Words to search for, e.g. "netflix 4k" or "refund"' } }, required: ['query'] },
       annotations: readOnly,
       execute: async ({ query }) => {
@@ -90,6 +96,7 @@ function client(D) {
         return reply({
           products: D.products.filter((p) => hit(JSON.stringify(p))).map((p) => ({ title: p.title, url: p.url, slug: p.slug })),
           services: D.services.filter((s) => hit(JSON.stringify(s))).map((s) => ({ title: s.title, url: s.url, slug: s.slug })),
+          tools: D.tools.filter((t) => hit(t.title + ' ' + t.summary)),
           pages: D.pages.filter((p) => hit(p.title)),
           faq: faqs.filter((f) => hit(f.q + ' ' + f.a)),
         });
@@ -130,6 +137,30 @@ function client(D) {
       execute: async ({ message }) => reply({ url: `${D.contact.whatsapp}?text=${encodeURIComponent(message || '')}` }),
     },
   ];
+
+  if (D.rates) {
+    const R = Object.fromEntries(D.rates.currencies.map((c) => [c.code, c]));
+    const codes = Object.keys(R);
+    tools.push({
+      name: 'convert-currency',
+      description: `Convert money between ${codes.join(', ')} with the exchange rates ${D.site.name} sets by hand (updated ${D.rates.updated}). Same numbers as the currency converter on the site.`,
+      inputSchema: {
+        type: 'object',
+        properties: { amount: { type: 'number', minimum: 0, description: 'Amount to convert' }, from: { type: 'string', enum: codes }, to: { type: 'string', enum: codes } },
+        required: ['amount', 'from', 'to'],
+      },
+      annotations: readOnly,
+      execute: async ({ amount, from, to }) => {
+        const a = R[String(from).toUpperCase()];
+        const b = R[String(to).toUpperCase()];
+        if (!a || !b) return reply(`Use one of these currency codes: ${codes.join(', ')}`);
+        const n = Math.max(0, Number(amount) || 0);
+        // Same steps and rounding as the converter page, so the numbers match it exactly
+        const result = new Intl.NumberFormat('en-US', { minimumFractionDigits: b.decimals, maximumFractionDigits: b.decimals, useGrouping: false }).format((n / a.perUsd) * b.perUsd);
+        return reply({ amount: n, from: a.code, to: b.code, result: Number(result), rate: b.perUsd / a.perUsd, updated: D.rates.updated, note: D.rates.note, url: D.rates.url });
+      },
+    });
+  }
 
   if (mc.registerTool) tools.forEach((t) => { try { mc.registerTool(t); } catch (e) { console.warn('WebMCP:', t.name, e); } });
   else if (mc.provideContext) mc.provideContext({ tools });

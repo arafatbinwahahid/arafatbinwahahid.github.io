@@ -12,6 +12,7 @@ const rules = [
   ['global/site.json', 'site'], ['global/header.json', 'header'], ['global/footer.json', 'footer'],
   ['global/contact.json', 'contact'], ['global/social.json', 'social'], ['global/sitemap.json', 'sitemap'],
   ['global/payments.json', 'payments'], ['collections/products.json', 'products'], ['collections/services.json', 'services'],
+  ['collections/tools.json', 'tools'], ['global/rates.json', 'rates'],
   ...filesIn('collections/blog').map((f) => [f, 'post']),
   ...filesIn('pages').map((f) => [f, 'page']),
 ];

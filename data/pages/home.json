@@ -39,7 +39,7 @@
     "meta": []
   },
   "hero": {
-    "eyebrow": "Shop & services",
+    "eyebrow": "Shop, services & free tools",
     "title": "Digital products, web development and design by Arafat Bin Wahahid",
     "text": "Buy Netflix shared accounts and design packs, or hire me for websites, Excel data entry and Clash of Clans boosting. Delivered online, anywhere.",
     "buttons": [
@@ -71,6 +71,13 @@
         "href": "/services/",
         "icon": "briefcase",
         "label": "See all services"
+      },
+      {
+        "title": "Free tools",
+        "text": "Website cost calculator and OMR, BDT, USD currency converter",
+        "href": "/tools/",
+        "icon": "calculator",
+        "label": "Open the tools"
       }
     ]
   },
@@ -96,6 +103,17 @@
       "link": {
         "label": "View all services",
         "href": "/services/"
+      }
+    },
+    {
+      "type": "tools",
+      "show": true,
+      "title": "Free tools",
+      "text": "Quick tools that run in your browser. No sign-up.",
+      "limit": 4,
+      "link": {
+        "label": "View all tools",
+        "href": "/tools/"
       }
     },
     {
