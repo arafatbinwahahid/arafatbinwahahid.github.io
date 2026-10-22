@@ -74,10 +74,21 @@
     }
   ],
   "newsletter": null,
-  "paymentIcons": [
-    {
-      "src": "/assets/images/brand/arafatbin.com-Payments-method.webp",
-      "alt": "We Accept All payments Method"
-    }
-  ]
+  "paymentMethods": {
+    "show": true,
+    "label": "Payment methods we accept",
+    "logos": [
+      { "name": "PayPal", "image": "" },
+      { "name": "Visa", "image": "" },
+      { "name": "Mastercard", "image": "" },
+      { "name": "Apple Pay", "image": "" },
+      { "name": "Thawani Pay", "image": "" },
+      { "name": "RedotPay", "image": "" },
+      { "name": "bKash", "image": "" },
+      { "name": "Nagad", "image": "" },
+      { "name": "Rocket", "image": "" },
+      { "name": "Bank transfer", "image": "" }
+    ],
+    "more": { "label": "+200 more", "href": "/payments/" }
+  }
 }

@@ -52,19 +52,51 @@
     "newsletter": {
       "type": "object"
     },
-    "paymentIcons": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "src": {
-            "type": "string"
-          },
-          "alt": {
-            "type": "string"
+    "paymentMethods": {
+      "type": "object",
+      "description": "Moving row of payment logos with a \"+200 more\" button, above the copyright line",
+      "properties": {
+        "show": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string",
+          "description": "Read by screen readers"
+        },
+        "logos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "image": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
+        },
+        "more": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string",
+              "pattern": "^(/|https?://)"
+            }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false
