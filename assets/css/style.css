@@ -217,6 +217,8 @@ a.card:hover { border-color: var(--primary); }
 .social a { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .18); border-radius: 10px; }
 .social a:hover { background: var(--accent); color: var(--dark); }
 .ftr-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; padding-top: 1.3rem; border-top: 1px solid rgba(255, 255, 255, .12); font-size: .85rem; }
+.ftr-pay { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.ftr-pay img { width: auto; max-width: min(100%, 420px); height: auto; border-radius: 10px; }
 .ftr-bottom nav { display: flex; flex-wrap: wrap; gap: 0 1.2rem; }
 .ftr-bottom nav a { display: inline-block; padding: .3rem 0; }
 @media (max-width: 860px) { .ftr-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; } .ftr-grid > div:first-child, .ftr-grid > div:last-child { grid-column: 1 / -1; } }

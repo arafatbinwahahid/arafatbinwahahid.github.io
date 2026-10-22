@@ -314,7 +314,7 @@ const globals = [
     txt('about', 'About text'), bool('showSocial', 'Show social icons'), list('columns', 'Columns', [str('title', 'Title'), links('links', 'Links')], { summary: '{{title}}' }),
     str('contactTitle', 'Contact heading'), str('copyright', 'Copyright', { hint: '{year} = current year' }), links('bottomLinks', 'Bottom links'),
     later(obj('newsletter', 'Newsletter box', [bool('show', 'Show'), str('title', 'Title'), str('text', 'Text'), str('placeholder', 'Email placeholder'), str('button', 'Button')])),
-    later(list('paymentIcons', 'Payment logos', [imgPath('src', 'Logo', 'brand'), str('alt', 'Name')], { summary: '{{alt}}' })),
+    list('paymentIcons', 'Payment logos', [imgPath('src', 'Logo', 'brand'), str('alt', 'Name', { hint: 'Describe the image, e.g. "We accept Visa, PayPal and bKash".' })], { summary: '{{alt}}', thumbnail: 'src', hint: 'Shown in the footer of every page, above the copyright line.' }),
   ] },
   { name: 'contact', label: 'Contact details', icon: 'call', fields: [
     str('whatsapp', 'WhatsApp number', { hint: 'Digits only with country code, e.g. 96892130528' }), str('whatsappDisplay', 'WhatsApp as shown'), bool('showFloatingWhatsapp', 'Floating WhatsApp button'),

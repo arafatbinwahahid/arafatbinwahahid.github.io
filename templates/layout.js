@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled, assetUrl } from './helpers.js';
+import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled, assetUrl, img } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -56,8 +56,10 @@ function siteFooter() {
 <a href="mailto:${esc(contact.email)}">${icon('mail')}${esc(contact.email)}</a>
 <a href="${esc(contact.mapUrl)}" target="_blank" rel="noopener">${icon('pin')}${esc(contact.address)}</a></div>`;
   const socials = footer.showSocial ? `<div class="social">${social.map((s) => `<a href="${esc(s.url)}"${target(s.url)} aria-label="${esc(s.label)}">${icon(s.icon)}</a>`).join('')}</div>` : '';
+  // Payment logos (footer.json "paymentIcons"), e.g. a "We accept" image, above the copyright line
+  const pay = footer.paymentIcons?.length ? `<div class="wrap ftr-pay">${footer.paymentIcons.filter((p) => p.src).map((p) => img(p, { sizes: '(max-width: 480px) calc(100vw - 2rem), 420px' })).join('')}</div>` : '';
   return `<footer class="ftr"><div class="wrap ftr-grid">
-<div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>
+<div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;
 }
 
