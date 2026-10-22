@@ -331,9 +331,10 @@
     }
   },
   {
-    "id": "P003",
-    "slug": "social-media-post-pack",
     "title": "Social media post pack (10 posts)",
+    "slug": "social-media-post-pack",
+    "id": "P003",
+    "status": "",
     "category": "Design",
     "seo": {
       "title": "Social Media Post Pack: 10 Instagram & Facebook Posts",
@@ -392,12 +393,13 @@
           "USD": 25,
           "BDT": 3050
         },
+        "compareAtPrices": null,
         "stock": 10
       }
     ],
     "images": [
       {
-        "src": "/assets/images/products/social-media-post-pack.jpg",
+        "src": "/assets/images/products/Avast-secure-line-vpn.webp",
         "alt": "Social media post design sample"
       }
     ],
@@ -448,7 +450,18 @@
       "label": "Ask a question on WhatsApp",
       "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20the%20social%20media%20post%20pack.",
       "icon": "wa"
-    }
+    },
+    "brand": "",
+    "sku": "",
+    "deliveryTime": "",
+    "warranty": "",
+    "badge": "",
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "rating": null,
+    "related": []
   },
   {
     "id": "P004",
