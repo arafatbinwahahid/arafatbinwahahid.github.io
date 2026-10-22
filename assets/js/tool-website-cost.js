@@ -5,13 +5,17 @@ const D = JSON.parse(document.getElementById('tool-data').textContent);
 const L = D.labels;
 const R = Object.fromEntries(D.rates.map((c) => [c.code, c]));
 const curSel = tool.querySelector('[data-calc-currency]');
-const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? '');
+const fill = (text, values) => String(text || '').replace(/\{(\w+)\}/g, (_, k) => values[k] ?? '');
 const fmt = (n, code) => {
   const c = R[code];
   return new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals }).format(n);
 };
-// Prices are set in the service's currency; others go through USD (rates = units per 1 USD)
-const inCur = (n, code) => (n / R[D.base].rate) * R[code].rate;
+// Prices are set in one currency (calculator.currency); others go through USD (rates = units per 1 USD).
+// Each line is rounded to the currency's decimals and the total is the sum of the rounded lines, so they always add up.
+const inCur = (n, code) => {
+  const d = R[code].decimals;
+  return Number(new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: false }).format((n / R[D.base].rate) * R[code].rate));
+};
 
 function update() {
   const pk = D.packages[tool.querySelector('input[name="pkg"]:checked')?.value || 0];
@@ -26,14 +30,15 @@ function update() {
     if (qty) lines.push([x.unit ? `${x.name} × ${qty}` : x.name, x.price * qty]);
   }
   const code = curSel.value;
-  const total = lines.reduce((n, [, p]) => n + p, 0);
-  tool.querySelector('[data-calc-lines]').replaceChildren(...lines.map(([name, price]) => {
+  const shown = lines.map(([name, price]) => [name, inCur(price, code)]);
+  const total = fmt(shown.reduce((n, [, p]) => n + p, 0), code);
+  tool.querySelector('[data-calc-lines]').replaceChildren(...shown.map(([name, price]) => {
     const li = document.createElement('li');
-    li.append(Object.assign(document.createElement('span'), { textContent: name }), Object.assign(document.createElement('b'), { textContent: fmt(inCur(price, code), code) }));
+    li.append(Object.assign(document.createElement('span'), { textContent: name }), Object.assign(document.createElement('b'), { textContent: fmt(price, code) }));
     return li;
   }));
-  tool.querySelector('[data-calc-total]').textContent = fmt(inCur(total, code), code);
-  const text = fill(L.whatsappMessage, { package: pk.name, extras: lines.slice(1).map(([n]) => n).join(', ') || L.noExtras, total: fmt(inCur(total, code), code) });
+  tool.querySelector('[data-calc-total]').textContent = total;
+  const text = fill(L.whatsappMessage, { package: pk.name, extras: lines.slice(1).map(([n]) => n).join(', ') || L.noExtras, total });
   tool.querySelector('[data-calc-wa]').href = `https://wa.me/${D.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 

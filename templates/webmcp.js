@@ -7,6 +7,7 @@ const list = (a) => [].concat(a || []).filter(Boolean);
 
 function siteData(pages) {
   const faq = page('faq');
+  const converter = tools.find((t) => t.type === 'currency');
   return {
     site: { name: site.name, url: site.url, description: site.description },
     contact: {
@@ -28,8 +29,8 @@ function siteData(pages) {
     })),
     tools: tools.map((t) => ({ slug: t.slug, title: t.title, url: absUrl(`/tools/${t.slug}/`), summary: t.summary })),
     // The currency converter's own rates (units per 1 USD), only when that tool is on the site
-    rates: tools.some((t) => t.type === 'currency')
-      ? { updated: rates.updated, note: rates.note, currencies: rates.currencies.map((c) => ({ code: c.code, name: c.name, perUsd: c.rate, decimals: c.decimals ?? 2 })) }
+    rates: converter
+      ? { updated: rates.updated, note: rates.note, url: absUrl(`/tools/${converter.slug}/`), currencies: rates.currencies.map((c) => ({ code: c.code, name: c.name, perUsd: c.rate, decimals: c.decimals })) }
       : null,
     faq: faq.groups.flatMap((g) => g.items),
   };
@@ -153,9 +154,10 @@ function client(D) {
         const a = R[String(from).toUpperCase()];
         const b = R[String(to).toUpperCase()];
         if (!a || !b) return reply(`Use one of these currency codes: ${codes.join(', ')}`);
-        const rate = b.perUsd / a.perUsd;
         const n = Math.max(0, Number(amount) || 0);
-        return reply({ amount: n, from: a.code, to: b.code, result: Number((n * rate).toFixed(b.decimals)), rate, updated: D.rates.updated, note: D.rates.note, url: D.tools.find((t) => t.slug === 'currency-converter')?.url });
+        // Same steps and rounding as the converter page, so the numbers match it exactly
+        const result = new Intl.NumberFormat('en-US', { minimumFractionDigits: b.decimals, maximumFractionDigits: b.decimals, useGrouping: false }).format((n / a.perUsd) * b.perUsd);
+        return reply({ amount: n, from: a.code, to: b.code, result: Number(result), rate: b.perUsd / a.perUsd, updated: D.rates.updated, note: D.rates.note, url: D.rates.url });
       },
     });
   }

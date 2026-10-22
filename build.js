@@ -37,24 +37,29 @@ for (const p of products) {
 }
 // Free tools: the service, currencies and slugs they point to must exist
 const rateCodes = rates.currencies.map((c) => c.code);
-if (!rateCodes.includes('USD')) throw new Error('data/global/rates.json: "currencies" needs USD with rate 1 (every rate is per 1 USD)');
+const twice = (list) => list.find((x, i) => list.indexOf(x) !== i);
+if (rates.currencies.find((c) => c.code === 'USD')?.rate !== 1) throw new Error('data/global/rates.json: "currencies" needs USD with rate 1 (every rate is per 1 USD)');
+if (twice(rateCodes)) throw new Error(`data/global/rates.json: ${twice(rateCodes)} is listed twice in "currencies"; keep one and change its rate`);
 const toolSlugs = new Set();
 for (const t of tools) {
   const where = `data/collections/tools.json (${t.slug})`;
   if (toolSlugs.has(t.slug)) throw new Error(`${where}: two tools use the same "slug"`);
   toolSlugs.add(t.slug);
   if (t.type === 'website-cost') {
-    const svc = services.find((s) => s.slug === t.calculator.service);
+    const K = t.calculator;
+    const svc = services.find((s) => s.slug === K.service);
     if (!svc) throw new Error(`${where}: "calculator.service" must be the slug of a service in services.json (not a draft)`);
-    const cur = Object.keys(svc.packages[0].prices)[0];
-    if (!rateCodes.includes(cur)) throw new Error(`${where}: the service prices are in ${cur}, so data/global/rates.json needs ${cur}`);
-    const ids = t.calculator.extras.map((x) => x.id);
-    if (new Set(ids).size !== ids.length) throw new Error(`${where}: every extra needs its own "id"`);
+    if (!rateCodes.includes(K.currency)) throw new Error(`${where}: "calculator.currency" ${K.currency} is not in data/global/rates.json`);
+    for (const pk of svc.packages) if (!(pk.prices?.[K.currency] > 0)) throw new Error(`${where}: package "${pk.name}" of the service "${svc.slug}" needs a ${K.currency} price above 0 for the calculator`);
+    const ids = K.extras.map((x) => x.id);
+    if (twice(ids)) throw new Error(`${where}: two extras use the id "${twice(ids)}"`);
   }
   if (t.type === 'currency') {
     const C = t.converter;
     for (const c of [C.from, C.to, ...C.pairs.flatMap((p) => [p.from, p.to])]) if (!rateCodes.includes(c)) throw new Error(`${where}: currency ${c} is not in data/global/rates.json`);
-    for (const p of C.pairs) if (p.from === p.to) throw new Error(`${where}: a pair needs two different currencies (${p.from})`);
+    for (const p of [C, ...C.pairs]) if (p.from === p.to) throw new Error(`${where}: a pair needs two different currencies (${p.from})`);
+    const pairs = C.pairs.map((p) => `${p.from} → ${p.to}`);
+    if (twice(pairs)) throw new Error(`${where}: the pair ${twice(pairs)} is listed twice`);
   }
 }
 if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);

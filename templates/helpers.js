@@ -76,7 +76,10 @@ export const services = read('collections/services.json').filter((s) => s.status
 export const page = (name) => read(`pages/${name}.json`);
 // Free tools (/tools/) and the exchange rates they use (rate = units of a currency per 1 USD, set by hand)
 export const tools = read('collections/tools.json').filter((t) => t.status !== 'draft');
-export const rates = read('global/rates.json');
+const ratesFile = read('global/rates.json');
+// Decimals left empty = the currency's usual number (OMR 3, USD 2), the same everywhere the rates are shown
+const usualDecimals = (code) => { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: code }).resolvedOptions().maximumFractionDigits; } catch { return 2; } };
+export const rates = { ...ratesFile, currencies: (ratesFile.currencies || []).map((c) => ({ ...c, decimals: c.decimals ?? usualDecimals(c.code) })) };
 export const posts = fs
   .readdirSync(path.join(DATA, 'collections/blog'))
   .filter((f) => f.endsWith('.json'))

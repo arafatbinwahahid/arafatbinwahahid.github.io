@@ -76,12 +76,18 @@
         "type": "object",
         "required": [
           "service",
+          "currency",
           "extras",
           "labels"
         ],
         "properties": {
           "service": {
             "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "The currency the extras' prices are written in"
           },
           "extras": {
             "type": "array",
@@ -117,9 +123,56 @@
           },
           "labels": {
             "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
+            "required": [
+              "packageTitle",
+              "extrasTitle",
+              "currencyLabel",
+              "totalLabel",
+              "perLabel",
+              "noExtras",
+              "whatsappLabel",
+              "whatsappMessage",
+              "note"
+            ],
+            "properties": {
+              "packageTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "extrasTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "currencyLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "totalLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "perLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "noExtras": {
+                "type": "string",
+                "minLength": 1
+              },
+              "whatsappLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "whatsappMessage": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
@@ -177,9 +230,86 @@
           },
           "labels": {
             "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
+            "required": [
+              "amountLabel",
+              "fromLabel",
+              "toLabel",
+              "swapLabel",
+              "ownRateTitle",
+              "ownRateHint",
+              "banglaLabel",
+              "allTitle",
+              "wordsLabel",
+              "updatedLabel",
+              "tableTitle",
+              "otherTitle",
+              "pairTitle",
+              "pairText",
+              "pairDescription"
+            ],
+            "properties": {
+              "amountLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fromLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "toLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "swapLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ownRateTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ownRateHint": {
+                "type": "string",
+                "minLength": 1
+              },
+              "banglaLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "allTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "wordsLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "updatedLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tableTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "otherTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairText": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pairDescription": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false

@@ -287,22 +287,23 @@ const toolFields = [
   txtList('intro', 'Intro paragraphs'), strList('steps', 'How to use it (steps)'), faq(),
   obj('cta', 'Call to action under the tool', [str('title', 'Title'), txt('text', 'Text'), buttons()]),
   obj('calculator', 'Website cost calculator settings', [
-    F('relation', 'service', 'Packages from this service', { collection: 'services', value_field: 'slug', display_fields: ['title'], hint: 'The packages and prices of this service are the starting choices.' }),
+    F('relation', 'service', 'Packages from this service', { collection: 'services', value_field: 'slug', display_fields: ['title'], required: true, hint: 'The packages and prices of this service are the starting choices.' }),
+    currencyCode('currency', 'Prices are in', { required: true, default: 'OMR', hint: 'Every package of the service needs a price in this currency; the extras’ prices below are in it too. A code from Settings → Exchange rates.' }),
     list('extras', 'Extras', [
-      str('id', 'ID', { required: true, hint: 'Short and unique, e.g. blog' }), str('name', 'Name', { required: true }),
-      num('price', 'Price (in the service’s currency)', { min: 0, step: 0.001 }),
+      str('id', 'ID', { required: true, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and dashes'], hint: 'Short and unique, e.g. blog' }), str('name', 'Name', { required: true }),
+      num('price', 'Price', { required: true, min: 0, step: 0.001, hint: 'In the currency chosen above' }),
       str('unit', 'Unit', { hint: 'e.g. page. Empty = a simple yes/no tick box; with a unit the visitor types a number.' }),
       int('max', 'Most the visitor can choose', { min: 1 }),
     ], { summary: '{{name}} ({{price}})' }),
-    obj('labels', 'Texts', ['packageTitle', 'extrasTitle', 'currencyLabel', 'totalLabel', 'perLabel', 'noExtras', 'whatsappLabel'].map((k) => str(k, k, { hint: k === 'perLabel' ? '{unit} = the extra’s unit' : undefined }))
-      .concat([txt('whatsappMessage', 'WhatsApp message', { hint: '{package}, {extras} and {total} are filled in' }), txt('note', 'Note under the price', { hint: '{currency} = the service’s currency, {date} = rates date' })])),
+    obj('labels', 'Texts', ['packageTitle', 'extrasTitle', 'currencyLabel', 'totalLabel', 'perLabel', 'noExtras', 'whatsappLabel'].map((k) => str(k, k, { required: true, hint: k === 'perLabel' ? '{unit} = the extra’s unit' : undefined }))
+      .concat([txt('whatsappMessage', 'WhatsApp message', { required: true, hint: '{package}, {extras} and {total} are filled in' }), txt('note', 'Note under the price', { required: true, hint: '{currency} = the currency chosen above, {date} = rates date' })])),
   ], { hint: 'Only for the website cost calculator.' }),
   obj('converter', 'Currency converter settings', [
-    currencyCode('from', 'Start with: from'), currencyCode('to', 'Start with: to'), num('amount', 'Start amount', { min: 0 }),
-    list('pairs', 'Pair pages', [currencyCode('from', 'From'), currencyCode('to', 'To')], { summary: '{{from}} → {{to}}', hint: 'Each pair gets its own page for Google, e.g. /tools/currency-converter/omr-to-bdt/' }),
-    F('list', 'amounts', 'Amounts in the quick tables', { field: { name: 'item', label: 'Amount', widget: 'number', value_type: 'float' } }),
+    currencyCode('from', 'Start with: from', { required: true }), currencyCode('to', 'Start with: to', { required: true }), num('amount', 'Start amount', { required: true, min: 0 }),
+    list('pairs', 'Pair pages', [currencyCode('from', 'From', { required: true }), currencyCode('to', 'To', { required: true })], { summary: '{{from}} → {{to}}', hint: 'Each pair gets its own page for Google, e.g. /tools/currency-converter/usd-to-bdt/. The starting pair above is the main page, so it gets no second page.' }),
+    F('list', 'amounts', 'Amounts in the quick tables', { field: { name: 'item', label: 'Amount', widget: 'number', value_type: 'float', min: 0.001 } }),
     obj('labels', 'Texts', ['amountLabel', 'fromLabel', 'toLabel', 'swapLabel', 'ownRateTitle', 'ownRateHint', 'banglaLabel', 'allTitle', 'wordsLabel', 'updatedLabel', 'tableTitle', 'otherTitle', 'pairTitle', 'pairText', 'pairDescription']
-      .map((k) => str(k, k, { hint: k.startsWith('pair') || k === 'tableTitle' ? '{from}, {to}, {fromName} and {toName} are filled in' : undefined }))),
+      .map((k) => str(k, k, { required: true, hint: k.startsWith('pair') || k === 'tableTitle' ? '{from}, {to}, {fromName} and {toName} are filled in' : undefined }))),
   ], { hint: 'Only for the currency converter. Rates are in Settings → Exchange rates.' }),
 ];
 
@@ -382,12 +383,12 @@ const globals = [
     txt('note', 'Note under the tools'),
     list('currencies', 'Currencies', [
       currencyCode('code', 'Code', { required: true, hint: 'e.g. BDT' }), str('name', 'Name', { required: true }),
-      num('rate', 'Rate: 1 USD =', { required: true, min: 0, step: 0.0001, hint: 'How much of this currency 1 US Dollar buys. USD itself is 1.' }),
+      num('rate', 'Rate: 1 USD =', { required: true, min: 0.000001, step: 0.0001, hint: 'How much of this currency 1 US Dollar buys, above 0. USD itself must stay 1.' }),
       int('decimals', 'Decimals', { min: 0, max: 3, default: 2, hint: 'OMR and BHD use 3' }),
       str('unit', 'Name in words (one)', { hint: 'e.g. Rial Omani' }), str('units', 'Name in words (many)', { hint: 'e.g. Rials Omani' }),
       str('subunit', 'Small unit (one)', { hint: 'e.g. Baisa' }), str('subunits', 'Small unit (many)'), int('subunitPer', 'Small units in one', { min: 1, hint: 'e.g. 1000 Baisa in 1 Rial' }),
       bool('lakh', 'Use lakh and crore', { hint: 'For Taka: 1,00,000 and "one lakh"' }),
-    ], { summary: '{{code}} – {{name}} ({{rate}})', hint: 'Used by the currency converter and the website cost calculator. These are not the shop prices (those are in Payment methods).' }),
+    ], { summary: '{{code}} – {{name}} ({{rate}})', min: 1, hint: 'Used by the currency converter and the website cost calculator. Each code once, USD always with rate 1. These are not the shop prices (those are in Payment methods).' }),
   ] },
   { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' })] },
   { name: 'icons', label: 'Icons', icon: 'interests', fields: [

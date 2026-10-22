@@ -17,7 +17,8 @@ const fmt = (n, code) => {
   return new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals }).format(n);
 };
 const fmtRate = (n) => new Intl.NumberFormat('en-US', { maximumFractionDigits: n < 1 ? 6 : 4 }).format(n);
-const rate = (from, to) => R[to].rate / R[from].rate;
+// Same order of steps as the build (templates/pages.js), so the tables and the live result never differ by a cent
+const convert = (n, from, to) => (n / R[from].rate) * R[to].rate;
 
 // ---- Amount in words: "One thousand two hundred Rials Omani and five hundred Baisa only"; Taka uses lakh and crore ----
 const ONES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
@@ -44,12 +45,15 @@ function intWords(n, lakh) {
   return out.join(' ');
 }
 function words(amount, c) {
-  if (!(amount >= 0) || amount >= 1e15 || !c.unit) return '';
-  const per = c.subunitPer || 100;
-  const total = Math.round(amount * per);
-  const whole = Math.floor(total / per);
-  const part = total % per;
-  const text = `${intWords(whole, c.lakh)} ${whole === 1 ? c.unit : c.units || c.unit}${part ? ` and ${intWords(part, c.lakh)} ${part === 1 ? c.subunit : c.subunits || c.subunit}` : ''} only`;
+  const d = c.decimals;
+  if (!c.unit || !(amount >= 0) || amount * 10 ** d > Number.MAX_SAFE_INTEGER) return '';
+  // Split the same rounded figure that is shown, so the words always match the number
+  const [w, f = ''] = new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: false }).format(amount).split('.');
+  const whole = Number(w);
+  const part = Number(f) ? Math.round((Number(f) / 10 ** d) * (c.subunitPer || 10 ** d)) : 0;
+  const sub = part === 1 ? c.subunit || c.subunits : c.subunits || c.subunit;
+  const rest = part ? (sub ? ` and ${intWords(part, c.lakh)} ${sub}` : ` and ${f}/${10 ** d}`) : '';
+  const text = `${intWords(whole, c.lakh)} ${whole === 1 ? c.unit : c.units || c.unit}${rest} only`;
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
@@ -58,18 +62,19 @@ function update() {
   const from = fromEl.value;
   const to = toEl.value;
   const own = Number(ownEl.value);
-  const r = own > 0 ? own : rate(from, to);
+  const r = own > 0 ? own : convert(1, from, to);
+  const out = own > 0 ? a * own : convert(a, from, to);
   $('[data-conv-in]').textContent = digits(`${fmt(a, from)} =`);
-  $('[data-conv-out]').textContent = digits(fmt(a * r, to));
+  $('[data-conv-out]').textContent = digits(fmt(out, to));
   $('[data-conv-rate]').textContent = digits(`1 ${from} = ${fmtRate(r)} ${to} · 1 ${to} = ${fmtRate(1 / r)} ${from}`);
-  const w = a ? words(a * r, R[to]) : '';
+  const w = a ? words(out, R[to]) : '';
   $('[data-conv-words]').textContent = w;
   $('[data-conv-words-row]').hidden = !w;
   $('[data-conv-own-from]').textContent = `1 ${from} =`;
   $('[data-conv-own-to]').textContent = to;
   $('[data-conv-all]').replaceChildren(...D.rates.filter((c) => c.code !== from).map((c) => {
     const li = document.createElement('li');
-    li.append(Object.assign(document.createElement('span'), { textContent: c.name }), Object.assign(document.createElement('b'), { textContent: digits(fmt(a * (c.code === to && own > 0 ? own : rate(from, c.code)), c.code)) }));
+    li.append(Object.assign(document.createElement('span'), { textContent: c.name }), Object.assign(document.createElement('b'), { textContent: digits(fmt(c.code === to ? out : convert(a, from, c.code), c.code)) }));
     return li;
   }));
 }

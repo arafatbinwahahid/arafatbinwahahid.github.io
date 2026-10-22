@@ -90,6 +90,7 @@
     },
     "calculator": {
       "service": "web-development",
+      "currency": "OMR",
       "extras": [
         {
           "id": "pages",
