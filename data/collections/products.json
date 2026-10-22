@@ -464,9 +464,10 @@
     "related": []
   },
   {
-    "id": "P004",
-    "slug": "excel-data-entry-service",
     "title": "Professional Excel Data Entry Service",
+    "slug": "excel-data-entry-service",
+    "id": "P004",
+    "status": "",
     "category": "Excel Services",
     "seo": {
       "title": "Excel Data Entry | PDF to Excel, Cleaning & Formatting",
@@ -525,12 +526,13 @@
           "USD": 15,
           "BDT": 1830
         },
+        "compareAtPrices": null,
         "stock": 10
       }
     ],
     "images": [
       {
-        "src": "/assets/images/products/excel-data-entry-service.jpg",
+        "src": "/assets/images/products/Amazon-prime-video-free-arafatbin.com.webp",
         "alt": "Professional Excel data entry and spreadsheet management service"
       }
     ],
@@ -596,6 +598,17 @@
       "label": "Ask a question on WhatsApp",
       "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20have%20a%20question%20about%20Excel%20data%20entry.",
       "icon": "wa"
-    }
+    },
+    "brand": "",
+    "sku": "",
+    "deliveryTime": "",
+    "warranty": "",
+    "badge": "",
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "rating": null,
+    "related": []
   }
 ]
