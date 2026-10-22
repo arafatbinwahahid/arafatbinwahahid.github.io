@@ -144,7 +144,7 @@ const pages = [
     ...['summaryTitle', 'orderIdLabel', 'editCartLabel', 'stockNotice', 'currencyTitle', 'methodTitle', 'payTitle', 'detailsTitle', 'copyLabel', 'copiedLabel', 'stepsTitle', 'locationTitle', 'openMapLabel', 'hoursTitle', 'missingDetails', 'verifyNote', 'noscript'].map((k) => str(k, k)),
     obj('empty', 'Empty cart box', [str('title', 'Title'), txt('text', 'Text'), button()]),
     obj('form', 'Payment form texts', ['nameLabel', 'mobileLabel', 'emailLabel', 'amountLabel', 'transactionLabel', 'dateLabel', 'timeLabel', 'messageLabel', 'submitPayment', 'submitAppointment', 'sending', 'invalidPhone', 'invalidAmount', 'invalidDate', 'invalidTime', 'emptyCart', 'duplicate', 'error'].map((k) => str(k, k))),
-    obj('paypal', 'PayPal box texts', ['title', 'note', 'fallback', 'error', 'paid', 'feeLabel'].map((k) => str(k, k))),
+    obj('paypal', 'PayPal box texts', ['title', 'note', 'fallback', 'error', 'feeLabel'].map((k) => str(k, k))),
     obj('done', 'Thank-you box', [str('title', 'Title'), txt('payment', 'After a payment form', { hint: '{id} = order ID' }), txt('paypal', 'After a PayPal payment'), txt('appointment', 'After an appointment request'), button()]),
   ] },
   { name: 'services', label: 'Services page', icon: 'work', preview_path: 'services/', fields: [
@@ -314,7 +314,15 @@ const globals = [
     txt('about', 'About text'), bool('showSocial', 'Show social icons'), list('columns', 'Columns', [str('title', 'Title'), links('links', 'Links')], { summary: '{{title}}' }),
     str('contactTitle', 'Contact heading'), str('copyright', 'Copyright', { hint: '{year} = current year' }), links('bottomLinks', 'Bottom links'),
     later(obj('newsletter', 'Newsletter box', [bool('show', 'Show'), str('title', 'Title'), str('text', 'Text'), str('placeholder', 'Email placeholder'), str('button', 'Button')])),
-    list('paymentIcons', 'Payment logos', [imgPath('src', 'Logo', 'brand'), str('alt', 'Name', { hint: 'Describe the image, e.g. "We accept Visa, PayPal and bKash".' })], { summary: '{{alt}}', thumbnail: 'src', hint: 'Shown in the footer of every page, above the copyright line.' }),
+    obj('paymentMethods', 'Payment methods row', [
+      bool('show', 'Show', { default: true }),
+      str('label', 'Name for screen readers', { hint: 'e.g. Payment methods we accept' }),
+      list('logos', 'Logos', [
+        str('name', 'Name', { required: true, hint: 'e.g. PayPal. Shown in the tile until a logo is uploaded.' }),
+        imgPath('image', 'Logo', 'payments', { hint: 'A square or wide logo on a light background. Small files are best.' }),
+      ], { summary: '{{name}}', thumbnail: 'image', hint: 'The tiles move slowly from right to left in the footer of every page. Drag to reorder.' }),
+      obj('more', '"+200 more" button', [str('label', 'Text', { hint: 'e.g. +200 more' }), href('href', 'Link', { hint: 'e.g. /payments/ or /faq/' })]),
+    ], { hint: 'Shown in the footer of every page, above the copyright line.' }),
   ] },
   { name: 'contact', label: 'Contact details', icon: 'call', fields: [
     str('whatsapp', 'WhatsApp number', { hint: 'Digits only with country code, e.g. 96892130528' }), str('whatsappDisplay', 'WhatsApp as shown'), bool('showFloatingWhatsapp', 'Floating WhatsApp button'),

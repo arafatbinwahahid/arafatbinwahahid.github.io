@@ -56,8 +56,13 @@ function siteFooter() {
 <a href="mailto:${esc(contact.email)}">${icon('mail')}${esc(contact.email)}</a>
 <a href="${esc(contact.mapUrl)}" target="_blank" rel="noopener">${icon('pin')}${esc(contact.address)}</a></div>`;
   const socials = footer.showSocial ? `<div class="social">${social.map((s) => `<a href="${esc(s.url)}"${target(s.url)} aria-label="${esc(s.label)}">${icon(s.icon)}</a>`).join('')}</div>` : '';
-  // Payment logos (footer.json "paymentIcons"), e.g. a "We accept" image, above the copyright line
-  const pay = footer.paymentIcons?.length ? `<div class="wrap ftr-pay">${footer.paymentIcons.filter((p) => p.src).map((p) => img(p, { sizes: '(max-width: 480px) calc(100vw - 2rem), 420px' })).join('')}</div>` : '';
+  // Payment methods (footer.json "paymentMethods"): a moving row of logo tiles and a "+200 more" button.
+  // The row is drawn twice so it loops without a gap; a logo without an image shows its name.
+  const pm = footer.paymentMethods || {};
+  const tiles = (pm.logos || []).map((l) => `<li>${l.image ? img({ src: l.image, alt: l.name }, { sizes: '64px' }) : `<span>${esc(l.name)}</span>`}</li>`).join('');
+  const pay = pm.show !== false && tiles ? `<section class="wrap pm" aria-label="${esc(pm.label || 'Payment methods')}">
+<div class="pm-track"><ul class="pm-list">${tiles}</ul><ul class="pm-list" aria-hidden="true">${tiles}</ul></div>
+${pm.more?.label ? `<a class="pm-more" href="${esc(pm.more.href || '/payments/')}"${target(pm.more.href)}>${esc(pm.more.label)}${icon('arrow')}</a>` : ''}</section>` : '';
   return `<footer class="ftr"><div class="wrap ftr-grid">
 <div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;

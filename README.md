@@ -97,7 +97,7 @@
 | নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-01.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
 | sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
-| পেমেন্টের লোগো / "We accept" ছবি | `data/global/footer.json` → `paymentIcons` (CMS: Settings → Footer → Payment logos), সব পেইজের ফুটারে দেখায় |
+| পেমেন্ট মেথডের চলমান লোগো সারি আর "+200 more" বোতাম | `data/global/footer.json` → `paymentMethods` (CMS: Settings → Footer → Payment methods row): প্রতিটি লোগোর নাম আর ছবি (ছবি না দিলে টাইলে নাম দেখায়), বোতামের লেখা আর লিংক। সব পেইজের ফুটারে, ধীরে ডান থেকে বামে সরে; "Reduce motion" চালু থাকলে থেমে থাকে |
 | লোগো | `data/global/header.json` → `logo.image` (হেডার ও ফুটার), `data/global/site.json` → `favicon`। build নিজে চারপাশের সাদা অংশ কেটে ছোট কপি বানায় |
 
 **বাটন:** `{ "label": "লেখা", "href": "/contact/", "style": "primary | outline | light", "icon": "wa" }`
