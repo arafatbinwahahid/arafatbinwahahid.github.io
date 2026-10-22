@@ -8,7 +8,20 @@
       "title": "Web Development & Custom Website Design | arafatbin.com",
       "titleSuffix": false,
       "description": "Custom, fully responsive websites built for speed, SEO and conversions. Professional web development and website design services by arafatbin.com.",
-      "keywords": ["Professional Web Development Services", "Custom Website Design BD", "E-commerce Website Development", "Full-Stack Web Developer Bangladesh", "Business Website Services", "arafatbin.com", "Responsive Web Design", "SEO-Friendly Website Building", "Website Maintenance Service", "Fast Loading Website", "Custom Web Solutions", "Web Development Test Demo"],
+      "keywords": [
+        "Professional Web Development Services",
+        "Custom Website Design BD",
+        "E-commerce Website Development",
+        "Full-Stack Web Developer Bangladesh",
+        "Business Website Services",
+        "arafatbin.com",
+        "Responsive Web Design",
+        "SEO-Friendly Website Building",
+        "Website Maintenance Service",
+        "Fast Loading Website",
+        "Custom Web Solutions",
+        "Web Development Test Demo"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -46,13 +59,37 @@
     "packagesTitle": "Service packages & starting prices",
     "priceLabel": "Starting from",
     "packages": [
-      {"name": "Personal / Portfolio Website", "prices": {"OMR": 40, "USD": 104}},
-      {"name": "Business / Corporate Website", "prices": {"OMR": 60, "USD": 156}},
-      {"name": "E-commerce / Online Store", "prices": {"OMR": 65, "USD": 169}}
+      {
+        "name": "Personal / Portfolio Website",
+        "prices": {
+          "OMR": 40,
+          "USD": 104
+        }
+      },
+      {
+        "name": "Business / Corporate Website",
+        "prices": {
+          "OMR": 60,
+          "USD": 156
+        }
+      },
+      {
+        "name": "E-commerce / Online Store",
+        "prices": {
+          "OMR": 65,
+          "USD": 169
+        }
+      }
     ],
     "images": [
-      {"src": "/assets/images/services/web-development-01.jpg", "alt": "Professional web development and custom website design services by arafatbin.com"},
-      {"src": "/assets/images/services/web-development-02.jpg", "alt": "Responsive, fast and SEO-friendly websites built by arafatbin.com"}
+      {
+        "src": "/assets/images/services/web-development-01.jpg",
+        "alt": "Professional web development and custom website design services by arafatbin.com"
+      },
+      {
+        "src": "/assets/images/services/web-development-02.jpg",
+        "alt": "Responsive, fast and SEO-friendly websites built by arafatbin.com"
+      }
     ],
     "summary": "Custom, fully responsive, fast and SEO-friendly websites: portfolio, business and e-commerce, with a test demo before launch.",
     "about": "🚀 Ready to take your business to the next level online? Don't settle for a basic template: get a custom, high-performing, fast and visually stunning website tailored specifically to your brand. Powered by arafatbin.com, we deliver end-to-end web development solutions designed to convert visitors into loyal customers.",
@@ -73,33 +110,81 @@
       "❌ Avoid unauthorized code modifications: third-party developers or plugin modifications during active development are strictly prohibited."
     ],
     "features": [
-      {"icon": "tv", "text": "100% Fully Responsive: flawless layout and performance across mobiles, tablets and desktops."},
-      {"icon": "zap", "text": "Lightning-Fast Speed: optimized performance to boost user retention and drive sales."},
-      {"icon": "globe", "text": "SEO & Mobile-Friendly: search-engine-ready code structure to help you rank higher on Google."},
-      {"icon": "shield", "text": "Top-Tier Security: enterprise-grade code protection and automated backup setups."},
-      {"icon": "check", "text": "Risk-Free Test Demo: review and test your site on a staging server before final launch."},
-      {"icon": "headset", "text": "After-Sales Support: continuous technical maintenance and support after delivery."}
+      {
+        "icon": "tv",
+        "text": "100% Fully Responsive: flawless layout and performance across mobiles, tablets and desktops."
+      },
+      {
+        "icon": "zap",
+        "text": "Lightning-Fast Speed: optimized performance to boost user retention and drive sales."
+      },
+      {
+        "icon": "globe",
+        "text": "SEO & Mobile-Friendly: search-engine-ready code structure to help you rank higher on Google."
+      },
+      {
+        "icon": "shield",
+        "text": "Top-Tier Security: enterprise-grade code protection and automated backup setups."
+      },
+      {
+        "icon": "check",
+        "text": "Risk-Free Test Demo: review and test your site on a staging server before final launch."
+      },
+      {
+        "icon": "headset",
+        "text": "After-Sales Support: continuous technical maintenance and support after delivery."
+      }
     ],
     "faq": [
-      {"q": "How do I know the website will turn out the way I want?", "a": "Before going live, we share initial mockups and set up a test demo server where you can preview the working website. We only publish the final version after your complete review and approval."},
-      {"q": "How long does it take to build a complete website?", "a": "Timelines depend on the project scope. Simple portfolio or landing pages typically take 3–5 business days, while complex e-commerce or corporate platforms take 7–15 business days."},
-      {"q": "What is your Refund & Project Support Policy?", "a": "We build trust through transparency. We provide a demo/test environment during development. If we fail to deliver promised specifications or if an unresolvable issue occurs on our side prior to launch, a refund will be issued according to our agreement. Additionally, we provide free post-launch support for a designated period."},
-      {"q": "Can I easily edit content or upload products by myself after launch?", "a": "Absolutely! Your website will feature a user-friendly admin dashboard. You will be able to update text, images and products without any technical or coding knowledge. Video guides can also be provided upon request."}
+      {
+        "q": "How do I know the website will turn out the way I want?",
+        "a": "Before going live, we share initial mockups and set up a test demo server where you can preview the working website. We only publish the final version after your complete review and approval."
+      },
+      {
+        "q": "How long does it take to build a complete website?",
+        "a": "Timelines depend on the project scope. Simple portfolio or landing pages typically take 3–5 business days, while complex e-commerce or corporate platforms take 7–15 business days."
+      },
+      {
+        "q": "What is your Refund & Project Support Policy?",
+        "a": "We build trust through transparency. We provide a demo/test environment during development. If we fail to deliver promised specifications or if an unresolvable issue occurs on our side prior to launch, a refund will be issued according to our agreement. Additionally, we provide free post-launch support for a designated period."
+      },
+      {
+        "q": "Can I easily edit content or upload products by myself after launch?",
+        "a": "Absolutely! Your website will feature a user-friendly admin dashboard. You will be able to update text, images and products without any technical or coding knowledge. Video guides can also be provided upon request."
+      }
     ],
     "buttons": [
-      {"label": "Ask for a test demo on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20would%20like%20a%20website.%20Can%20I%20see%20a%20test%20demo%3F", "style": "outline", "icon": "wa"}
+      {
+        "label": "Ask for a test demo on WhatsApp",
+        "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20would%20like%20a%20website.%20Can%20I%20see%20a%20test%20demo%3F",
+        "style": "outline",
+        "icon": "wa"
+      }
     ]
   },
   {
-    "slug": "clash-of-clans-account-boosting",
     "title": "Clash of Clans (CoC) Account Boosting & Village Building",
+    "slug": "clash-of-clans-account-boosting",
+    "status": "",
     "category": "Game services",
     "icon": "shield",
     "seo": {
       "title": "Clash of Clans Account Boosting & Building | arafatbin.com",
       "titleSuffix": false,
       "description": "Max out your Clash of Clans Town Hall, Heroes and Walls fast and safely. Premium CoC account boosting and village building, worldwide, by arafatbin.com.",
-      "keywords": ["Clash of Clans account boosting", "CoC village building service", "CoC base upgrade service", "professional CoC player", "Clash of Clans account maxing", "arafatbin.com", "Trusted CoC booster", "Town Hall maxing service", "CoC hero upgrade service", "safe Clash of Clans management", "CoC trophy pushing"],
+      "keywords": [
+        "Clash of Clans account boosting",
+        "CoC village building service",
+        "CoC base upgrade service",
+        "professional CoC player",
+        "Clash of Clans account maxing",
+        "arafatbin.com",
+        "Trusted CoC booster",
+        "Town Hall maxing service",
+        "CoC hero upgrade service",
+        "safe Clash of Clans management",
+        "CoC trophy pushing"
+      ],
       "canonical": "",
       "image": "",
       "imageAlt": "",
@@ -137,13 +222,52 @@
     "packagesTitle": "Pricing & packages",
     "priceLabel": "Price",
     "packages": [
-      {"name": "Resource Farming Package (Gold/Elixir/Dark Elixir)", "prices": {"USD": 10}},
-      {"name": "Monthly Account Building (1 Month Full Care)", "prices": {"USD": 19.9}},
-      {"name": "Custom Town Hall Maxing Package", "prices": {"USD": 65}}
+      {
+        "name": "Resource Farming Package (Gold/Elixir/Dark Elixir)",
+        "prices": {
+          "OMR": null,
+          "USD": 10,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
+      },
+      {
+        "name": "Monthly Account Building (1 Month Full Care)",
+        "prices": {
+          "OMR": null,
+          "USD": 19.9,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
+      },
+      {
+        "name": "Custom Town Hall Maxing Package",
+        "prices": {
+          "OMR": null,
+          "USD": 65,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
+      }
     ],
     "images": [
-      {"src": "/assets/images/services/clash-of-clans-account-boosting-01.jpg", "alt": "Clash of Clans account boosting and village building service by arafatbin.com"},
-      {"src": "/assets/images/services/clash-of-clans-account-boosting-02.jpg", "alt": "CoC Town Hall, hero and resource maxing service from arafatbin.com"}
+      {
+        "src": "/assets/images/services/Clash-of-clan.webp",
+        "alt": "Clash of Clans account boosting and village building service by arafatbin.com"
+      },
+      {
+        "src": "/assets/images/services/clash-of-clans-account-boosting-02.jpg",
+        "alt": "CoC Town Hall, hero and resource maxing service from arafatbin.com"
+      }
     ],
     "summary": "Manual Clash of Clans account management: resource farming, base and hero upgrades, Town Hall maxing and trophy pushing, with a 24–48 hour test run.",
     "about": "⚔️ Want to max out your Clash of Clans account without the daily grind? Stuck with rushed Town Halls, underleveled Heroes or low resources? Let an expert handle your village! Powered by arafatbin.com, we offer professional Clash of Clans Account Management & Village Building Services to upgrade your base safely, quickly and efficiently.",
@@ -165,22 +289,69 @@
       "❌ Do not share access with third parties: do not share your Supercell ID with other players or sellers while our management package is active."
     ],
     "features": [
-      {"icon": "home", "text": "Complete Village Building: upgrading Town Hall, Defenses, Walls and Troops strategically."},
-      {"icon": "award", "text": "Hero & Resource Maxing: dedicated farming for Gold, Elixir and Dark Elixir to keep your Heroes upgrading nonstop."},
-      {"icon": "shield", "text": "100% Safe & Secure: manual playing only! No hacks, bots or third-party scripts used."},
-      {"icon": "check", "text": "Test Management Option: hand over your account for a 24–48 hour test run to see quick progress before committing long-term."},
-      {"icon": "lock", "text": "Full Privacy Guaranteed: your Supercell ID and personal account details remain completely confidential."},
-      {"icon": "star", "text": "War & Trophy Pushing: strategic attacks in Clan Wars and League trophy pushes upon request."}
+      {
+        "icon": "home",
+        "text": "Complete Village Building: upgrading Town Hall, Defenses, Walls and Troops strategically."
+      },
+      {
+        "icon": "award",
+        "text": "Hero & Resource Maxing: dedicated farming for Gold, Elixir and Dark Elixir to keep your Heroes upgrading nonstop."
+      },
+      {
+        "icon": "shield",
+        "text": "100% Safe & Secure: manual playing only! No hacks, bots or third-party scripts used."
+      },
+      {
+        "icon": "check",
+        "text": "Test Management Option: hand over your account for a 24–48 hour test run to see quick progress before committing long-term."
+      },
+      {
+        "icon": "lock",
+        "text": "Full Privacy Guaranteed: your Supercell ID and personal account details remain completely confidential."
+      },
+      {
+        "icon": "star",
+        "text": "War & Trophy Pushing: strategic attacks in Clan Wars and League trophy pushes upon request."
+      }
     ],
     "faq": [
-      {"q": "How does the Clash of Clans boosting process work?", "a": "You provide us login access via Supercell ID (login code). Our experienced CoC player logs into your account and plays manually to farm resources, manage builders and upgrade your base according to your chosen plan."},
-      {"q": "Can I test your service before committing to a full package?", "a": "Yes! We offer a short test trial (24–48 hours) where we log in, farm resources and start base upgrades so you can witness our progress and speed firsthand. Once you are satisfied with the test results, you can select a full monthly or custom package."},
-      {"q": "Is my account safe from bans or stealing?", "a": "All playing is done 100% manually without bots, mods or third-party tools. Additionally, Supercell ID uses a one-time OTP login sent to your email, so your email password remains completely secure with you."},
-      {"q": "What is your Refund & Satisfaction Policy?", "a": "If we fail to meet the agreed upgrade milestones during your package period or if an unresolved issue arises on our end before setup, we will issue a partial or full refund based on our agreement."},
-      {"q": "Can I log into my account and play while the service is active?", "a": "Yes, but you must inform us beforehand to avoid logging in during an active attack or War battle. We coordinate playing schedules with you so your gameplay isn't interrupted."}
+      {
+        "q": "How does the Clash of Clans boosting process work?",
+        "a": "You provide us login access via Supercell ID (login code). Our experienced CoC player logs into your account and plays manually to farm resources, manage builders and upgrade your base according to your chosen plan."
+      },
+      {
+        "q": "Can I test your service before committing to a full package?",
+        "a": "Yes! We offer a short test trial (24–48 hours) where we log in, farm resources and start base upgrades so you can witness our progress and speed firsthand. Once you are satisfied with the test results, you can select a full monthly or custom package."
+      },
+      {
+        "q": "Is my account safe from bans or stealing?",
+        "a": "All playing is done 100% manually without bots, mods or third-party tools. Additionally, Supercell ID uses a one-time OTP login sent to your email, so your email password remains completely secure with you."
+      },
+      {
+        "q": "What is your Refund & Satisfaction Policy?",
+        "a": "If we fail to meet the agreed upgrade milestones during your package period or if an unresolved issue arises on our end before setup, we will issue a partial or full refund based on our agreement."
+      },
+      {
+        "q": "Can I log into my account and play while the service is active?",
+        "a": "Yes, but you must inform us beforehand to avoid logging in during an active attack or War battle. We coordinate playing schedules with you so your gameplay isn't interrupted."
+      }
     ],
     "buttons": [
-      {"label": "Ask for a 24–48 hour test run on WhatsApp", "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%2024-48%20hour%20test%20run%20for%20Clash%20of%20Clans%20account%20boosting.", "style": "outline", "icon": "wa"}
-    ]
+      {
+        "label": "Ask for a 24–48 hour test run on WhatsApp",
+        "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%2024-48%20hour%20test%20run%20for%20Clash%20of%20Clans%20account%20boosting.",
+        "style": "outline",
+        "icon": "wa",
+        "download": false
+      }
+    ],
+    "deliveryTime": "",
+    "revisions": null,
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "portfolio": [],
+    "related": []
   }
 ]
