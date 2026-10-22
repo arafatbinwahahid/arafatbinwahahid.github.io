@@ -388,7 +388,7 @@ const globals = [
       str('unit', 'Name in words (one)', { hint: 'e.g. Rial Omani' }), str('units', 'Name in words (many)', { hint: 'e.g. Rials Omani' }),
       str('subunit', 'Small unit (one)', { hint: 'e.g. Baisa' }), str('subunits', 'Small unit (many)'), int('subunitPer', 'Small units in one', { min: 1, hint: 'e.g. 1000 Baisa in 1 Rial' }),
       bool('lakh', 'Use lakh and crore', { hint: 'For Taka: 1,00,000 and "one lakh"' }),
-    ], { summary: '{{code}} – {{name}} ({{rate}})', min: 1, hint: 'Used by the currency converter and the website cost calculator. Each code once, USD always with rate 1. These are not the shop prices (those are in Payment methods).' }),
+    ], { summary: '{{code}} – {{name}} ({{rate}})', required: true, min: 1, hint: 'Used by the currency converter and the website cost calculator. Each code once, USD always with rate 1. These are not the shop prices (those are in Payment methods).' }),
   ] },
   { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' })] },
   { name: 'icons', label: 'Icons', icon: 'interests', fields: [
