@@ -1,7 +1,8 @@
 [
   {
-    "slug": "web-development",
     "title": "Professional Web Development & Custom Website Design",
+    "slug": "web-development",
+    "status": "",
     "category": "Web development",
     "icon": "code",
     "seo": {
@@ -63,27 +64,42 @@
         "name": "Personal / Portfolio Website",
         "prices": {
           "OMR": 40,
-          "USD": 104
-        }
+          "USD": 104,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
       },
       {
         "name": "Business / Corporate Website",
         "prices": {
           "OMR": 60,
-          "USD": 156
-        }
+          "USD": 156,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
       },
       {
         "name": "E-commerce / Online Store",
         "prices": {
           "OMR": 65,
-          "USD": 169
-        }
+          "USD": 169,
+          "BDT": null
+        },
+        "features": [],
+        "deliveryTime": "",
+        "revisions": null,
+        "popular": false
       }
     ],
     "images": [
       {
-        "src": "/assets/images/services/web-development-01.jpg",
+        "src": "/assets/images/services/arafatbin.com-Make-website.webp",
         "alt": "Professional web development and custom website design services by arafatbin.com"
       },
       {
@@ -158,9 +174,18 @@
         "label": "Ask for a test demo on WhatsApp",
         "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20would%20like%20a%20website.%20Can%20I%20see%20a%20test%20demo%3F",
         "style": "outline",
-        "icon": "wa"
+        "icon": "wa",
+        "download": false
       }
-    ]
+    ],
+    "deliveryTime": "",
+    "revisions": null,
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "portfolio": [],
+    "related": []
   },
   {
     "title": "Clash of Clans (CoC) Account Boosting & Village Building",
