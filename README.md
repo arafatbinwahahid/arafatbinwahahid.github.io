@@ -52,6 +52,7 @@
     │   ├── social.json      ← সোশ্যাল লিংক ও আইকন
     │   ├── sitemap.json     ← sitemap.xml-এ বাড়তি লিংক (বাকি সব নিজে যোগ হয়)
     │   ├── payments.json    ← currency (OMR/USD/BDT), পেমেন্ট মেথড, ব্যাংক/Send Money/PayPal/RedotPay তথ্য, poster, ম্যাপ, সময়
+    │   ├── rates.json       ← ফ্রি টুলের exchange rate (1 USD = কত, প্রতিটি currency আলাদা, হাতে বসানো)
     │   └── icons.json       ← সব আইকন (নাম দিয়ে যেকোনো JSON-এ ব্যবহার করুন)
     │
     ├── pages/               ← প্রতিটি পেইজের লেখা
@@ -59,6 +60,7 @@
     │   ├── shop.json        → /shop/  (benefits, policy লিংক, কার্টের লেখা, নিচের queue CTA)
     │   ├── payments.json    → /payments/  (Payment পেইজ ও ফর্মের সব লেখা)
     │   ├── services.json    → /services/
+    │   ├── tools.json       → /tools/  (Free tools পেইজের লেখা)
     │   ├── about.json       → /about/
     │   ├── experience.json  → /experience/
     │   ├── skills.json      → /skills/
@@ -76,10 +78,11 @@
     └── collections/         ← প্রতিটি আইটেমের নিজের পেইজ তৈরি হয়
         ├── products.json    → /shop/<slug>/  (দাম, stock, ছবি, about, usage, FAQ, review)
         ├── services.json    → /services/<slug>/
+        ├── tools.json       → /tools/<slug>/  (Website cost calculator, Currency converter ও তার pair পেইজ)
         └── blog/*.json      → /blog/<slug>/   (প্রতিটি পোস্ট = একটি ফাইল)
 ```
 
-`sitemap.xml` নিজে থেকে তৈরি হয়: সব পেইজ, প্রোডাক্ট, সার্ভিস ও ব্লগ পোস্টের লিংক স্বয়ংক্রিয়ভাবে যোগ হয়, কোনো তারিখ ছাড়া। `data/global/sitemap.json`-এ শুধু বাড়তি লিংক (যেমন CV-এর PDF) দিন। `robots.txt` তৈরি হয় `site.json` থেকে।
+`sitemap.xml` নিজে থেকে তৈরি হয়: সব পেইজ, প্রোডাক্ট, সার্ভিস, টুল ও ব্লগ পোস্টের লিংক স্বয়ংক্রিয়ভাবে যোগ হয়, কোনো তারিখ ছাড়া। `data/global/sitemap.json`-এ শুধু বাড়তি লিংক (যেমন CV-এর PDF) দিন। `robots.txt` তৈরি হয় `site.json` থেকে।
 
 ## কীভাবে এডিট করবেন
 
@@ -92,6 +95,8 @@
 | হোম পেইজের section-এর ক্রম | `data/pages/home.json` → `sections` (উপর-নিচ সরান, `"show": false` দিলে লুকাবে) |
 | নতুন প্রোডাক্ট | `data/collections/products.json`-এ একটি `{ ... }` কপি করে নতুন `id` ও `slug` দিন |
 | নতুন সার্ভিস | `data/collections/services.json` |
+| ফ্রি টুলের লেখা, extras-এর দাম, currency pair | `data/collections/tools.json` (CMS: Free tools) |
+| টুলের exchange rate | `data/global/rates.json` (CMS: Settings → Exchange rates) |
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
 | নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-01.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
@@ -139,9 +144,19 @@
 
 **নিরাপত্তা:** এটা static সাইট, তাই ব্রাউজারের যাচাই কেউ চাইলে এড়িয়ে যেতে পারে। সেজন্য আসল যাচাই হলো ধাপ ৪-এর হাতে মিলিয়ে দেখা। Web3Forms-এর access key ব্রাউজারে থাকতেই হয়। এটা গোপন password নয়, এটা দিয়ে শুধু আপনার ইমেইলে ফর্ম পাঠানো যায়। spam বাড়লে Web3Forms dashboard থেকে key বদলে `site.json`-এ নতুনটা দিন। কোনো password বা ব্যাংকের গোপন তথ্য JSON-এ রাখবেন না, কারণ JSON-এর সবকিছু public।
 
+## Free tools (`/tools/`)
+
+হেডার, 3-dot মেনু, ফুটার আর হোম পেইজে (Shop ও Services-এর পরে) "Free tools"। সব হিসাব ভিজিটরের ফোনেই হয়, কোনো API বা বাইরের সার্ভিস লাগে না, তাই পেইজ দ্রুত।
+
+**Website cost calculator (`/tools/website-cost-calculator/`):** প্যাকেজ আর দাম আসে `tools.json` → `calculator.service`-এ দেওয়া সার্ভিসের (`web-development`) প্যাকেজ থেকে, তাই সার্ভিসের দাম বদলালে এখানেও বদলায়। বাড়তি কাজ (extra pages, blog, payment …) `calculator.extras`-এ: `name`, `price` (সার্ভিসের currency-তে, এখন OMR), আর সংখ্যা নিতে চাইলে `unit` (যেমন `"page"`) ও `max`। ভিজিটর currency বদলালে `rates.json` দিয়ে হিসাব হয়। "Send this quote on WhatsApp" বোতামে প্যাকেজ, extras আর মোট দাম লেখা থাকে (`labels.whatsappMessage`, `{package}` `{extras}` `{total}`)।
+
+**Currency converter (`/tools/currency-converter/`):** rate `data/global/rates.json`-এ, প্রতিটি currency-র `"rate"` = 1 USD-তে কত (যেমন OMR `0.3845`, BDT `122`); যেকোনো দুই currency-র হিসাব USD দিয়ে হয়। `"updated"`-এ তারিখ দিন, পেইজে দেখায়। `decimals` (OMR/BHD 3), কথায় লেখার জন্য `unit`/`units`/`subunit`/`subunits`/`subunitPer` (Rial Omani / Baisa 1000), আর `"lakh": true` দিলে লাখ-কোটি (BDT)। `converter.pairs`-এর প্রতিটি জোড়ার নিজের পেইজ হয় (যেমন `/tools/currency-converter/omr-to-bdt/`), Google-এ "OMR to BDT" খুঁজলে আসার জন্য; `amounts` = সেই পেইজের টেবিলের অঙ্ক। ভিজিটর চাইলে নিজের rate বসাতে পারেন (শুধু তাঁর ফোনে)। নতুন currency যোগ করতে `rates.json`-এ যোগ করুন, সব টুলে নিজে আসে।
+
+**নতুন টুল:** এখন দুই ধরনের (`type`: `website-cost`, `currency`)। `"status": "draft"` দিলে টুল সাইট, sitemap, search আর হোম থেকে লুকায়। অন্য ধরনের টুল (যেমন image converter) বানাতে নতুন কোড লাগবে।
+
 ## CMS: arafatbin.com/admin/ (Sveltia CMS)
 
-JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Blog posts**, **Pages** (প্রতিটি পেইজ আলাদা) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Sitemap, Icons)। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
+JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Free tools, Blog posts**, **Pages** (প্রতিটি পেইজ আলাদা) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Exchange rates, Sitemap, Icons)। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
 
 **প্রথমবার লগইন (Access Token):**
 1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token
@@ -153,7 +168,7 @@ JSON হাতে না লিখে ফর্মে লিখুন। বা�
 
 **জানা দরকার:**
 - ছবি আপলোড করলে নিজে WebP হয় (সর্বোচ্চ 2000px), নাম ছোট হাতের হয়, আর ঠিক ফোল্ডারে যায় (products, services, blog …)।
-- **Status → Draft** দিলে প্রোডাক্ট/সার্ভিস সাইট, sitemap আর search থেকে লুকায়।
+- **Status → Draft** দিলে প্রোডাক্ট/সার্ভিস/টুল সাইট, sitemap আর search থেকে লুকায়।
 - "Saved for later" লেখা ঘরগুলো এখন সাইটে দেখায় না, পরে কাজে লাগানোর জন্য রাখা।
 - Icon ঘরে Settings → Icons-এর সব আইকন থেকে বাছা যায়; নতুন আইকন সেখানে যোগ করলে সব জায়গায় পাওয়া যায়।
 - CMS ফর্ম `templates/cms.js`-এ। কোনো JSON-এ নতুন ঘর যোগ করলে সেখানেও যোগ করতে হয়, নাহলে build জানিয়ে দেয় (CMS save করলে সেই ঘর মুছে যেত)।
@@ -207,18 +222,19 @@ JSON হাতে না লিখে ফর্মে লিখুন। বা�
 
 ## AI agent-এর জন্য WebMCP (`/webmcp.js`)
 
-build প্রতিবার `data/`-এর JSON থেকে নিজে `dist/webmcp.js` বানায়, এটা হাতে এডিট করতে হয় না। নতুন প্রোডাক্ট, সার্ভিস বা পেইজ যোগ করলে এতেও নিজে যোগ হয়।
+build প্রতিবার `data/`-এর JSON থেকে নিজে `dist/webmcp.js` বানায়, এটা হাতে এডিট করতে হয় না। নতুন প্রোডাক্ট, সার্ভিস, টুল বা পেইজ যোগ করলে এতেও নিজে যোগ হয়।
 যে browser WebMCP চেনে (`document.modelContext`), শুধু সেখানেই ফাইলটা লোড হয়, তাই সাধারণ ভিজিটরের সাইট একটুও ধীর হয় না।
 AI agent এই tool-গুলো ব্যবহার করতে পারে:
 
 | Tool | কাজ |
 |---|---|
-| `get-site-info` | সাইট, যোগাযোগ, currency, পেমেন্ট মেথড, পেইজের তালিকা |
+| `get-site-info` | সাইট, যোগাযোগ, currency, পেমেন্ট মেথড, ফ্রি টুল, পেইজের তালিকা |
 | `list-products` / `get-product` | প্রোডাক্ট, প্ল্যান, দাম, stock, FAQ |
 | `list-services` / `get-service` | সার্ভিস, প্যাকেজ, দাম, FAQ |
-| `search-site` | প্রোডাক্ট, সার্ভিস, পেইজ ও FAQ-তে খোঁজা |
+| `search-site` | প্রোডাক্ট, সার্ভিস, টুল, পেইজ ও FAQ-তে খোঁজা |
 | `get-cart` / `add-to-cart` | ভিজিটরের কার্ট দেখা ও যোগ করা (stock-এর বেশি নয়; পেমেন্ট ভিজিটর নিজে করেন) |
 | `whatsapp-link` | লেখা-সহ WhatsApp লিংক বানানো (নিজে কিছু পাঠায় না) |
+| `convert-currency` | `rates.json`-এর rate দিয়ে currency বদল, সাইটের converter-এর মতো একই হিসাব (Currency converter টুল থাকলেই) |
 
 কোডটা আছে `templates/webmcp.js`-এ।
 

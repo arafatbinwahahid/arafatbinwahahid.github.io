@@ -1,0 +1,315 @@
+[
+  {
+    "slug": "website-cost-calculator",
+    "type": "website-cost",
+    "status": "",
+    "title": "Website Cost Calculator",
+    "category": "Business",
+    "icon": "calculator",
+    "summary": "Pick a package and the features you need, and see a starting price for your website in OMR, USD or BDT.",
+    "seo": {
+      "title": "Website Cost Calculator Oman & Bangladesh | Free Quote",
+      "titleSuffix": false,
+      "description": "Free website cost calculator: pick a package and the features you need and see a starting price in OMR, USD or BDT. Send the quote on WhatsApp.",
+      "keywords": [],
+      "canonical": "",
+      "image": "",
+      "imageAlt": "",
+      "author": "",
+      "robots": {
+        "index": true,
+        "follow": true,
+        "nosnippet": false,
+        "noimageindex": false,
+        "notranslate": false,
+        "indexifembedded": false,
+        "maxSnippet": -1,
+        "maxImagePreview": "large",
+        "maxVideoPreview": -1,
+        "unavailableAfter": ""
+      },
+      "googlebot": "",
+      "bingbot": "",
+      "openGraph": {
+        "type": "",
+        "title": "",
+        "description": "",
+        "localeAlternate": []
+      },
+      "twitter": {
+        "card": "",
+        "title": "",
+        "description": "",
+        "creator": ""
+      },
+      "alternates": [],
+      "schema": [],
+      "meta": []
+    },
+    "intro": [
+      "Planning a website for your shop, company or portfolio? Choose a package, tick the extras you need, and the calculator shows an estimated starting price straight away.",
+      "Send the result on WhatsApp and I will reply with a final quote, the delivery time and what you will get."
+    ],
+    "steps": [
+      "Choose a package.",
+      "Tick the extra features you need.",
+      "Pick your currency.",
+      "Send the quote on WhatsApp for a final price."
+    ],
+    "faq": [
+      {
+        "q": "Is this the final price?",
+        "a": "No. It is a starting price to help you plan. The final price depends on your content, design and features, and is confirmed on WhatsApp before any work starts."
+      },
+      {
+        "q": "Which currencies can I see?",
+        "a": "Omani Rial, US Dollar, Bangladeshi Taka and the other currencies in the list. Prices are set in Omani Rial and converted with the rates shown on the currency converter."
+      },
+      {
+        "q": "How long does a website take?",
+        "a": "A simple website usually takes a few days. Online shops and websites with many pages take longer. You get a delivery date with the final quote."
+      }
+    ],
+    "cta": {
+      "title": "Ready to start your website?",
+      "text": "Send your quote on WhatsApp or see the web development packages.",
+      "buttons": [
+        {
+          "label": "See web development",
+          "href": "/services/web-development/",
+          "style": "primary",
+          "icon": "code"
+        },
+        {
+          "label": "Message on WhatsApp",
+          "href": "https://wa.me/96892130528",
+          "style": "outline",
+          "icon": "wa"
+        }
+      ]
+    },
+    "calculator": {
+      "service": "web-development",
+      "extras": [
+        {
+          "id": "pages",
+          "name": "Extra pages",
+          "price": 5,
+          "unit": "page",
+          "max": 50
+        },
+        {
+          "id": "languages",
+          "name": "Extra language (Bangla, Arabic …)",
+          "price": 15,
+          "unit": "language",
+          "max": 5
+        },
+        {
+          "id": "blog",
+          "name": "Blog",
+          "price": 10
+        },
+        {
+          "id": "forms",
+          "name": "Contact or booking form",
+          "price": 5
+        },
+        {
+          "id": "payments",
+          "name": "Online payments (PayPal, bKash, bank)",
+          "price": 15
+        },
+        {
+          "id": "products",
+          "name": "Extra products (sets of 10)",
+          "price": 5,
+          "unit": "set of 10",
+          "max": 50
+        },
+        {
+          "id": "seo",
+          "name": "SEO setup (Google Search Console, sitemap)",
+          "price": 10
+        },
+        {
+          "id": "logo",
+          "name": "Logo design",
+          "price": 10
+        },
+        {
+          "id": "domain",
+          "name": "Domain and hosting setup",
+          "price": 10
+        },
+        {
+          "id": "care",
+          "name": "Monthly care and updates",
+          "price": 10,
+          "unit": "month",
+          "max": 12
+        }
+      ],
+      "labels": {
+        "packageTitle": "1. Choose a package",
+        "extrasTitle": "2. Add what you need",
+        "currencyLabel": "Show prices in",
+        "totalLabel": "Estimated starting price",
+        "perLabel": "per {unit}",
+        "noExtras": "No extras",
+        "whatsappLabel": "Send this quote on WhatsApp",
+        "whatsappMessage": "Hello Arafat, I used the website cost calculator.\nPackage: {package}\nExtras: {extras}\nEstimated starting price: {total}\nPlease send me a final quote.",
+        "note": "This is an estimate, not a final price. Prices are set in {currency}; other currencies use the rates from {date}."
+      }
+    }
+  },
+  {
+    "slug": "currency-converter",
+    "type": "currency",
+    "status": "",
+    "title": "Currency Converter",
+    "category": "Money",
+    "icon": "swap",
+    "summary": "Convert Omani Rial, Bangladeshi Taka, US Dollar, Saudi Riyal and UAE Dirham, with the amount in words.",
+    "seo": {
+      "title": "Currency Converter: OMR, BDT, USD, SAR, AED",
+      "titleSuffix": true,
+      "description": "Free currency converter for Omani Rial, Bangladeshi Taka, US Dollar, Saudi Riyal and UAE Dirham, with the amount in words and a quick rate table.",
+      "keywords": [],
+      "canonical": "",
+      "image": "",
+      "imageAlt": "",
+      "author": "",
+      "robots": {
+        "index": true,
+        "follow": true,
+        "nosnippet": false,
+        "noimageindex": false,
+        "notranslate": false,
+        "indexifembedded": false,
+        "maxSnippet": -1,
+        "maxImagePreview": "large",
+        "maxVideoPreview": -1,
+        "unavailableAfter": ""
+      },
+      "googlebot": "",
+      "bingbot": "",
+      "openGraph": {
+        "type": "",
+        "title": "",
+        "description": "",
+        "localeAlternate": []
+      },
+      "twitter": {
+        "card": "",
+        "title": "",
+        "description": "",
+        "creator": ""
+      },
+      "alternates": [],
+      "schema": [],
+      "meta": []
+    },
+    "intro": [
+      "Type an amount and see it in Omani Rial, Bangladeshi Taka, US Dollar and other Gulf currencies at once. The amount is also written in words, and Taka uses lakh and crore.",
+      "Have a rate from your exchange house, bank or app? Use your own rate to see exactly how much you will get."
+    ],
+    "steps": [
+      "Type the amount.",
+      "Choose the currency you have and the one you want.",
+      "Optional: enter your exchange house rate.",
+      "Read the result, in numbers and in words."
+    ],
+    "faq": [
+      {
+        "q": "Are these live rates?",
+        "a": "No. The rates are set by arafatbin.com and the update date is shown under the converter. Banks, exchange houses and apps use their own rates and fees, so use your own rate for the exact amount."
+      },
+      {
+        "q": "Why is the Omani Rial rate almost the same every day?",
+        "a": "The Omani Rial is pegged to the US Dollar at about 0.3845 Rial per Dollar, so it hardly changes. The Saudi Riyal, UAE Dirham, Qatari Riyal and Bahraini Dinar are pegged too. The Bangladeshi Taka is not."
+      },
+      {
+        "q": "Can I see the amount in Bangla digits?",
+        "a": "Yes. Turn on Bangla digits under the result."
+      }
+    ],
+    "cta": {
+      "title": "Paying from Oman or Bangladesh?",
+      "text": "See the payment options for the shop and services: bank transfer, Send Money, PayPal and more.",
+      "buttons": [
+        {
+          "label": "Payment options",
+          "href": "/payments/",
+          "style": "primary",
+          "icon": "wallet"
+        },
+        {
+          "label": "Visit the shop",
+          "href": "/shop/",
+          "style": "outline",
+          "icon": "cart"
+        }
+      ]
+    },
+    "converter": {
+      "from": "OMR",
+      "to": "BDT",
+      "amount": 100,
+      "pairs": [
+        {
+          "from": "OMR",
+          "to": "BDT"
+        },
+        {
+          "from": "USD",
+          "to": "BDT"
+        },
+        {
+          "from": "OMR",
+          "to": "USD"
+        },
+        {
+          "from": "SAR",
+          "to": "BDT"
+        },
+        {
+          "from": "AED",
+          "to": "BDT"
+        },
+        {
+          "from": "USD",
+          "to": "OMR"
+        }
+      ],
+      "amounts": [
+        1,
+        5,
+        10,
+        20,
+        50,
+        100,
+        200,
+        500,
+        1000
+      ],
+      "labels": {
+        "amountLabel": "Amount",
+        "fromLabel": "From",
+        "toLabel": "To",
+        "swapLabel": "Swap currencies",
+        "ownRateTitle": "Use my own rate",
+        "ownRateHint": "From your exchange house, bank or app. Leave it empty to use the rate below.",
+        "banglaLabel": "Show Bangla digits",
+        "allTitle": "In every currency",
+        "wordsLabel": "In words",
+        "updatedLabel": "Rates updated",
+        "tableTitle": "{from} to {to}",
+        "otherTitle": "Other converters",
+        "pairTitle": "{from} to {to} Converter",
+        "pairText": "Convert {fromName} ({from}) to {toName} ({to}), with a quick table and the amount in words.",
+        "pairDescription": "Free {from} to {to} converter: change {fromName} to {toName} with today's guide rate, a quick table and the amount in words."
+      }
+    }
+  }
+]

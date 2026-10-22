@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
-import { ROOT, site, sitemap, products, payments, absUrl, buildImages, optionsOf, hasSharp, paypalIdOk } from './templates/helpers.js';
+import { ROOT, site, sitemap, products, services, payments, tools, rates, absUrl, buildImages, optionsOf, hasSharp, paypalIdOk } from './templates/helpers.js';
 import { layout, isNoindex } from './templates/layout.js';
 import { allPages } from './templates/pages.js';
 import { validateData } from './templates/validate.js';
@@ -33,6 +33,28 @@ for (const p of products) {
   for (const o of optionsOf(p)) {
     const what = o.name ? `${where}, plan "${o.name}"` : where;
     for (const c of codes) if (!(o.prices?.[c] > 0)) throw new Error(`${what}: "prices" needs a ${c} price above 0 (currencies come from payments.json)`);
+  }
+}
+// Free tools: the service, currencies and slugs they point to must exist
+const rateCodes = rates.currencies.map((c) => c.code);
+if (!rateCodes.includes('USD')) throw new Error('data/global/rates.json: "currencies" needs USD with rate 1 (every rate is per 1 USD)');
+const toolSlugs = new Set();
+for (const t of tools) {
+  const where = `data/collections/tools.json (${t.slug})`;
+  if (toolSlugs.has(t.slug)) throw new Error(`${where}: two tools use the same "slug"`);
+  toolSlugs.add(t.slug);
+  if (t.type === 'website-cost') {
+    const svc = services.find((s) => s.slug === t.calculator.service);
+    if (!svc) throw new Error(`${where}: "calculator.service" must be the slug of a service in services.json (not a draft)`);
+    const cur = Object.keys(svc.packages[0].prices)[0];
+    if (!rateCodes.includes(cur)) throw new Error(`${where}: the service prices are in ${cur}, so data/global/rates.json needs ${cur}`);
+    const ids = t.calculator.extras.map((x) => x.id);
+    if (new Set(ids).size !== ids.length) throw new Error(`${where}: every extra needs its own "id"`);
+  }
+  if (t.type === 'currency') {
+    const C = t.converter;
+    for (const c of [C.from, C.to, ...C.pairs.flatMap((p) => [p.from, p.to])]) if (!rateCodes.includes(c)) throw new Error(`${where}: currency ${c} is not in data/global/rates.json`);
+    for (const p of C.pairs) if (p.from === p.to) throw new Error(`${where}: a pair needs two different currencies (${p.from})`);
   }
 }
 if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);

@@ -74,6 +74,9 @@ export const products = read('collections/products.json').filter((p) => p.status
 export const services = read('collections/services.json').filter((s) => s.status !== 'draft')
   .map((s) => ({ ...s, packages: s.packages.map((pk) => ({ ...pk, prices: packageUsd(pk.prices) })) }));
 export const page = (name) => read(`pages/${name}.json`);
+// Free tools (/tools/) and the exchange rates they use (rate = units of a currency per 1 USD, set by hand)
+export const tools = read('collections/tools.json').filter((t) => t.status !== 'draft');
+export const rates = read('global/rates.json');
 export const posts = fs
   .readdirSync(path.join(DATA, 'collections/blog'))
   .filter((f) => f.endsWith('.json'))

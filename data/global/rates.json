@@ -1,0 +1,85 @@
+{
+  "_help": "Exchange rates used by the free tools (currency converter, website cost calculator). rate = how much of this currency 1 USD buys. Set them yourself; the pages show the date below.",
+  "updated": "2026-10-22",
+  "note": "Rates set by arafatbin.com for a quick guide only. Banks, exchange houses and apps use their own rates and fees.",
+  "currencies": [
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "rate": 1,
+      "decimals": 2,
+      "unit": "Dollar",
+      "units": "Dollars",
+      "subunit": "Cent",
+      "subunits": "Cents",
+      "subunitPer": 100
+    },
+    {
+      "code": "OMR",
+      "name": "Omani Rial",
+      "rate": 0.3845,
+      "decimals": 3,
+      "unit": "Rial Omani",
+      "units": "Rials Omani",
+      "subunit": "Baisa",
+      "subunits": "Baisa",
+      "subunitPer": 1000
+    },
+    {
+      "code": "BDT",
+      "name": "Bangladeshi Taka",
+      "rate": 122,
+      "decimals": 2,
+      "unit": "Taka",
+      "units": "Taka",
+      "subunit": "Poisha",
+      "subunits": "Poisha",
+      "subunitPer": 100,
+      "lakh": true
+    },
+    {
+      "code": "SAR",
+      "name": "Saudi Riyal",
+      "rate": 3.75,
+      "decimals": 2,
+      "unit": "Riyal",
+      "units": "Riyals",
+      "subunit": "Halala",
+      "subunits": "Halalas",
+      "subunitPer": 100
+    },
+    {
+      "code": "AED",
+      "name": "UAE Dirham",
+      "rate": 3.6725,
+      "decimals": 2,
+      "unit": "Dirham",
+      "units": "Dirhams",
+      "subunit": "Fils",
+      "subunits": "Fils",
+      "subunitPer": 100
+    },
+    {
+      "code": "QAR",
+      "name": "Qatari Riyal",
+      "rate": 3.64,
+      "decimals": 2,
+      "unit": "Riyal",
+      "units": "Riyals",
+      "subunit": "Dirham",
+      "subunits": "Dirhams",
+      "subunitPer": 100
+    },
+    {
+      "code": "BHD",
+      "name": "Bahraini Dinar",
+      "rate": 0.376,
+      "decimals": 3,
+      "unit": "Dinar",
+      "units": "Dinars",
+      "subunit": "Fils",
+      "subunits": "Fils",
+      "subunitPer": 1000
+    }
+  ]
+}

@@ -119,6 +119,7 @@ const pages = [
     F('list', 'sections', 'Sections (drag to reorder)', { types: [
       homeSection('products', 'Products', [...sectionHead(), int('limit', 'How many', { default: 4 })]),
       homeSection('services', 'Services', [...sectionHead(), int('limit', 'How many', { default: 2 })]),
+      homeSection('tools', 'Free tools', [...sectionHead(), int('limit', 'How many', { default: 4 })]),
       homeSection('about', 'About', [str('title', 'Title'), txtList('text', 'Paragraphs'), image('image', 'Photo', 'about'), buttons(), sel('background', 'Background', ['', 'soft'])]),
       homeSection('work', 'Recent work', [...sectionHead(), int('limit', 'How many', { default: 2 })]),
       homeSection('reviews', 'Reviews', [...sectionHead(), int('limit', 'How many', { default: 3 })]),
@@ -153,6 +154,9 @@ const pages = [
     obj('paypal', 'PayPal on packages', ['payLabel', 'payLabelFee', 'feeLabel', 'note', 'doneTitle', 'doneText', 'doneWhatsapp', 'error', 'fallback', 'sendError'].map((k) => str(k, k, { hint: { payLabel: '{price} = package price', payLabelFee: 'Used when PayPal fees are set: {total} = price + fee, {fee} = the fee' }[k] }))),
     obj('process', '"How it works"', [str('title', 'Title'), list('steps', 'Steps', [str('title', 'Title'), txt('text', 'Text')], { summary: '{{title}}' })]),
     obj('sections', 'Service page headings', ['about', 'description', 'features', 'faq'].map((k) => str(k, k))),
+  ] },
+  { name: 'tools', label: 'Tools page', icon: 'handyman', preview_path: 'tools/', fields: [
+    seo(), hero(), str('openLabel', '"Open tool" link'), str('freeLabel', '"Free" label'), str('howTitle', '"How to use it" heading'), str('faqTitle', 'Questions heading'),
   ] },
   { name: 'about', label: 'About', icon: 'person', preview_path: 'about/', fields: [
     seo(), hero(), image('image', 'Photo', 'about'), txtList('paragraphs', 'Paragraphs'), str('factsTitle', 'Facts heading'),
@@ -273,6 +277,35 @@ const postFields = [
   later(F('relation', 'related', 'Related posts', { collection: 'blog', value_field: 'slug', display_fields: ['title'], multiple: true })),
 ];
 
+// ---- Free tools (data/collections/tools.json) ----
+const currencyCode = (name, label, o) => str(name, label, { pattern: ['^[A-Z]{3}$', 'Three capital letters, e.g. OMR'], hint: 'A code from Settings → Exchange rates', ...o });
+const toolFields = [
+  str('title', 'Tool name', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /tools/<slug>/' }),
+  sel('type', 'Tool type', [{ label: 'Website cost calculator', value: 'website-cost' }, { label: 'Currency converter', value: 'currency' }], { required: true, hint: 'Decides which tool the page shows. Each type has its own settings below.' }),
+  statusField(), str('category', 'Category', { hint: 'e.g. Money, Business' }), icon('icon', 'Icon', { required: true }), seo(),
+  txt('summary', 'Short summary', { required: true, hint: 'Shown on cards and under the title.' }),
+  txtList('intro', 'Intro paragraphs'), strList('steps', 'How to use it (steps)'), faq(),
+  obj('cta', 'Call to action under the tool', [str('title', 'Title'), txt('text', 'Text'), buttons()]),
+  obj('calculator', 'Website cost calculator settings', [
+    F('relation', 'service', 'Packages from this service', { collection: 'services', value_field: 'slug', display_fields: ['title'], hint: 'The packages and prices of this service are the starting choices.' }),
+    list('extras', 'Extras', [
+      str('id', 'ID', { required: true, hint: 'Short and unique, e.g. blog' }), str('name', 'Name', { required: true }),
+      num('price', 'Price (in the service’s currency)', { min: 0, step: 0.001 }),
+      str('unit', 'Unit', { hint: 'e.g. page. Empty = a simple yes/no tick box; with a unit the visitor types a number.' }),
+      int('max', 'Most the visitor can choose', { min: 1 }),
+    ], { summary: '{{name}} ({{price}})' }),
+    obj('labels', 'Texts', ['packageTitle', 'extrasTitle', 'currencyLabel', 'totalLabel', 'perLabel', 'noExtras', 'whatsappLabel'].map((k) => str(k, k, { hint: k === 'perLabel' ? '{unit} = the extra’s unit' : undefined }))
+      .concat([txt('whatsappMessage', 'WhatsApp message', { hint: '{package}, {extras} and {total} are filled in' }), txt('note', 'Note under the price', { hint: '{currency} = the service’s currency, {date} = rates date' })])),
+  ], { hint: 'Only for the website cost calculator.' }),
+  obj('converter', 'Currency converter settings', [
+    currencyCode('from', 'Start with: from'), currencyCode('to', 'Start with: to'), num('amount', 'Start amount', { min: 0 }),
+    list('pairs', 'Pair pages', [currencyCode('from', 'From'), currencyCode('to', 'To')], { summary: '{{from}} → {{to}}', hint: 'Each pair gets its own page for Google, e.g. /tools/currency-converter/omr-to-bdt/' }),
+    F('list', 'amounts', 'Amounts in the quick tables', { field: { name: 'item', label: 'Amount', widget: 'number', value_type: 'float' } }),
+    obj('labels', 'Texts', ['amountLabel', 'fromLabel', 'toLabel', 'swapLabel', 'ownRateTitle', 'ownRateHint', 'banglaLabel', 'allTitle', 'wordsLabel', 'updatedLabel', 'tableTitle', 'otherTitle', 'pairTitle', 'pairText', 'pairDescription']
+      .map((k) => str(k, k, { hint: k.startsWith('pair') || k === 'tableTitle' ? '{from}, {to}, {fromName} and {toName} are filled in' : undefined }))),
+  ], { hint: 'Only for the currency converter. Rates are in Settings → Exchange rates.' }),
+];
+
 // ---- Global settings (data/global/*.json) ----
 const method = () => [
   str('id', 'Method ID', { required: true, hint: 'e.g. omr-bank. Lowercase and dashes.' }), sel('type', 'Type', ['transfer', 'appointment'], { required: true }),
@@ -343,6 +376,19 @@ const globals = [
       list('methods', 'Methods', method(), { summary: '{{name}}' }),
     ], { summary: '{{code}} – {{name}}', collapsed: true }),
   ] },
+  { name: 'rates', label: 'Exchange rates', icon: 'currency_exchange', fields: [
+    hidden('_help'),
+    date('updated', 'Rates updated on', { required: true, hint: 'Shown under the tools. Change it every time you update the rates.' }),
+    txt('note', 'Note under the tools'),
+    list('currencies', 'Currencies', [
+      currencyCode('code', 'Code', { required: true, hint: 'e.g. BDT' }), str('name', 'Name', { required: true }),
+      num('rate', 'Rate: 1 USD =', { required: true, min: 0, step: 0.0001, hint: 'How much of this currency 1 US Dollar buys. USD itself is 1.' }),
+      int('decimals', 'Decimals', { min: 0, max: 3, default: 2, hint: 'OMR and BHD use 3' }),
+      str('unit', 'Name in words (one)', { hint: 'e.g. Rial Omani' }), str('units', 'Name in words (many)', { hint: 'e.g. Rials Omani' }),
+      str('subunit', 'Small unit (one)', { hint: 'e.g. Baisa' }), str('subunits', 'Small unit (many)'), int('subunitPer', 'Small units in one', { min: 1, hint: 'e.g. 1000 Baisa in 1 Rial' }),
+      bool('lakh', 'Use lakh and crore', { hint: 'For Taka: 1,00,000 and "one lakh"' }),
+    ], { summary: '{{code}} – {{name}} ({{rate}})', hint: 'Used by the currency converter and the website cost calculator. These are not the shop prices (those are in Payment methods).' }),
+  ] },
   { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' })] },
   { name: 'icons', label: 'Icons', icon: 'interests', fields: [
     F('keyvalue', 'icons', 'Icons', { root: true, key_label: 'Name', value_label: 'SVG code (inside a 24×24 stroke icon)', hint: 'Add your own: paste the inner SVG code, e.g. <path d="…"/>. The name can then be chosen in every Icon field.' }),
@@ -365,6 +411,7 @@ export function cmsConfig() {
     collections: [
       { name: 'products', label: 'Products', label_singular: 'product', icon: 'shopping_bag', file: 'data/collections/products.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'shop/{{fields.slug}}/', fields: productFields },
       { name: 'services', label: 'Services', label_singular: 'service', icon: 'design_services', file: 'data/collections/services.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'services/{{fields.slug}}/', fields: serviceFields },
+      { name: 'tools', label: 'Free tools', label_singular: 'tool', icon: 'handyman', file: 'data/collections/tools.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'tools/{{fields.slug}}/', fields: toolFields },
       { name: 'blog', label: 'Blog posts', label_singular: 'post', icon: 'edit_note', folder: 'data/collections/blog', extension: 'json', format: 'json', identifier_field: 'title', slug: '{{fields.slug}}', summary: '{{title}} ({{date}})', sortable_fields: ['date', 'title'], preview_path: 'blog/{{fields.slug}}/', fields: postFields },
       { divider: true },
       { name: 'pages', label: 'Pages', icon: 'description', files: pages.map(file('pages')) },
