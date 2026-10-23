@@ -2,9 +2,14 @@
 // The build (templates/build-steps.js) writes /admin/config.yml from this file, so the icon lists and folders always match the site.
 // Every key of every JSON file must have a field here, or the CMS drops it when saving: `npm test` checks that (cms-check.js).
 import { icons, header, payments, site } from './helpers.js';
+import { schemaFor, readSchema } from './validate.js';
 
 export const CMS_VERSION = '0.227.4';
-const REPO = process.env.GITHUB_REPOSITORY || 'arafatbinwahahid/arafatbinwahahid.github.io';
+export const REPO = process.env.GITHUB_REPOSITORY || 'arafatbinwahahid/arafatbinwahahid.github.io';
+// Every CMS save goes to this branch first (a draft). Nothing changes on the site until "Publish all" on /admin/publish/,
+// which puts all drafts on main in one go, so many products, services and settings can be changed with one build.
+export const DRAFTS_BRANCH = 'cms-drafts';
+const DRAFT_NOTE = 'Save keeps your changes as a draft. Press "Publish all" on arafatbin.com/admin/publish/ to put all drafts on the site at once.';
 const LATER = 'Saved for later: the site does not show this yet.';
 
 // ---- Field helpers (every field is optional unless `required: true` is passed; the build checks the data) ----
@@ -455,10 +460,80 @@ const pagesIn = (names) => names.map((n) => {
 });
 const file = (dir) => (p) => ({ ...p, file: `data/${dir}/${p.name}.json`, format: 'json', ...(p.preview_path !== undefined ? { preview_path: p.preview_path } : {}) });
 
+// ---- The build's rules (schemas/) copied onto the CMS fields, so the CMS stops a save the build would refuse ----
+// required → the field must be filled; pattern → the text must match; minimum/maximum → number limits; minItems → at least that many.
+// Rules that need several files at once (e.g. a price in every currency, IDs used once) are checked on the Publish page.
+const PATTERN_HELP = {
+  '^(/|https?://|mailto:|tel:|#)': 'Start with /, https://, mailto:, tel: or #',
+  '^(/assets/|https?://)': 'Pick an image or file from the media library',
+  '^$|^(/|https://)': 'Start with / or https://',
+  '^(/|https://)': 'Start with / or https://',
+  '^[A-Z]{3}$': 'Three capital letters, e.g. OMR',
+  '^[a-z0-9-]+$': 'Lowercase letters, numbers and dashes',
+  '^[A-Za-z0-9-]+$': 'Letters, numbers and dashes, no spaces',
+  '^[0-9]{8,15}$': 'Digits only with country code, e.g. 96892130528',
+  '^\\+[0-9]{8,15}$': 'Start with + and the country code, digits only, e.g. +96892130528',
+  '^https://': 'A full link starting with https://',
+  '^https://[^/]+$': 'Like https://arafatbin.com (no slash at the end)',
+};
+const schemaCache = {};
+const defs = (name) => (schemaCache[name] ||= readSchema(name));
+function resolve(node, own) {
+  let n = node;
+  for (let i = 0; n?.$ref && i < 10; i++) {
+    const [file, ptr] = n.$ref.split('#');
+    n = ptr.split('/').filter(Boolean).reduce((o, k) => o?.[k], file === 'common' ? defs('common') : own);
+  }
+  return n || {};
+}
+const TEXT_WIDGETS = ['string', 'text'];
+function applyRules(schemaNode, field, own) {
+  const s = resolve(schemaNode, own);
+  if (!field || field.widget === 'hidden') return;
+  if (s.pattern && TEXT_WIDGETS.includes(field.widget) && !field.pattern) field.pattern = [s.pattern, PATTERN_HELP[s.pattern] || 'This is not in the right format'];
+  if (field.widget === 'number') {
+    const step = field.value_type === 'int' ? 1 : 0.001;
+    if (s.minimum !== undefined && !(field.min >= s.minimum)) field.min = s.minimum;
+    if (s.exclusiveMinimum !== undefined && !(field.min > s.exclusiveMinimum)) field.min = s.exclusiveMinimum + step;
+    if (s.maximum !== undefined && !(field.max <= s.maximum)) field.max = s.maximum;
+  }
+  if (field.widget === 'list') {
+    // Only a lower limit: an optional list may still be left empty ("required" comes from the parent's list)
+    if (s.minItems && !(field.min >= s.minItems)) field.min = s.minItems;
+    if (s.maxItems && !(field.max <= s.maxItems)) field.max = s.maxItems;
+    const item = s.items;
+    if (item && field.fields) applyRules(item, { widget: 'object', fields: field.fields }, own);
+    else if (item && field.field) applyRules(item, field.field, own);
+    else if (item && field.types) field.types.forEach((t) => applyRules(item, { widget: 'object', fields: t.fields }, own));
+  }
+  const fields = field.fields;
+  if (!fields || !s.properties) return;
+  for (const [key, sub] of Object.entries(s.properties)) {
+    const f = fields.find((x) => x.name === key);
+    if (!f) continue;
+    if ((s.required || []).includes(key) && !['boolean', 'hidden'].includes(f.widget)) f.required = true;
+    applyRules(sub, f, own);
+  }
+}
+function withSchemaRules(config) {
+  for (const c of config.collections) {
+    const files = c.files ? c.files : c.file || c.folder ? [c] : [];
+    for (const f of files) {
+      const dataFile = (f.file || `${f.folder}/x.json`).replace(/^data\//, '');
+      const name = schemaFor(dataFile);
+      if (!name) continue;
+      const schema = defs(name);
+      const root = f.fields.find((x) => x.root);
+      applyRules(schema.type === 'array' ? schema.items : schema, root || { widget: 'object', fields: f.fields }, schema);
+    }
+  }
+  return config;
+}
+
 export function cmsConfig() {
-  return {
+  return withSchemaRules(structuredClone({
     backend: {
-      name: 'github', repo: REPO, branch: 'main', auth_methods: ['token'],
+      name: 'github', repo: REPO, branch: DRAFTS_BRANCH, auth_methods: ['token'],
       commit_messages: { create: 'Create {{collection}} “{{slug}}”', update: 'Update {{collection}} “{{slug}}”', delete: 'Delete {{collection}} “{{slug}}”', uploadMedia: 'Upload “{{path}}”', deleteMedia: 'Delete “{{path}}”' },
     },
     app_title: `${header.logo.text} CMS`,
@@ -473,8 +548,8 @@ export function cmsConfig() {
     editor: { preview: false },
     show_preview_links: true,
     collections: [
-      { name: 'products', label: 'Products', label_singular: 'product', icon: 'shopping_bag', description: 'Things people buy in the shop. Prices, stock, plans, images and SEO for each product.', file: 'data/collections/products.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, view_groups: [{ label: 'Category', field: 'category' }], preview_path: 'shop/{{fields.slug}}/', fields: productFields },
-      { name: 'services', label: 'Services', label_singular: 'service', icon: 'design_services', description: 'Work people order on WhatsApp or pay for with PayPal: packages, prices, images and SEO.', file: 'data/collections/services.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, preview_path: 'services/{{fields.slug}}/', fields: serviceFields },
+      { name: 'products', label: 'Products', label_singular: 'product', icon: 'shopping_bag', description: `Things people buy in the shop. Prices, stock, plans, images and SEO for each product. ${DRAFT_NOTE}`, file: 'data/collections/products.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, view_groups: [{ label: 'Category', field: 'category' }], preview_path: 'shop/{{fields.slug}}/', fields: productFields },
+      { name: 'services', label: 'Services', label_singular: 'service', icon: 'design_services', description: `Work people order on WhatsApp or pay for with PayPal: packages, prices, images and SEO. ${DRAFT_NOTE}`, file: 'data/collections/services.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, preview_path: 'services/{{fields.slug}}/', fields: serviceFields },
       { name: 'tools', label: 'Free tools', label_singular: 'tool', icon: 'handyman', description: 'Website cost calculator and currency converter. Exchange rates are in Settings → Exchange rates.', file: 'data/collections/tools.json', format: 'json', identifier_field: 'title', summary: '{{title}}', thumbnail: false, view_filters: draftFilter, preview_path: 'tools/{{fields.slug}}/', fields: toolFields },
       { divider: true },
       { name: 'blog', label: 'Blog posts', label_singular: 'post', icon: 'edit_note', description: 'One file per post. Newest first.', folder: 'data/collections/blog', extension: 'json', format: 'json', identifier_field: 'title', slug: '{{fields.slug}}', summary: '{{title}} ({{date}})', thumbnail: 'image.src', sortable_fields: { fields: ['date', 'title'], default: { field: 'date', direction: 'descending' } }, view_filters: [{ name: 'drafts', label: 'Drafts', field: 'draft', pattern: true }], view_groups: [{ name: 'year', label: 'Year', field: 'date', pattern: '\\d{4}' }], preview_path: 'blog/{{fields.slug}}/', fields: postFields },
@@ -483,9 +558,9 @@ export function cmsConfig() {
       { name: 'about-pages', label: 'About me pages', icon: 'person', description: 'About, experience, skills, work, credentials and reviews.', files: pagesIn(['about', 'experience', 'skills', 'work', 'credentials', 'reviews']) },
       { name: 'help-pages', label: 'Help & legal pages', icon: 'help', description: 'Contact, FAQ, blog page, search, policies and the 404 page.', files: pagesIn(['contact', 'faq', 'blog', 'search', 'terms', 'privacy', 'refund', '404']) },
       { divider: true },
-      { name: 'settings', label: 'Settings', icon: 'tune', description: 'Things on every page: site name and SEO, header, footer, contact details, payment methods, exchange rates, icons.', files: globals.map(file('global')) },
+      { name: 'settings', label: 'Settings', icon: 'tune', description: `Things on every page: site name and SEO, header, footer, contact details, payment methods, exchange rates, icons. ${DRAFT_NOTE}`, files: globals.map(file('global')) },
     ],
-  };
+  }));
 }
 
 // <title> and Sveltia CMS script for dist/admin/index.html (kept out of Google)
@@ -496,9 +571,17 @@ export const adminHtml = () => `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>${header.logo.text} CMS</title>
+<style>body{margin:0;font-family:system-ui,sans-serif}.drafts-missing{max-width:520px;margin:15vh auto;padding:24px;line-height:1.5}.drafts-missing a{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:10px;background:#0b63c4;color:#fff;text-decoration:none;font-weight:600}</style>
 </head>
 <body>
-<script src="https://unpkg.com/@sveltia/cms@${CMS_VERSION}/dist/sveltia-cms.js"></script>
+<script>
+// The CMS saves into the "${DRAFTS_BRANCH}" branch. If it does not exist yet, the Publish page makes it (one click), then the CMS opens.
+fetch('https://api.github.com/repos/${REPO}/branches/${DRAFTS_BRANCH}').then(function (r) {
+  if (r.status === 404) document.body.innerHTML = '<div class="drafts-missing"><h1>One step first</h1><p>The CMS keeps your changes as drafts in the "${DRAFTS_BRANCH}" branch, which does not exist yet. Open the Publish page, sign in with your GitHub token and press "Create the drafts branch". Then come back here.</p><a href="/admin/publish/">Open the Publish page</a></div>';
+  else load();
+}, load);
+function load() { var s = document.createElement('script'); s.src = 'https://unpkg.com/@sveltia/cms@${CMS_VERSION}/dist/sveltia-cms.js'; document.body.appendChild(s); }
+</script>
 </body>
 </html>
 `;

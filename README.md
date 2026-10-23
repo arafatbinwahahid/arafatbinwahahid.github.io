@@ -110,7 +110,7 @@
 | টুলের exchange rate | `data/global/rates.json` (CMS: Settings → Exchange rates) |
 | নতুন ব্লগ পোস্ট | `data/collections/blog/`-এ একটি ফাইল কপি করুন, নাম ও `slug` বদলান |
 | নতুন রিভিউ | `data/pages/reviews.json` → `items` |
-| নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-01.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
+| নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-1.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
 | sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
 | কোনো পেমেন্ট মেথড বন্ধ | সব জায়গা থেকে: `data/global/payments.json` → মেথডের `"enabled": false` (CMS: Settings → Payment methods → Show this method)। শুধু একটা প্রোডাক্ট বা সার্ভিসের জন্য: তার `"paymentsOff"`-এ মেথডের id, যেমন `["usd-paypal"]` (CMS: Payment methods turned off)। কার্টে এমন প্রোডাক্ট থাকলে Payment পেইজে সেই মেথড আসে না, কোনো currency-র সব মেথড বন্ধ হলে currency-টাই লুকায়; সার্ভিসে PayPal বন্ধ করলে PayPal বোতাম আসে না |
@@ -167,6 +167,17 @@
 **নতুন টুল:** এখন দুই ধরনের (`type`: `website-cost`, `currency`)। `"status": "draft"` দিলে টুল সাইট, sitemap, search আর হোম থেকে লুকায়। অন্য ধরনের টুল (যেমন image converter) বানাতে নতুন কোড লাগবে।
 
 ## CMS: arafatbin.com/admin/ (Sveltia CMS)
+
+
+**Draft আর Publish (অনেক কিছু বদলে একবারে সাইট আপডেট):**
+- CMS-এ **Save** করলে পরিবর্তন সাইটে যায় না, `cms-drafts` ব্রাঞ্চে **draft** হিসেবে জমা থাকে। যত খুশি প্রোডাক্ট, সার্ভিস, পেইজ আর Settings বদলান; কোনো build হয় না।
+- প্রতিটি Save-এর পর GitHub নিজে (ফ্রি) পুরো build আর পরীক্ষা চালায়।
+- সব শেষ হলে **arafatbin.com/admin/publish/** খুলুন (CMS-এর একই GitHub token): কোন কোন save অপেক্ষায় আছে, আর পরীক্ষার ফল দেখায়। ✓ পাস করলে **Publish all** চাপুন: সব draft একসাথে `main`-এ যায়, Cloudflare **একবার** build করে (৩–৫ মিনিট)।
+- পরীক্ষায় ভুল পেলে Publish বোতাম বন্ধ থাকে আর ঠিক কোন ফাইলের কোন ঘরে সমস্যা তা লেখা থাকে। CMS-এ ঠিক করে আবার Save করুন।
+- **Discard all drafts** = এখনো publish না করা সব পরিবর্তন বাদ।
+- প্রথমবার: Publish পেইজে **Create the drafts branch** একবার চাপুন, তারপর CMS খুলবে।
+- Cloudflare-এর build মিনিট বাঁচাতে: Worker → Settings → Build → **Branch control → Builds for non-production branches বন্ধ করুন** (draft-এর পরীক্ষা GitHub-ই করে)।
+- CMS-এর প্রতিটি ঘর build-এর নিয়ম (`schemas/`) নিজে পড়ে নেয়: আবশ্যক ঘর খালি, ভুল ফরম্যাট (ID, ইমেইল, ফোন, লিংক), সীমার বাইরের সংখ্যা থাকলে CMS Save করতে দেয় না। যেসব নিয়ম একাধিক ফাইল মিলিয়ে দেখতে হয় (যেমন প্রতিটি currency-তে দাম, একই ID দুবার), সেগুলো Publish পেইজের পরীক্ষায় ধরা পড়ে।
 
 JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Free tools**, **Blog posts**, পেইজগুলো তিন ভাগে (**Shop pages**, **About me pages**, **Help & legal pages**) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Exchange rates, Sitemap, Icons)। প্রোডাক্ট আর সার্ভিসের তালিকায় ছবি দেখায়, **Drafts** filter আর category অনুযায়ী ভাগ আছে। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
 

@@ -42,7 +42,10 @@ export const handle = (fn) => async (ctx) => {
 export async function body(request, max = 8000) {
   const text = await request.text();
   if (text.length > max) throw new HttpError(413, 'Too much data.');
-  try { return JSON.parse(text || '{}'); } catch { throw new HttpError(400, 'Not valid JSON.'); }
+  let v;
+  try { v = JSON.parse(text || '{}'); } catch { throw new HttpError(400, 'Not valid JSON.'); }
+  if (!v || typeof v !== 'object' || Array.isArray(v)) throw new HttpError(400, 'Not valid JSON.');
+  return v;
 }
 
 // Short, clean text fields (no control characters, limited length)

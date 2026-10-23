@@ -10,7 +10,13 @@ export default function site() {
     hooks: {
       'astro:build:start': async () => {
         const { checkData } = await import('./build-steps.js');
-        await checkData();
+        try {
+          await checkData();
+        } catch (e) {
+          // Rules across several files (e.g. a price for every currency) throw one message; show it on GitHub too
+          if (process.env.GITHUB_ACTIONS && !e.message.startsWith('Fix the data files')) console.log(`::error title=Data problem::${e.message.replace(/\n/g, ' ')}`);
+          throw e;
+        }
       },
       // dir = dist/client, the folder Cloudflare serves as static files
       'astro:build:done': async ({ dir, logger }) => {

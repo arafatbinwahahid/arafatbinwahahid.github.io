@@ -4,6 +4,7 @@ import {
   esc, icon, btns, paras, bullets, img, fullImage, shareImage, target, formatPrice, formatDate, whatsapp, absUrl, optionsOf, stockOf, lowestPrices, filled, paypalIdOk,
 } from './helpers.js';
 import { policyLinks, currencySelect } from './layout.js';
+import { REPO, DRAFTS_BRANCH } from './cms.js';
 
 const shopText = page('shop');
 const servicesText = page('services');
@@ -86,7 +87,7 @@ ${r.link ? `<a class="more" href="${esc(r.link.href)}"${target(r.link.href)}>${e
 
 const workCard = (p) => `<article class="card"><div class="card-img card-img-tall">${img(p.image)}</div><div class="card-body"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></article>`;
 
-const figure = (image) => (image?.src ? `<figure class="fig">${img(image)}${image.caption ? `<figcaption>${esc(image.caption)}</figcaption>` : ''}</figure>` : '');
+const figure = (image, o) => (image?.src ? `<figure class="fig">${img(image, o)}${image.caption ? `<figcaption>${esc(image.caption)}</figcaption>` : ''}</figure>` : '');
 
 // ---- Home ----
 const homeSections = {
@@ -311,8 +312,10 @@ function aboutPage() {
 function experiencePage() {
   const d = page('experience');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/experience/' });
-  const roles = d.roles.map((r) => `<article class="role"><div class="role-head"><h2 class="h3">${esc(r.title)}${r.current ? ` <span class="badge badge-inline">${esc(d.currentLabel)}</span>` : ''}</h2>
-<p class="muted">${esc(r.company)}</p><p class="meta"><span>${icon('clock')}${esc(r.period)}</span><span>${esc(r.type)}</span></p></div>${bullets(r.points)}${figure(r.image)}</article>`).join('');
+  // The first photo is the biggest thing on the screen, so it loads first (not lazily)
+  const firstPhoto = d.roles.findIndex((r) => r.image?.src);
+  const roles = d.roles.map((r, i) => `<article class="role"><div class="role-head"><h2 class="h3">${esc(r.title)}${r.current ? ` <span class="badge badge-inline">${esc(d.currentLabel)}</span>` : ''}</h2>
+<p class="muted">${esc(r.company)}</p><p class="meta"><span>${icon('clock')}${esc(r.period)}</span><span>${esc(r.type)}</span></p></div>${bullets(r.points)}${figure(r.image, { eager: i === firstPhoto })}</article>`).join('');
   return { path: '/experience/', seo: d.seo, crumbs, body: pageHero(d.hero, crumbs) + section(`<div class="timeline">${roles}</div>`) };
 }
 
@@ -519,7 +522,7 @@ function toolPage(t, pair) {
   // Pair pages follow the tool's robots setting, so hiding the converter from Google hides its pair pages too
   const seo = pair ? { ...(t.seo?.robots && { robots: t.seo.robots }), title, description: fillT(L.pairDescription, pv) } : { title: t.title, description: t.summary, ...filled(t.seo) };
   return {
-    path: url, seo, crumbs, schema: [faq].filter(Boolean), scripts: [isConv ? 'tool-currency' : 'tool-website-cost'],
+    path: url, seo, crumbs, schema: [faq].filter(Boolean), scripts: [isConv ? 'tool-currency' : 'tool-website-cost'], styles: ['tools'],
     body: pageHero({ title, text: summary }, crumbs) + section(`<div class="narrow">${widget}</div>`) + tables + how + faqSection(t.faq, toolsText.faqTitle) + others + cta,
   };
 }
@@ -579,7 +582,7 @@ function trackPage() {
 <div class="card card-pad track-result" data-track-result hidden aria-live="polite"></div>
 <p class="center muted">${esc(d.helpText)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>
 ${jsonData('track-data', { labels: L, statuses: statusData(), locale: site.locale })}`;
-  return { path: '/track/', seo: d.seo, crumbs, scripts: ['track'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
+  return { path: '/track/', seo: d.seo, crumbs, scripts: ['track'], styles: ['admin'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
 }
 
 // The owner's page: list, search and change orders. It is useless without the ADMIN_PASSWORD secret, and hidden from Google.
@@ -593,7 +596,7 @@ function ordersAdminPage() {
 <div data-app hidden>
 <div class="admin-bar"><input type="search" placeholder="Search ID, name, phone, email, item" data-q aria-label="Search orders">
 <select data-filter aria-label="Filter by status"><option value="">All statuses</option>${opts}</select>
-<button class="btn btn-primary btn-sm" type="button" data-new>${icon('plus')}New order</button><button class="btn btn-outline btn-sm" type="button" data-logout>Log out</button></div>
+<button class="btn btn-primary btn-sm" type="button" data-new>${icon('plus')}New order</button><a class="btn btn-outline btn-sm" href="/admin/publish/">Publish changes</a><button class="btn btn-outline btn-sm" type="button" data-logout>Log out</button></div>
 <p class="status" role="status" data-app-status></p>
 <ul class="order-list" data-list></ul></div>
 <dialog class="drawer order-edit" data-edit aria-labelledby="edit-title"><form class="form" method="dialog" data-edit-form>
@@ -610,7 +613,32 @@ function ordersAdminPage() {
 <ol class="history" data-edit-history></ol></form></dialog>
 ${jsonData('orders-data', { statuses: statusData(), site: site.url, whatsapp: whatsapp(), linkLabel: trackText.linkLabel, locale: site.locale })}
 </div></section>`;
-  return { path: '/admin/orders/', noindex: true, seo: { title: 'Orders' }, scripts: ['orders-admin'], body };
+  return { path: '/admin/orders/', noindex: true, seo: { title: 'Orders' }, scripts: ['orders-admin'], styles: ['admin'], body };
+}
+
+// The owner's Publish page: CMS saves wait as drafts in the cms-drafts branch; "Publish all" puts them on the site in one build.
+// It talks to GitHub with the same token as the CMS (kept only in this browser tab).
+function publishPage() {
+  const body = `<section class="sec"><div class="wrap admin-orders" data-publish>
+<h1 class="h2">Publish changes</h1>
+<p class="muted">Every Save in the CMS is kept as a draft. Nothing changes on the site until you press <b>Publish all</b> here, so you can change many products, services and settings and update the site once.</p>
+<form class="card card-pad form narrow" data-login><label>GitHub token<input type="password" name="token" required autocomplete="current-password"></label>
+<button class="btn btn-primary" type="submit">${icon('lock')}Open</button><p class="status" role="status" data-login-status></p>
+<p class="muted">The same fine-grained token you use for the CMS (Contents: Read and write on this repository). It is kept only in this browser tab.</p></form>
+<div data-app hidden>
+<div class="admin-bar"><button class="btn btn-primary" type="button" data-publish-all disabled>${icon('check')}Publish all</button>
+<button class="btn btn-outline btn-sm" type="button" data-refresh>${icon('refresh')}Refresh</button><a class="btn btn-outline btn-sm" href="/admin/">Open the CMS</a><a class="btn btn-outline btn-sm" href="/admin/orders/">Orders</a>
+<button class="btn btn-outline btn-sm" type="button" data-logout>Log out</button></div>
+<p class="status" role="status" data-app-status></p>
+<div class="card card-pad" data-create hidden><h2 class="h3">One step first</h2><p>The drafts branch does not exist yet. Make it once, then the CMS opens and saves drafts there.</p><button class="btn btn-primary" type="button" data-create-branch>${icon('plus')}Create the drafts branch</button></div>
+<div class="card card-pad publish-check" data-check hidden><h2 class="h3">Check</h2><p data-check-text></p><ul class="publish-problems" data-problems></ul></div>
+<div class="card card-pad" data-changes hidden><h2 class="h3" data-changes-title>Waiting to be published</h2><ul class="order-list publish-list" data-change-list></ul>
+<details><summary>Files</summary><ul class="publish-files" data-file-list></ul></details>
+<p><button class="btn btn-outline btn-sm" type="button" data-discard>${icon('trash')}Discard all drafts</button></p></div>
+</div>
+${jsonData('publish-data', { repo: REPO, drafts: DRAFTS_BRANCH, main: 'main', locale: site.locale })}
+</div></section>`;
+  return { path: '/admin/publish/', noindex: true, seo: { title: 'Publish changes' }, scripts: ['publish'], styles: ['admin'], body };
 }
 
 export function allPages() {
@@ -623,6 +651,6 @@ export function allPages() {
     reviewsPageFn(), contactPage(),
     blogPage(), ...posts.map(postPage),
     legalPage('terms', '/terms-and-conditions/'), legalPage('privacy', '/privacy-policy/'), legalPage('refund', '/refund-policy/'),
-    faqPage(), searchPage(), trackPage(), ordersAdminPage(), notFoundPage(),
+    faqPage(), searchPage(), trackPage(), ordersAdminPage(), publishPage(), notFoundPage(),
   ];
 }

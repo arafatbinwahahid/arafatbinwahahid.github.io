@@ -6,9 +6,12 @@ const L = D.labels;
 const R = Object.fromEntries(D.rates.map((c) => [c.code, c]));
 const curSel = tool.querySelector('[data-calc-currency]');
 const fill = (text, values) => String(text || '').replace(/\{(\w+)\}/g, (_, k) => values[k] ?? '');
+// One formatter per currency, made the first time it is needed
+const formats = {};
 const fmt = (n, code) => {
   const c = R[code];
-  return new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals }).format(n);
+  formats[code] ||= new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals });
+  return formats[code].format(n);
 };
 // Prices are set in one currency (calculator.currency); others go through USD (rates = units per 1 USD).
 // Each line is rounded to the currency's decimals and the total is the sum of the rounded lines, so they always add up.

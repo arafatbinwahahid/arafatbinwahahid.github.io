@@ -1,13 +1,14 @@
 name: Build and publish
 
-# Pull requests: build and check only.
+# Pull requests and cms-drafts (where the CMS saves): build and check only. The Publish page (/admin/publish/)
+# shows this check and only lets you publish the drafts when it passed.
 # main: build, check, then publish the static pages (dist/client/) to the gh-pages branch.
 # Cloudflare (Workers Builds, connected to this repo) builds and publishes the full site, with order tracking, by itself.
 # The gh-pages copy keeps arafatbin.com working until the domain points to Cloudflare; then this publish step can go.
 
 on:
   push:
-    branches: [main]
+    branches: [main, cms-drafts]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -16,8 +17,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('check-{0}', github.ref) || 'publish' }}
-  cancel-in-progress: false
+  group: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && 'publish' || format('check-{0}', github.ref) }}
+  # Many CMS saves in a row: only the newest drafts are checked
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -33,11 +35,14 @@ jobs:
       - run: npm run build
         env:
           ASTRO_TELEMETRY_DISABLED: 1
-      # HTML errors (html-validate) and broken internal links (linkinator)
-      - run: npm test
+      # HTML errors (html-validate) and broken internal links (linkinator); the first lines of a failure become annotations
+      - name: Check HTML and links
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test.log || { grep -E "error|\[404\]" test.log | head -20 | sed 's/^/::error title=Page problem::/'; exit 1; }
       # Replace the gh-pages branch with the freshly built site (one commit, no old history)
       - name: Publish to gh-pages
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         working-directory: dist/client
         run: |
           rm -f wrangler.json .assetsignore

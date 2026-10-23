@@ -43,6 +43,10 @@ function where(data, instancePath) {
   return parts.join(' › ');
 }
 
+// The schema name for a data file, e.g. "collections/products.json" -> "products" (used by the CMS too)
+export const schemaFor = (file) => rules.find(([f]) => f === file)?.[1] || (file.startsWith('pages/') ? 'page' : file.startsWith('collections/blog/') ? 'post' : null);
+export const readSchema = loadSchema;
+
 export async function validateData() {
   let Ajv;
   try { Ajv = (await import('ajv')).default; } catch {
@@ -63,6 +67,8 @@ export async function validateData() {
   }
   if (problems.length) {
     console.error(`\n✗ ${problems.length} problem(s) in the data files:\n${[...new Set(problems)].map((p) => `  - ${p}`).join('\n')}\n`);
+    // On GitHub each problem is also an annotation, so the Publish page (/admin/publish/) can list it
+    if (process.env.GITHUB_ACTIONS) for (const p of new Set(problems)) console.log(`::error title=Data problem::${p}`);
     throw new Error('Fix the data files above, then build again.');
   }
   console.log(`✓ ${rules.length} data files match their rules in schemas/`);

@@ -12,9 +12,12 @@ const bnEl = $('[data-conv-bn]');
 
 const BN = '০১২৩৪৫৬৭৮৯';
 const digits = (s) => (bnEl.checked ? s.replace(/\d/g, (d) => BN[d]) : s);
+// One formatter per currency, made the first time it is needed
+const formats = {};
 const fmt = (n, code) => {
   const c = R[code];
-  return new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals }).format(n);
+  formats[code] ||= new Intl.NumberFormat(c.lakh ? 'en-IN' : 'en-US', { style: 'currency', currency: code, minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals });
+  return formats[code].format(n);
 };
 const fmtRate = (n) => new Intl.NumberFormat('en-US', { maximumFractionDigits: n < 1 ? 6 : 4 }).format(n);
 // Same order of steps as the build (templates/pages.js), so the tables and the live result never differ by a cent

@@ -1,5 +1,5 @@
 // The HTML shell every page shares: <head> with SEO tags, header, footer.
-import { css, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled, assetUrl, img } from './helpers.js';
+import { css, extraCss, site, header, footer, contact, social, products, payments, page, esc, icon, target, absUrl, iconLinks, thumb, logoImg, optionsOf, shareImage, filled, assetUrl, img } from './helpers.js';
 
 const shop = page('shop');
 const payText = page('payments');
@@ -105,7 +105,7 @@ const VERIFY = { google: 'google-site-verification', bing: 'msvalidate.01', yand
 const code = (v) => (String(v || '').match(/content="([^"]+)"/)?.[1] || v || '').trim();
 const verifyTags = () => Object.entries(VERIFY).map(([k, n]) => meta('name', n, code(site.verification?.[k]))).join('');
 
-export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false, article, product, scripts = [] }) {
+export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type = 'website', noindex = false, cart = false, article, product, scripts = [], styles = [] }) {
   const seo = filled(rawSeo) || {};
   const og = seo.openGraph || {};
   const tw = seo.twitter || {};
@@ -191,7 +191,7 @@ function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=no">
 ${head.trim()}
-<style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
+<style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}${styles.map(extraCss).join('')}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
 ${analytics}${cfBeacon}
 </head>
