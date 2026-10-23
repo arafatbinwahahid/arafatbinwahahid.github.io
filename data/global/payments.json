@@ -1,12 +1,13 @@
 {
   "_help": "Currencies and payment methods for the Payment page. Fill in every empty \"value\". Rows with an empty value are hidden. type \"transfer\" = payment confirmation form, type \"appointment\" = visit request form. Set \"enabled\": false to hide a method.",
   "defaultCurrency": "USD",
+  "orderPrefix": "",
   "currencies": [
     {
       "code": "OMR",
+      "name": "Omani Rial",
       "rate": 0,
       "roundTo": 0,
-      "name": "Omani Rial",
       "methods": [
         {
           "id": "omr-bank",
@@ -15,14 +16,34 @@
           "name": "Bank Transfer",
           "icon": "bank",
           "intro": "Transfer the order total to the bank account below.",
+          "paypalClientId": "",
+          "fees": null,
           "details": [
-            { "label": "Bank name", "value": "Bank Dhofar" },
-            { "label": "Account holder", "value": "Arafat Bin Wahahid" },
-            { "label": "Account number", "value": "0101 5671 80 4001" },
-            { "label": "IBAN", "value": "OM10 0250 0001 0156 7180 400" }
+            {
+              "label": "Bank name",
+              "value": "Bank Dhofar"
+            },
+            {
+              "label": "Account holder",
+              "value": "Arafat Bin Wahahid"
+            },
+            {
+              "label": "Account number",
+              "value": "0101 5671 80 4001"
+            },
+            {
+              "label": "IBAN",
+              "value": "OM10 0250 0001 0156 7180 400"
+            }
           ],
-          "link": { "label": "direct transfer", "href": "https://www.facebook.com/share/1C4zWqFKuU/?mibextid=wwXIfr" },
-          "poster": { "src": "/assets/images/payments/bank-dhofar-qr-code.jpg", "alt": "Bank transfer details for OMR payments" },
+          "link": null,
+          "poster": {
+            "src": "/assets/images/payments/Transfer-Money-Oman.webp",
+            "alt": "Bank transfer details for OMR payments"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
             "Copy the account details above.",
             "Transfer the exact order total in OMR from your bank app.",
@@ -31,40 +52,66 @@
           ]
         },
         {
-          "id": "omr-send-money",
+          "id": "transfer-money",
           "type": "transfer",
           "enabled": true,
-          "name": "Send Money",
+          "name": "Transfer Money",
           "icon": "wallet",
           "intro": "Send the order total with a money transfer service.",
+          "paypalClientId": "",
+          "fees": null,
           "details": [
-            { "label": "Service", "value": "" },
-            { "label": "Receiver name", "value": "Arafat Bin Wahahid" },
-            { "label": "Receiver mobile", "value": "" }
+            {
+              "label": "Service",
+              "value": "Transfer Money"
+            },
+            {
+              "label": "Receiver name",
+              "value": "Arafat Bin Wahahid"
+            },
+            {
+              "label": "Receiver mobile",
+              "value": "+968 92130528"
+            }
           ],
-          "link": { "label": "", "href": "" },
-          "poster": { "src": "", "alt": "Send money details for OMR payments" },
+          "link": null,
+          "poster": {
+            "src": "/assets/images/payments/Transfer-Money-Oman.webp",
+            "alt": "Send money details for OMR payments"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
-            "Open your money transfer app or visit an exchange.",
-            "Send the exact order total in OMR to the receiver above.",
-            "Keep the transaction number.",
-            "Fill in the form below and send it."
+            "Open Bank Dhofar App/ Bank Muscat And any other banking app",
+            "Go to transfer section- then Mobile Payment- Mobile number.",
+            "Copy my mobile number- past number and check the name is correct",
+            "Type amount and confirm- Back to website fill in the filled with correct information",
+            "Any problem please chat us and massage on WhatsApp with 1/2 minutes instant reply"
           ]
         },
         {
-          "id": "omr-face-to-face",
+          "id": "face-to-face",
           "type": "appointment",
           "enabled": true,
           "name": "Face to Face",
           "icon": "user",
           "intro": "Meet in person and pay in cash. Choose a date and time and we will confirm it.",
+          "paypalClientId": "",
+          "fees": null,
+          "details": [],
+          "link": null,
+          "poster": null,
           "location": {
             "name": "Rakhyut, Dhofar",
             "address": "Rakhyut (224), Dhofar Governorate, Salalah, Oman",
             "mapQuery": "16.8186958,53.4757235"
           },
           "hours": [],
-          "timeRange": { "start": "", "end": "" },
+          "timeRange": {
+            "start": "18:00",
+            "end": "06:00"
+          },
           "steps": [
             "Choose a date and time that suits you.",
             "Send the form. We will confirm on WhatsApp.",
@@ -76,21 +123,40 @@
     {
       "code": "USD",
       "name": "US Dollar",
+      "rate": null,
+      "roundTo": null,
       "methods": [
         {
           "id": "usd-paypal",
           "type": "transfer",
           "enabled": true,
           "name": "PayPal",
-          "fees": { "percent": 0, "internationalPercent": 0, "fixed": 0, "conversionPercent": 0 },
-          "paypalClientId": "BAAseXcu6vpR6kzbJZorqAR8N27kNr4GsXnXddV0M-rBWM_36yjlKWnKtLFTuQ5-83x0Ipa4QkfbPUfWNo",
           "icon": "card",
           "intro": "Pay the order total in USD with PayPal.",
+          "paypalClientId": "BAAseXcu6vpR6kzbJZorqAR8N27kNr4GsXnXddV0M-rBWM_36yjlKWnKtLFTuQ5-83x0Ipa4QkfbPUfWNo",
+          "fees": {
+            "percent": 0,
+            "internationalPercent": 0,
+            "fixed": 0,
+            "conversionPercent": 0
+          },
           "details": [
-            { "label": "PayPal email", "value": "" }
+            {
+              "label": "PayPal email",
+              "value": ""
+            }
           ],
-          "link": { "label": "Pay with PayPal", "href": "" },
-          "poster": { "src": "", "alt": "PayPal payment details" },
+          "link": {
+            "label": "Pay with PayPal",
+            "href": ""
+          },
+          "poster": {
+            "src": "",
+            "alt": "PayPal payment details"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
             "Open PayPal with the button above, or send money to the PayPal email.",
             "Pay the exact order total in USD.",
@@ -105,11 +171,25 @@
           "name": "RedotPay",
           "icon": "card",
           "intro": "Pay the order total in USD with RedotPay.",
+          "paypalClientId": "",
+          "fees": null,
           "details": [
-            { "label": "RedotPay ID", "value": "" }
+            {
+              "label": "RedotPay ID",
+              "value": ""
+            }
           ],
-          "link": { "label": "Pay with RedotPay", "href": "" },
-          "poster": { "src": "", "alt": "RedotPay payment details" },
+          "link": {
+            "label": "Pay with RedotPay",
+            "href": ""
+          },
+          "poster": {
+            "src": "",
+            "alt": "RedotPay payment details"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
             "Open RedotPay with the button above, or send to the RedotPay ID.",
             "Pay the exact order total in USD.",
@@ -121,9 +201,9 @@
     },
     {
       "code": "BDT",
+      "name": "Bangladeshi Taka",
       "rate": 0,
       "roundTo": 0,
-      "name": "Bangladeshi Taka",
       "methods": [
         {
           "id": "bdt-bank",
@@ -132,15 +212,41 @@
           "name": "Bank Transfer",
           "icon": "bank",
           "intro": "Transfer the order total to the Bangladeshi bank account below.",
+          "paypalClientId": "",
+          "fees": null,
           "details": [
-            { "label": "Bank name", "value": "" },
-            { "label": "Branch", "value": "" },
-            { "label": "Account holder", "value": "Arafat Bin Wahahid" },
-            { "label": "Account number", "value": "" },
-            { "label": "Routing number", "value": "" }
+            {
+              "label": "Bank name",
+              "value": ""
+            },
+            {
+              "label": "Branch",
+              "value": ""
+            },
+            {
+              "label": "Account holder",
+              "value": "Arafat Bin Wahahid"
+            },
+            {
+              "label": "Account number",
+              "value": ""
+            },
+            {
+              "label": "Routing number",
+              "value": ""
+            }
           ],
-          "link": { "label": "", "href": "" },
-          "poster": { "src": "", "alt": "Bank transfer details for BDT payments" },
+          "link": {
+            "label": "",
+            "href": ""
+          },
+          "poster": {
+            "src": "",
+            "alt": "Bank transfer details for BDT payments"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
             "Copy the account details above.",
             "Transfer the exact order total in BDT.",
@@ -155,13 +261,33 @@
           "name": "Send Money",
           "icon": "wallet",
           "intro": "Send the order total with mobile banking.",
+          "paypalClientId": "",
+          "fees": null,
           "details": [
-            { "label": "Service", "value": "" },
-            { "label": "Account type", "value": "" },
-            { "label": "Number", "value": "" }
+            {
+              "label": "Service",
+              "value": ""
+            },
+            {
+              "label": "Account type",
+              "value": ""
+            },
+            {
+              "label": "Number",
+              "value": ""
+            }
           ],
-          "link": { "label": "", "href": "" },
-          "poster": { "src": "", "alt": "Send money details for BDT payments" },
+          "link": {
+            "label": "",
+            "href": ""
+          },
+          "poster": {
+            "src": "",
+            "alt": "Send money details for BDT payments"
+          },
+          "location": null,
+          "hours": [],
+          "timeRange": null,
           "steps": [
             "Open your mobile banking app and choose Send Money.",
             "Send the exact order total in BDT to the number above.",
@@ -176,9 +302,21 @@
           "name": "Face to Face",
           "icon": "user",
           "intro": "Meet in person in Bangladesh and pay in cash. Choose a date and time and we will confirm it.",
-          "location": { "name": "", "address": "", "mapQuery": "" },
+          "paypalClientId": "",
+          "fees": null,
+          "details": [],
+          "link": null,
+          "poster": null,
+          "location": {
+            "name": "",
+            "address": "",
+            "mapQuery": ""
+          },
           "hours": [],
-          "timeRange": { "start": "", "end": "" },
+          "timeRange": {
+            "start": "",
+            "end": ""
+          },
           "steps": [
             "Choose a date and time that suits you.",
             "Send the form. We will confirm on WhatsApp.",
