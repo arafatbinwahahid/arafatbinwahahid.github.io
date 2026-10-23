@@ -3,7 +3,7 @@
   "type": "object",
   "required": ["logo", "links", "menu"],
   "properties": {
-    "logo": { "type": "object", "required": ["text", "href"], "properties": { "text": { "$ref": "common#/$defs/text" }, "image": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/imagePath" }] }, "href": { "$ref": "common#/$defs/href" } }, "additionalProperties": false },
+    "logo": { "type": "object", "required": ["text", "href"], "properties": { "text": { "$ref": "common#/$defs/text" }, "image": { "anyOf": [{ "const": "" }, { "$ref": "common#/$defs/imagePath" }] }, "href": { "$ref": "common#/$defs/href" }, "showText": { "type": "boolean", "description": "false = the logo image already shows the name, so the text is not written next to it" } }, "additionalProperties": false },
     "links": { "type": "array", "items": { "$ref": "common#/$defs/link" } },
     "search": { "type": "object", "required": ["label", "href"], "properties": { "label": { "$ref": "common#/$defs/text" }, "href": { "$ref": "common#/$defs/href" } }, "additionalProperties": false, "description": "Search icon in the header. Remove to hide it" },
     "button": { "$ref": "common#/$defs/button" },

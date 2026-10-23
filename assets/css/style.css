@@ -338,6 +338,8 @@ a.card:hover { border-color: var(--primary); }
 
 /* Logo, product plans */
 .logo img { height: 32px; width: auto; }
+.logo-full img { height: 44px; }
+@media (max-width: 480px) { .logo-full img { height: 36px; } }
 .from { font-size: .85em; color: var(--muted); font-weight: 500; }
 .plans { margin-top: 1rem; }
 .buy .cur { margin-top: 1.25rem; }

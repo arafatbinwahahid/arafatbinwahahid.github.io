@@ -46,7 +46,7 @@ const SIZES = {
   credential: '1600 × 1200 px (4:3) scan or photo of the certificate. Shown whole (never cut) in a 4:3 box; tapping it opens the full image, so keep the text sharp.',
   poster: '1000 × 1000 px (square). For a QR code: square, at least 600 px, with a white border around the code.',
   payLogo: '256 × 256 px (square) or a wide logo, PNG or SVG with a transparent or light background. Shown in a 64 × 64 px tile.',
-  logo: 'PNG with a white or transparent background, at least 300 px tall. White space around it is cut off automatically; shown 32 px tall in the header and footer.',
+  logo: 'PNG with a white or transparent background, at least 300 px tall. White space around it is cut off automatically; shown 32 px tall (44 px when the image has the name in it) in the header and footer.',
   favicon: '512 × 512 px (square) PNG. Becomes the browser tab icon (48 px) and the phone home-screen icon (180 px).',
   share: '1200 × 630 px (1.91:1), JPG or PNG. Shown when the page is shared on Facebook, WhatsApp, X or LinkedIn and in Google Discover.',
   avatar: '400 × 400 px (square) photo of the person.',
@@ -380,7 +380,12 @@ const globals = [
     obj('robots', 'robots.txt', [strList('allow', 'Allow'), strList('disallow', 'Disallow')]),
   ] },
   { name: 'header', label: 'Header', icon: 'top_panel_open', fields: [
-    obj('logo', 'Logo', [str('text', 'Text', { required: true }), imgPath('image', 'Logo image', 'brand', { size: 'logo' }), href('href', 'Link')], { collapsed: false }),
+    obj('logo', 'Logo', [
+      str('text', 'Text', { required: true, hint: 'The site name. Shown next to the logo image, or used as its description for Google and screen readers when the text is turned off.' }),
+      imgPath('image', 'Logo image', 'brand', { size: 'logo' }),
+      bool('showText', 'Show the text next to the logo image', { default: true, hint: 'Turn off when the logo image already has the name in it (like the arafatbin.com logo). The footer gets a copy with the dark text made white.' }),
+      href('href', 'Link'),
+    ], { collapsed: false }),
     links('links', 'Top links (desktop)'), obj('search', 'Search icon', [str('label', 'Label'), href()], { hint: 'Clear both to hide the icon.' }), button('button', 'Header button'),
     obj('menu', '3-dot menu', [str('buttonLabel', 'Button label'), list('columns', 'Columns', [str('title', 'Title'), links('links', 'Links', true)], { summary: '{{title}}' })]),
   ] },

@@ -41,6 +41,13 @@ function chatButton() {
   return `<button class="chat-float" type="button" data-chat="${esc(c.tawkPropertyId)}/${esc(c.tawkWidgetId)}" aria-label="${label}" title="${label}">${icon('chat')}</button>`;
 }
 
+// Logo link. With "showText": false the logo image already has the name in it, so the image's alt text names the link instead.
+function logoLink(href, dark = false) {
+  const { text, showText } = header.logo;
+  const full = showText === false && header.logo.image;
+  return `<a class="logo${full ? ' logo-full' : ''}" href="${esc(href)}">${logoImg({ dark, alt: full ? text : '' })}${full ? '' : esc(text)}</a>`;
+}
+
 const isActive = (href, path) => (href === '/' ? path === '/' : path.startsWith(href));
 
 function siteHeader(path, cart) {
@@ -50,7 +57,7 @@ function siteHeader(path, cart) {
     .map((c) => `<div><p class="menu-title">${esc(c.title)}</p>${c.links.map((l) => `<a href="${esc(l.href)}"${target(l.href)}${path === l.href ? ' aria-current="page"' : ''}>${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>`)
     .join('');
   return `<header class="hdr"><div class="wrap hdr-in">
-<a class="logo" href="${esc(logo.href)}">${logoImg()}${esc(logo.text)}</a>
+${logoLink(logo.href)}
 <nav class="nav" aria-label="Main">${navLinks}</nav>
 <div class="hdr-end">${header.search ? `<a class="icon-btn hdr-search" href="${esc(header.search.href)}" aria-label="${esc(header.search.label)}" title="${esc(header.search.label)}"${path === header.search.href ? ' aria-current="page"' : ''}>${icon('search')}</a>` : ''}${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)} aria-label="${esc(button.label)}">${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
 <details class="menu"><summary aria-label="${esc(menu.buttonLabel)}" title="${esc(menu.buttonLabel)}">${icon('dots')}</summary><nav class="menu-panel" aria-label="${esc(menu.buttonLabel)}">${menuCols}</nav></details></div>
@@ -72,7 +79,7 @@ function siteFooter() {
 <div class="pm-track"><ul class="pm-list">${tiles}</ul><ul class="pm-list" aria-hidden="true">${tiles}</ul></div>
 ${pm.more?.label ? `<a class="pm-more" href="${esc(pm.more.href || '/payments/')}"${target(pm.more.href)}>${esc(pm.more.label)}${icon('arrow')}</a>` : ''}</section>` : '';
   return `<footer class="ftr"><div class="wrap ftr-grid">
-<div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
+<div>${logoLink('/', true)}<p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;
 }
 

@@ -192,19 +192,22 @@ export function shareImage(src) {
   return { src: optPath(src, 'og', 'jpg'), width, height: Math.round((h * width) / w) };
 }
 
-// Logo: white space around it is cut off, then a 64px-high copy is used in the header and footer
-const LOGO_H = 64;
+// Logo: white or see-through space around it is cut off, then a 96px-high copy is used in the header and footer
+// (shown 32–44px high, so it stays sharp on phones). The footer is dark, so it gets a copy with black and grey made white.
+const LOGO_H = 96;
+const logoInput = (src) => sharp(path.join(ROOT, decodeURI(src))).flatten({ background: '#ffffff' }).trim();
 let logoSize = null;
 if (sharp && header.logo.image && !isHttp(header.logo.image)) {
-  try { logoSize = (await sharp(path.join(ROOT, decodeURI(header.logo.image))).trim().toBuffer({ resolveWithObject: true })).info; } catch { console.warn(`  ! Logo not found: ${header.logo.image}`); }
+  try { logoSize = (await logoInput(header.logo.image).toBuffer({ resolveWithObject: true })).info; } catch { console.warn(`  ! Logo not found: ${header.logo.image}`); }
 }
-export function logoImg() {
+export function logoImg({ dark = false, alt = '' } = {}) {
   const src = header.logo.image;
   if (!src) return '';
-  if (!logoSize) return `<img src="${esc(url(src))}" alt="" height="32">`;
-  addJob(src, 'logo');
+  if (!logoSize) return `<img src="${esc(url(src))}" alt="${esc(alt)}" height="32">`;
+  const job = dark ? 'logo-dark' : 'logo';
+  addJob(src, job);
   const w = Math.round((logoSize.width / logoSize.height) * LOGO_H);
-  return `<img src="${optPath(src, 'logo')}" alt="" width="${Math.round(w / 2)}" height="${LOGO_H / 2}">`;
+  return `<img src="${optPath(src, job)}" alt="${esc(alt)}" width="${Math.round(w / 2)}" height="${LOGO_H / 2}">`;
 }
 
 // Products can have plans ("variants"), each with its own id, prices and stock. Without plans the product itself is the only option.
@@ -230,16 +233,18 @@ export async function buildImages(outDir) {
           const inner = await sharp(mark).resize(Math.round(px * 0.86), Math.round(px * 0.86), { fit: 'contain', background: white }).toBuffer();
           await sharp({ create: { width: px, height: px, channels: 4, background: white } }).composite([{ input: inner, gravity: 'centre' }]).png().toFile(path.join(outDir, optPath(src, px, 'png')));
         }
-      } else if (w === 'logo') {
-        // Turn the white background into transparency so the logo also works on the dark footer
-        const { data, info } = await sharp(input).trim().resize({ height: LOGO_H }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+      } else if (w === 'logo' || w === 'logo-dark') {
+        // Turn the white background into transparency so the logo sits on any background
+        const { data, info } = await logoInput(src).resize({ height: LOGO_H }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
         const rgba = Buffer.alloc(info.width * info.height * 4);
         for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {
           const a = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
           for (let k = 0; k < 3; k++) rgba[j + k] = a ? Math.round(255 - ((255 - data[i + k]) * 255) / a) : 0;
+          // Dark footer: black and grey parts (the name) become white, coloured parts stay as they are
+          if (w === 'logo-dark' && Math.max(rgba[j], rgba[j + 1], rgba[j + 2]) - Math.min(rgba[j], rgba[j + 1], rgba[j + 2]) < 48) rgba.fill(255, j, j + 3);
           rgba[j + 3] = a;
         }
-        await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 90, alphaQuality: 100 }).toFile(path.join(outDir, optPath(src, 'logo')));
+        await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 90, alphaQuality: 100 }).toFile(path.join(outDir, optPath(src, w)));
       } else if (w === 'og') {
         await sharp(input).resize({ width: 1200, withoutEnlargement: true }).flatten({ background: '#ffffff' }).jpeg({ quality: 82, mozjpeg: true }).toFile(path.join(outDir, optPath(src, 'og', 'jpg')));
       } else {
