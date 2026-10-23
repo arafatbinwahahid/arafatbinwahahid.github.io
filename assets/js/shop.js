@@ -14,7 +14,9 @@ const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, k) => values[k] ??
 // ---- Currency ----
 let currency = store.get('currency', C.defaultCurrency);
 if (!C.currencies.includes(currency)) currency = C.defaultCurrency;
-const fmt = (code) => new Intl.NumberFormat(C.locale, { style: 'currency', currency: code });
+// One number formatter per currency (making a new one for every price is slow)
+const formats = {};
+const fmt = (code) => (formats[code] ||= new Intl.NumberFormat(C.locale, { style: 'currency', currency: code }));
 const money = (n) => fmt(currency).format(n);
 const round = (n) => { const d = fmt(currency).resolvedOptions().maximumFractionDigits; return Math.round(n * 10 ** d) / 10 ** d; };
 
@@ -59,12 +61,17 @@ const drawer = $('#cart');
 const openCart = () => { render(); drawer.showModal(); };
 $$('[data-cart-open]').forEach((b) => b.addEventListener('click', openCart));
 $$('[data-cart-close]').forEach((b) => b.addEventListener('click', () => drawer.close()));
-drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
+// Only a tap on the dark backdrop closes it; empty space inside the drawer is the drawer itself, so compare positions
+drawer.addEventListener('click', (e) => {
+  const r = drawer.getBoundingClientRect();
+  if (e.target === drawer && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) drawer.close();
+});
 $('[data-checkout]').addEventListener('click', (e) => { if (!cart.length) e.preventDefault(); });
 
 function cartRow(l) {
   const li = document.createElement('li');
   li.className = 'cart-item';
+  li.dataset.id = l.id;
   li.innerHTML = `<img alt="" width="56" height="56" loading="lazy"><div><a></a><span class="muted" data-option></span><span class="muted"></span>
 <div class="qty qty-sm"><button type="button" data-step="-1"></button><input type="number" inputmode="numeric" min="1"><button type="button" data-step="1"></button></div></div>
 <div class="cart-item-end"><b></b><button type="button" class="icon-btn" data-remove></button></div>`;
@@ -97,7 +104,11 @@ function render() {
   $$('[data-currency-select]').forEach((s) => { s.value = currency; });
   const count = cart.reduce((n, x) => n + x.qty, 0);
   $$('[data-cart-count]').forEach((b) => { b.textContent = count; b.hidden = !count; });
+  // The rows are drawn again on every change; keep keyboard focus on the same control (or the close button if its row is gone)
+  const was = document.activeElement?.closest('.cart-item');
+  const which = was && ['[data-step="-1"]', '[data-step="1"]', '[data-remove]', 'input'].find((s) => document.activeElement.matches(s));
   $('[data-cart-list]').replaceChildren(...lines().map(cartRow));
+  if (which) ($(`.cart-item[data-id="${was.dataset.id}"] ${which}`) || $('[data-cart-close]'))?.focus();
   $('[data-cart-empty]').hidden = cart.length > 0;
   $('[data-checkout]').toggleAttribute('aria-disabled', !cart.length);
   $$('[data-cart-total]').forEach((n) => { n.textContent = money(total()); });
@@ -302,6 +313,8 @@ async function submitOrder(form, paypal) {
     if (track) data['Tracking link'] = track;
     await window.sendToWeb3Forms(data);
     store.set('sentOrders', [...sent, id].slice(-20));
+    // The next order, even with the same cart, gets a new order ID
+    try { sessionStorage.removeItem('order'); } catch {}
     const link = $('[data-track-link]');
     if (track && link) { link.href = track; link.parentElement.hidden = false; }
     $('[data-pay-done]').hidden = false;

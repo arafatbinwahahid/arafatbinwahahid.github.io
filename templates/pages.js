@@ -87,7 +87,7 @@ ${r.link ? `<a class="more" href="${esc(r.link.href)}"${target(r.link.href)}>${e
 
 const workCard = (p) => `<article class="card"><div class="card-img card-img-tall">${img(p.image)}</div><div class="card-body"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></article>`;
 
-const figure = (image) => (image?.src ? `<figure class="fig">${img(image)}${image.caption ? `<figcaption>${esc(image.caption)}</figcaption>` : ''}</figure>` : '');
+const figure = (image, o) => (image?.src ? `<figure class="fig">${img(image, o)}${image.caption ? `<figcaption>${esc(image.caption)}</figcaption>` : ''}</figure>` : '');
 
 // ---- Home ----
 const homeSections = {
@@ -312,8 +312,10 @@ function aboutPage() {
 function experiencePage() {
   const d = page('experience');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/experience/' });
-  const roles = d.roles.map((r) => `<article class="role"><div class="role-head"><h2 class="h3">${esc(r.title)}${r.current ? ` <span class="badge badge-inline">${esc(d.currentLabel)}</span>` : ''}</h2>
-<p class="muted">${esc(r.company)}</p><p class="meta"><span>${icon('clock')}${esc(r.period)}</span><span>${esc(r.type)}</span></p></div>${bullets(r.points)}${figure(r.image)}</article>`).join('');
+  // The first photo is the biggest thing on the screen, so it loads first (not lazily)
+  const firstPhoto = d.roles.findIndex((r) => r.image?.src);
+  const roles = d.roles.map((r, i) => `<article class="role"><div class="role-head"><h2 class="h3">${esc(r.title)}${r.current ? ` <span class="badge badge-inline">${esc(d.currentLabel)}</span>` : ''}</h2>
+<p class="muted">${esc(r.company)}</p><p class="meta"><span>${icon('clock')}${esc(r.period)}</span><span>${esc(r.type)}</span></p></div>${bullets(r.points)}${figure(r.image, { eager: i === firstPhoto })}</article>`).join('');
   return { path: '/experience/', seo: d.seo, crumbs, body: pageHero(d.hero, crumbs) + section(`<div class="timeline">${roles}</div>`) };
 }
 
@@ -520,7 +522,7 @@ function toolPage(t, pair) {
   // Pair pages follow the tool's robots setting, so hiding the converter from Google hides its pair pages too
   const seo = pair ? { ...(t.seo?.robots && { robots: t.seo.robots }), title, description: fillT(L.pairDescription, pv) } : { title: t.title, description: t.summary, ...filled(t.seo) };
   return {
-    path: url, seo, crumbs, schema: [faq].filter(Boolean), scripts: [isConv ? 'tool-currency' : 'tool-website-cost'],
+    path: url, seo, crumbs, schema: [faq].filter(Boolean), scripts: [isConv ? 'tool-currency' : 'tool-website-cost'], styles: ['tools'],
     body: pageHero({ title, text: summary }, crumbs) + section(`<div class="narrow">${widget}</div>`) + tables + how + faqSection(t.faq, toolsText.faqTitle) + others + cta,
   };
 }
@@ -580,7 +582,7 @@ function trackPage() {
 <div class="card card-pad track-result" data-track-result hidden aria-live="polite"></div>
 <p class="center muted">${esc(d.helpText)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>
 ${jsonData('track-data', { labels: L, statuses: statusData(), locale: site.locale })}`;
-  return { path: '/track/', seo: d.seo, crumbs, scripts: ['track'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
+  return { path: '/track/', seo: d.seo, crumbs, scripts: ['track'], styles: ['admin'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
 }
 
 // The owner's page: list, search and change orders. It is useless without the ADMIN_PASSWORD secret, and hidden from Google.
@@ -611,7 +613,7 @@ function ordersAdminPage() {
 <ol class="history" data-edit-history></ol></form></dialog>
 ${jsonData('orders-data', { statuses: statusData(), site: site.url, whatsapp: whatsapp(), linkLabel: trackText.linkLabel, locale: site.locale })}
 </div></section>`;
-  return { path: '/admin/orders/', noindex: true, seo: { title: 'Orders' }, scripts: ['orders-admin'], body };
+  return { path: '/admin/orders/', noindex: true, seo: { title: 'Orders' }, scripts: ['orders-admin'], styles: ['admin'], body };
 }
 
 // The owner's Publish page: CMS saves wait as drafts in the cms-drafts branch; "Publish all" puts them on the site in one build.
@@ -636,7 +638,7 @@ function publishPage() {
 </div>
 ${jsonData('publish-data', { repo: REPO, drafts: DRAFTS_BRANCH, main: 'main', locale: site.locale })}
 </div></section>`;
-  return { path: '/admin/publish/', noindex: true, seo: { title: 'Publish changes' }, scripts: ['publish'], body };
+  return { path: '/admin/publish/', noindex: true, seo: { title: 'Publish changes' }, scripts: ['publish'], styles: ['admin'], body };
 }
 
 export function allPages() {

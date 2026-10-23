@@ -106,5 +106,5 @@ if (chatBtn) {
 // Product and service galleries: a thumbnail shows its picture
 document.querySelectorAll('.gallery').forEach((g) => g.querySelectorAll('[data-thumb]').forEach((t) => t.addEventListener('click', () => {
   g.querySelectorAll('[data-slide]').forEach((s) => { s.hidden = s.dataset.slide !== t.dataset.thumb; });
-  g.querySelectorAll('[data-thumb]').forEach((x) => x.toggleAttribute('aria-current', x === t));
+  g.querySelectorAll('[data-thumb]').forEach((x) => (x === t ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current')));
 })));

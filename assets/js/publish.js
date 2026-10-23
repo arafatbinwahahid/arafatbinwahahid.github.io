@@ -60,6 +60,7 @@ async function refresh() {
     }
     state = { mainSha, draftSha, ahead: cmp.ahead_by };
     renderChanges(cmp);
+    $('[data-check]').hidden = !cmp.ahead_by;
     const ok = cmp.ahead_by ? await renderCheck(draftSha) : false;
     $('[data-publish-all]').disabled = !ok;
     say(status, cmp.ahead_by ? '' : 'Nothing to publish: the site already has every saved change.', true);
