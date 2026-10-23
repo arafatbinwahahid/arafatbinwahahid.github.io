@@ -121,6 +121,25 @@ export async function finish(OUT, pages) {
     const file = path.join(OUT, 'assets/js', f);
     fs.writeFileSync(file, fs.readFileSync(file, 'utf8').split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('//')).join('\n'));
   }
+  // Cloudflare headers (dist/client/_headers, added to the one Astro writes):
+  // images and scripts have a fingerprint in their address (name.1a2b3c4d.webp, main.js?v=1a2b3c4d), so browsers may keep them a year;
+  // pages are always checked again, so a CMS change shows at once. Plus safe-browsing headers for every page.
+  fs.appendFileSync(path.join(OUT, '_headers'), `
+/assets/opt/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/pagefind/*
+  Cache-Control: public, max-age=3600
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self "https://www.paypal.com")
+  Strict-Transport-Security: max-age=31536000
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+`);
   // Only for the copy on GitHub Pages (Cloudflare ignores these)
   if (fs.existsSync(path.join(ROOT, 'CNAME'))) fs.copyFileSync(path.join(ROOT, 'CNAME'), path.join(OUT, 'CNAME'));
   fs.writeFileSync(path.join(OUT, '.nojekyll'), '');

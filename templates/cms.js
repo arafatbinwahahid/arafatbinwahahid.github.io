@@ -1,5 +1,5 @@
 // Sveltia CMS (arafatbin.com/admin/): one form per JSON file in data/.
-// build.js writes dist/admin/config.yml from this file, so the icon lists and folders always match the site.
+// The build (templates/build-steps.js) writes /admin/config.yml from this file, so the icon lists and folders always match the site.
 // Every key of every JSON file must have a field here, or the CMS drops it when saving: `npm test` checks that (cms-check.js).
 import { icons, header, payments, site } from './helpers.js';
 
@@ -373,6 +373,7 @@ const globals = [
     obj('verification', 'Site verification codes', ['google', 'bing', 'yandex', 'pinterest', 'facebook', 'baidu'].map((k) => str(k, k, { hint: 'The code, or the whole <meta> tag' }))),
     obj('seo', 'SEO defaults', [str('author', 'Author'), str('twitterSite', 'X (Twitter) @username'), str('twitterCreator', 'X creator @username'), str('facebookAppId', 'Facebook App ID')]),
     str('clarityId', 'Microsoft Clarity project ID', { hint: 'Empty = off' }), str('googleAnalyticsId', 'Google Analytics ID', { hint: 'G-XXXXXXX. Empty = off' }),
+    str('cloudflareAnalyticsToken', 'Cloudflare Web Analytics token', { pattern: ['^$|^[a-f0-9]{32}$', '32 letters and digits'], hint: 'Cloudflare dashboard → Analytics & Logs → Web Analytics → Add a site → copy the token from the snippet ("token": "…"). Free, no cookies. Empty = off.' }),
     str('web3formsAccessKey', 'Web3Forms access key', { required: true }),
     obj('theme', 'Colours', [color('primary', 'Primary'), color('accent', 'Accent'), color('dark', 'Dark'), color('text', 'Text'), color('muted', 'Muted text'), color('background', 'Background'), color('soft', 'Soft background'), color('border', 'Border'), str('radius', 'Corner radius', { hint: 'e.g. 14px' })]),
     obj('person', 'About you (for Google)', [str('jobTitle', 'Job title'), str('worksFor', 'Works for'), str('locality', 'City'), str('region', 'Region'), str('country', 'Country code'), strList('knowsAbout', 'Knows about')]),
@@ -399,6 +400,11 @@ const globals = [
   ] },
   { name: 'contact', label: 'Contact details', icon: 'call', fields: [
     str('whatsapp', 'WhatsApp number', { hint: 'Digits only with country code, e.g. 96892130528' }), str('whatsappDisplay', 'WhatsApp as shown'), bool('showFloatingWhatsapp', 'Floating WhatsApp button'),
+    obj('liveChat', 'Live chat (tawk.to)', [
+      str('tawkPropertyId', 'Property ID', { pattern: ['^$|^[a-f0-9]{24}$', '24 letters and digits'] }),
+      str('tawkWidgetId', 'Widget ID', { pattern: ['^$|^[a-z0-9]{6,12}$', 'e.g. 1abcd2efg or default'] }),
+      str('buttonLabel', 'Chat button text', { hint: 'Read by screen readers and shown when the button is pressed and held.' }),
+    ], { hint: 'Free live chat: make an account on tawk.to → Administration → Chat Widget → copy the "Direct Chat Link" (tawk.to/chat/PROPERTY_ID/WIDGET_ID) and put the two parts here. Answer chats in the tawk.to app on your phone. Empty = off. The chat loads only when a visitor presses the chat button, so the site stays fast.' }),
     list('phones', 'Phone numbers', [str('label', 'Label'), str('display', 'As shown'), str('number', 'Number', { hint: 'With +country code' })], { summary: '{{label}}: {{display}}' }),
     str('email', 'Email', { type: 'email' }), str('address', 'Address'), str('mapUrl', 'Google Maps link'), str('hours', 'Hours'),
     later(list('businessHours', 'Opening hours by day', [str('day', 'Day'), time('open', 'Opens'), time('close', 'Closes'), bool('closed', 'Closed')], { summary: '{{day}}' })),

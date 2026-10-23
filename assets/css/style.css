@@ -234,6 +234,9 @@ a.card:hover { border-color: var(--primary); }
 
 /* Floating WhatsApp */
 .wa-float { position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; font-size: 1.5rem; box-shadow: 0 8px 20px -6px rgba(0, 0, 0, .35); }
+.chat-float { position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 54px; height: 54px; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: #fff; font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 20px -6px rgba(0, 0, 0, .35); }
+.wa-float + .chat-float { bottom: 80px; }
+.chat-float:disabled { opacity: .6; cursor: wait; }
 .card-img-fit img { object-fit: contain; padding: .5rem; }
 
 /* ---- Shop: cart button + drawer ---- */

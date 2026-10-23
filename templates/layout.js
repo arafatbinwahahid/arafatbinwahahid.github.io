@@ -33,6 +33,14 @@ ${currencySelect()}
 <button class="btn btn-outline" type="button" data-cart-close>${esc(c.continueLabel)}</button>${policyLinks()}</div>
 </dialog>`;
 
+// Live chat button (contact.json "liveChat", tawk.to). The chat script loads only after it is pressed (assets/js/main.js).
+function chatButton() {
+  const c = contact.liveChat || {};
+  if (!c.tawkPropertyId || !c.tawkWidgetId) return '';
+  const label = esc(c.buttonLabel || 'Live chat');
+  return `<button class="chat-float" type="button" data-chat="${esc(c.tawkPropertyId)}/${esc(c.tawkWidgetId)}" aria-label="${label}" title="${label}">${icon('chat')}</button>`;
+}
+
 const isActive = (href, path) => (href === '/' ? path === '/' : path.startsWith(href));
 
 function siteHeader(path, cart) {
@@ -124,6 +132,9 @@ export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type
 function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/gtag/js?id=${gaId}');` : ''}${clarityId ? `add('https://www.clarity.ms/tag/${clarityId}');` : ''}}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})});addEventListener('load',function(){setTimeout(go,3500)})})();</script>`
     : '';
+  // Cloudflare Web Analytics (site.json "cloudflareAnalyticsToken"): a small script, no cookies
+  const cfToken = site.cloudflareAnalyticsToken;
+  const cfBeacon = cfToken ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="${esc(JSON.stringify({ token: cfToken }))}"></script>` : '';
   const head = [
     `<title>${esc(title)}</title>`,
     meta('name', 'description', description),
@@ -175,7 +186,7 @@ function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/
 ${head.trim()}
 <style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
-${analytics}
+${analytics}${cfBeacon}
 </head>
 <body data-forms-key="${esc(site.web3formsAccessKey)}">
 <a class="skip" href="#main">Skip to content</a>
@@ -184,7 +195,7 @@ ${siteHeader(path, cart)}
 ${body}
 </main>
 ${siteFooter()}
-${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
+${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}${chatButton()}
 ${cart ? cartDrawer() + catalog() : ''}
 <script src="${assetUrl('assets/js/main.js')}" defer></script>
 <script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${scripts.map((s) => `\n<script src="${assetUrl(`assets/js/${s}.js`)}" defer></script>`).join('')}${cart ? `\n<script src="${assetUrl('assets/js/shop.js')}" defer></script>` : ''}

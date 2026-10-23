@@ -526,7 +526,7 @@ function toolPage(t, pair) {
 
 const toolPages = () => tools.flatMap((t) => [toolPage(t), ...(t.type === 'currency' ? t.converter.pairs.filter((p) => !isStartPair(t, p)).map((p) => toolPage(t, p)) : [])]);
 
-// ---- Search (Pagefind index made by build.js) ----
+// ---- Search (Pagefind index made by templates/build-steps.js) ----
 function searchPage() {
   const d = page('search');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/search/' });
