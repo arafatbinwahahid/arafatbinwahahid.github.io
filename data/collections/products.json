@@ -4,17 +4,19 @@
     "slug": "netflix-shared-account",
     "id": "P005",
     "status": "",
-    "paymentsOff": [],
-    "category": "Streaming subscriptions",
+    "paymentsOff": [
+      "usd-paypal"
+    ],
+    "category": "Subscriptions",
     "seo": {
       "title": "Buy Netflix Shared Account | Standard & Premium 4K | BD",
       "titleSuffix": false,
-      "description": "Affordable Netflix shared accounts, Standard and Premium 4K UHD, with a personal PIN, test account option and full warranty in Bangladesh. Order now.",
+      "description": "Affordable Netflix shared accounts, Standard and Premium 4K UHD, with a personal PIN, test account option and full warranty in Bangladesh, Oman And globally.Order now.",
       "keywords": [
         "Netflix shared account",
         "cheap Netflix subscription Bangladesh",
-        "Netflix premium profile",
-        "Netflix Standard Plan BD",
+        "Netflix premium oman",
+        "Netflix Standard Plan oman",
         "buy Netflix account",
         "Netflix 4K UHD shared screen",
         "Netflix profile with PIN",
@@ -22,11 +24,11 @@
         "reliable Netflix seller",
         "Netflix private profile",
         "official Netflix account cheap price",
-        "Netflix test account BD"
+        "Netflix test account"
       ],
       "canonical": "",
-      "image": "",
-      "imageAlt": "",
+      "image": "/assets/images/social/netflix-premium-account-cheap-facebook-arafatbin.webp",
+      "imageAlt": "Buy Netflix account cheap low price at all plans, Easy refund policy & Secure Payment",
       "author": "",
       "robots": {
         "index": true,
@@ -36,23 +38,23 @@
         "notranslate": false,
         "indexifembedded": false,
         "maxSnippet": -1,
-        "maxImagePreview": "large",
+        "maxImagePreview": "standard",
         "maxVideoPreview": -1,
         "unavailableAfter": ""
       },
       "googlebot": "",
       "bingbot": "",
       "openGraph": {
-        "type": "",
-        "title": "",
-        "description": "",
+        "type": "Product",
+        "title": "Buy Netflix account at low price easy refund and trusted",
+        "description": "Explore available Netflix subscription plans and choose an option that matches your streaming needs. Review pricing, subscription duration, device compatibility, and access terms before placing an order.",
         "localeAlternate": []
       },
       "twitter": {
         "card": "",
-        "title": "",
-        "description": "",
-        "creator": ""
+        "title": "Buy Netflix account at low price easy refund and trusted",
+        "description": "Explore available Netflix subscription plans and choose an option that matches your streaming needs. Review pricing, subscription duration, device compatibility, and access terms before placing an order.",
+        "creator": "@arafatbinwahid"
       },
       "alternates": [],
       "schema": [],
@@ -61,47 +63,18 @@
     "variants": [
       {
         "id": "P005-STD-1M",
-        "name": "Standard 1080p HD · 1 Screen · 1 Month",
+        "name": "Standard 1080p HD · 1 Screen · 2 Month",
         "prices": {
-          "OMR": 2.3,
-          "USD": 4,
-          "BDT": 730
+          "OMR": 4,
+          "USD": 10.8,
+          "BDT": 1000
         },
-        "compareAtPrices": null,
-        "stock": 3
-      },
-      {
-        "id": "P005-STD-3M",
-        "name": "Standard 1080p HD · 1 Screen · 3 Months",
-        "prices": {
-          "OMR": 5.8,
-          "USD": 15,
-          "BDT": 1830
+        "compareAtPrices": {
+          "OMR": 5,
+          "USD": 12,
+          "BDT": 1200
         },
-        "compareAtPrices": null,
         "stock": 1
-      },
-      {
-        "id": "P005-PRE-1M",
-        "name": "Premium 4K UHD + HDR · 1 Screen · 1 Month",
-        "prices": {
-          "OMR": 3.8,
-          "USD": 10,
-          "BDT": 1220
-        },
-        "compareAtPrices": null,
-        "stock": 5
-      },
-      {
-        "id": "P005-PRE-3M",
-        "name": "Premium 4K UHD + HDR · 1 Screen · 3 Months",
-        "prices": {
-          "OMR": 9.6,
-          "USD": 25,
-          "BDT": 3050
-        },
-        "compareAtPrices": null,
-        "stock": 10
       }
     ],
     "images": [
@@ -110,7 +83,7 @@
         "alt": "Netflix shared accounts sale from arafatbin.com: Standard, Full HD and 4K plans on TV, mobile, laptop and tablet"
       },
       {
-        "src": "/assets/images/products/Netflix-profile.webp",
+        "src": "/assets/images/products/Netflix-personal-profile-buy-netflix-cheap-low.webp",
         "alt": "Netflix Profile Lock is on: every buyer gets their own profile with a PIN lock"
       },
       {
