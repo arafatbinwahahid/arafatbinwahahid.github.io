@@ -287,7 +287,8 @@ a.card:hover { border-color: var(--primary); }
 
 /* Product page */
 .gallery { display: grid; gap: .7rem; }
-.gallery-main img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+.gallery-main { aspect-ratio: 4 / 3; border-radius: var(--radius); border: 1px solid var(--border); background: var(--soft); overflow: hidden; }
+.gallery-main img { width: 100%; height: 100%; object-fit: contain; }
 .thumbs { display: flex; flex-wrap: wrap; gap: .5rem; }
 .thumb { width: 72px; height: 72px; padding: 0; border: 2px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; cursor: pointer; }
 .thumb[aria-current] { border-color: var(--primary); }

@@ -61,7 +61,7 @@ const image = (name, label, folder, o = {}) => obj(name, label, [
   str('alt', 'Alt text', { hint: 'Describe the image for Google and screen readers, e.g. "Netflix shared account poster".' }),
   ...(o.caption ? [str('caption', 'Caption', { hint: 'Short text shown under the image.' })] : []),
 ], { summary: '{{alt}}', ...o.field });
-const images = (name, label, folder, size) => list(name, label, [imgPath('src', 'Image', folder, { size }), str('alt', 'Alt text', { hint: 'Describe the image for Google and screen readers.' })], { summary: '{{alt}}', thumbnail: 'src', hint: `The first image is the main one. ${imageHint(size)}` });
+const images = (name, label, folder, size) => list(name, label, [imgPath('src', 'Image', folder, { size }), str('alt', 'Alt text', { required: true, hint: 'Needed: describe the image for Google and screen readers, e.g. "Netflix Profile Lock screen on a phone".' })], { summary: '{{alt}}', thumbnail: 'src', hint: `The first image is the main one. ${imageHint(size)}` });
 const buttonFields = () => [
   str('label', 'Button text', { required: true }),
   href('href', 'Link', { required: true }),
