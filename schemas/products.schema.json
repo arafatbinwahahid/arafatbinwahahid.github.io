@@ -184,6 +184,11 @@
         ],
         "description": "draft = hidden from the site"
       },
+      "paymentsOff": {
+        "type": "array",
+        "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "description": "Payment method ids (payments.json) not offered for this item"
+      },
       "brand": {
         "type": "string"
       },

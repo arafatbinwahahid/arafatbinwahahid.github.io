@@ -15,7 +15,7 @@ function catalog() {
     locale: site.locale,
     defaultCurrency: payments.defaultCurrency,
     currencies: payments.currencies.map((c) => c.code),
-    products: products.flatMap((p) => optionsOf(p).map((o) => ({ id: o.id, slug: p.slug, title: p.title, option: o.name, prices: o.prices, stock: o.stock, image: thumb(p.images[0]?.src) }))),
+    products: products.flatMap((p) => optionsOf(p).map((o) => ({ id: o.id, slug: p.slug, title: p.title, option: o.name, prices: o.prices, stock: o.stock, image: thumb(p.images[0]?.src), ...(p.paymentsOff?.length && { off: p.paymentsOff }) }))),
     text: { ...shop.cart, maxStock: shop.maxStockMessage, stock: shop.stockLabel, soldOut: shop.soldOutLabel, pay: payText.form, paypal: payText.paypal, done: payText.done, copied: payText.copiedLabel, copy: payText.copyLabel, orderPrefix: payments.orderPrefix || 'AB' },
   };
   return `<script type="application/json" id="catalog">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;

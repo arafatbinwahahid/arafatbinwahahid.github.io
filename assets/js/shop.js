@@ -149,12 +149,6 @@ $$('[data-buy]').forEach((box) => {
   input?.addEventListener('change', () => renderBuy(box));
 });
 
-// ---- Product gallery ----
-$$('[data-thumb]').forEach((t) => t.addEventListener('click', () => {
-  $$('[data-slide]').forEach((s) => { s.hidden = s.dataset.slide !== t.dataset.thumb; });
-  $$('[data-thumb]').forEach((x) => x.toggleAttribute('aria-current', x === t));
-}));
-
 // ---- Payment page ----
 const pay = $('[data-pay-main]');
 let method = {};
@@ -177,6 +171,16 @@ function renderPayment() {
   if (done) { pay.hidden = true; return; }
   pay.hidden = empty;
   if (empty) return;
+  // A method turned off for an item in the cart (products.json "paymentsOff") is not offered; a currency left without methods is hidden
+  const off = new Set(cart.flatMap((it) => byId[it.id]?.off || []));
+  const open = (code) => $$(`input[name="method-${code}"]`).filter((r) => !off.has(r.value));
+  $$('[data-methods] input').forEach((r) => { r.closest('.opt').hidden = off.has(r.value); });
+  $$('input[name="currency"]').forEach((r) => { r.closest('.opt').hidden = !open(r.value).length; });
+  if (!open(currency).length) currency = $$('input[name="currency"]').map((r) => r.value).find((code) => open(code).length) || currency;
+  const none = !open(currency).length;
+  if (none) method[currency] = '';
+  $('[data-no-methods]').hidden = !none;
+  $('.pay-steps').hidden = none;
   $('[data-order-id]').textContent = orderId();
   $('[data-stock-notice]').hidden = !stockChanged;
   $('[data-summary]').replaceChildren(...lines().map((l) => {
@@ -188,7 +192,7 @@ function renderPayment() {
   }));
   $$('input[name="currency"]').forEach((r) => { r.checked = r.value === currency; });
   $$('[data-methods]').forEach((f) => { f.hidden = f.dataset.methods !== currency; });
-  const radios = $$(`input[name="method-${currency}"]`);
+  const radios = open(currency);
   if (!radios.some((r) => r.value === method[currency]) && radios[0]) method[currency] = radios[0].value;
   radios.forEach((r) => { r.checked = r.value === method[currency]; });
   $$('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== method[currency]; });

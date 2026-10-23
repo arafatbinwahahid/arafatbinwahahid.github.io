@@ -239,7 +239,7 @@ function paymentsPage() {
 ${curs.map((c) => `<fieldset class="choice" data-methods="${esc(c.code)}" hidden><legend class="h3">${esc(d.methodTitle)}</legend><div class="opts">${enabledMethods(c).map((m) => opt(`method-${c.code}`, m.id, `${icon(m.icon)}<b>${esc(m.name)}</b>`)).join('')}</div></fieldset>`).join('')}
 ${curs.flatMap((c) => enabledMethods(c).map((m) => methodPanel(m, c, d))).join('')}`;
   const summary = `<aside class="card card-pad pay-summary" aria-labelledby="sum-title"><h2 class="h3" id="sum-title">${esc(d.summaryTitle)}</h2>
-<p>${esc(d.orderIdLabel)}: <b data-order-id></b></p><p class="notice" data-stock-notice hidden>${esc(d.stockNotice)}</p>
+<p>${esc(d.orderIdLabel)}: <b data-order-id></b></p><p class="notice" data-stock-notice hidden>${esc(d.stockNotice)}</p><p class="notice" data-no-methods hidden>${esc(d.noMethods)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>
 <ul class="sum-list" data-summary></ul><p class="fee-line" data-fee-line hidden><span>${esc(d.paypal.feeLabel)}</span><b data-fee></b></p><p class="cart-total"><span>${esc(shopText.cart.totalLabel)}</span><b data-cart-total></b></p>
 <button class="more" type="button" data-cart-open>${esc(d.editCartLabel)}</button>${policyLinks()}</aside>`;
   const e = d.empty;
@@ -273,7 +273,8 @@ function servicePage(s) {
   const order = (pk) => whatsapp(T.orderMessage.replace('{service}', s.title).replace('{package}', pk.name).replace('{price}', price(pk)));
   // A package with a USD price also gets PayPal / card buttons (Client ID from payments.json), next to Order on WhatsApp
   const P = T.paypal;
-  const payId = paypalClientId();
+  // "Payment methods turned off" on the service can switch PayPal off for it
+  const payId = s.paymentsOff?.includes(paypalMethod()?.id) ? '' : paypalClientId();
   const payBox = (pk) => (payId && pk.prices.USD ? `<div class="pk-btns"><a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a>
 <button class="btn btn-outline btn-sm" type="button" data-pay-open aria-expanded="false">${icon('card')}${esc(P.payLabel.replace('{price}', formatPrice(pk.prices.USD, 'USD')))}</button></div>
 <div class="paypal-box" hidden${feeAttrs(paypalMethod()?.fees, P.feeLabel)} data-package="${esc(pk.name)}" data-sku="${esc(`${s.slug}-${s.packages.indexOf(pk) + 1}`)}" data-price="${pk.prices.USD}"><p class="muted">${esc(P.note)}</p>

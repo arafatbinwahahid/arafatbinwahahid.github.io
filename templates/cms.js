@@ -1,7 +1,7 @@
 // Sveltia CMS (arafatbin.com/admin/): one form per JSON file in data/.
 // build.js writes dist/admin/config.yml from this file, so the icon lists and folders always match the site.
 // Every key of every JSON file must have a field here, or the CMS drops it when saving: `npm test` checks that (cms-check.js).
-import { icons, header } from './helpers.js';
+import { icons, header, payments } from './helpers.js';
 
 export const CMS_VERSION = '0.227.4';
 const REPO = process.env.GITHUB_REPOSITORY || 'arafatbinwahahid/arafatbinwahahid.github.io';
@@ -17,6 +17,12 @@ const bool = (name, label, o) => F('boolean', name, label, o);
 const date = (name, label, o) => F('datetime', name, label, { type: 'date', format: 'YYYY-MM-DD', ...o });
 const time = (name, label, o) => F('datetime', name, label, { type: 'time', format: 'HH:mm', ...o });
 const sel = (name, label, options, o) => F('select', name, label, { options, ...o });
+// Turn payment methods off for one product or service (every method in Settings → Payment methods can be picked)
+const paymentsOff = (what) => F('select', 'paymentsOff', 'Payment methods turned off', {
+  multiple: true, required: false,
+  options: payments.currencies.flatMap((c) => c.methods.map((m) => ({ label: `${m.name} (${c.code})`, value: m.id }))),
+  hint: `Pick the methods this ${what} must not be paid with, e.g. PayPal. Empty = every method that is on in Settings → Payment methods. To turn a method off everywhere, use its “Show this method” switch there.`,
+});
 const obj = (name, label, fields, o) => F('object', name, label, { fields, collapsed: 'auto', ...o });
 const list = (name, label, fields, o) => F('list', name, label, { fields, collapsed: 'auto', ...o });
 const strList = (name, label, o) => F('list', name, label, { field: { name: 'item', label: 'Item', widget: 'string' }, ...o });
@@ -142,7 +148,7 @@ const pages = [
   ] },
   { name: 'payments', label: 'Payment page', icon: 'payments', fields: [
     hidden('_help'), seo(), hero(),
-    ...['summaryTitle', 'orderIdLabel', 'editCartLabel', 'stockNotice', 'currencyTitle', 'methodTitle', 'payTitle', 'detailsTitle', 'copyLabel', 'copiedLabel', 'stepsTitle', 'locationTitle', 'openMapLabel', 'hoursTitle', 'missingDetails', 'verifyNote', 'noscript'].map((k) => str(k, k)),
+    ...['summaryTitle', 'orderIdLabel', 'editCartLabel', 'stockNotice', 'noMethods', 'currencyTitle', 'methodTitle', 'payTitle', 'detailsTitle', 'copyLabel', 'copiedLabel', 'stepsTitle', 'locationTitle', 'openMapLabel', 'hoursTitle', 'missingDetails', 'verifyNote', 'noscript'].map((k) => str(k, k)),
     obj('empty', 'Empty cart box', [str('title', 'Title'), txt('text', 'Text'), button()]),
     obj('form', 'Payment form texts', ['nameLabel', 'mobileLabel', 'emailLabel', 'amountLabel', 'transactionLabel', 'dateLabel', 'timeLabel', 'messageLabel', 'submitPayment', 'submitAppointment', 'sending', 'invalidPhone', 'invalidAmount', 'invalidDate', 'invalidTime', 'emptyCart', 'duplicate', 'error'].map((k) => str(k, k))),
     obj('paypal', 'PayPal box texts', ['title', 'note', 'fallback', 'error', 'feeLabel'].map((k) => str(k, k))),
@@ -233,7 +239,7 @@ const variant = () => [
 const statusField = () => sel('status', 'Status', [{ label: 'Live', value: '' }, { label: 'Draft (hidden from the site)', value: 'draft' }], { default: '', hint: 'Draft hides it from the site, the sitemap and search.' });
 const productFields = [
   str('title', 'Product name', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /shop/<slug>/. Changing it breaks old links.' }),
-  str('id', 'Product ID', { required: true, hint: 'Unique, e.g. P006.' }), statusField(), str('category', 'Category', { required: true }), seo(),
+  str('id', 'Product ID', { required: true, hint: 'Unique, e.g. P006.' }), statusField(), paymentsOff('product'), str('category', 'Category', { required: true }), seo(),
   list('variants', 'Plans', variant(), { summary: '{{name}} ({{stock}} in stock)', hint: 'One plan = one price. Add more plans for options like 1 or 3 months.' }),
   images('images', 'Images', 'products'),
   txt('summary', 'Short summary', { required: true, hint: 'Shown on cards and under the title.' }), txt('about', 'About'), txtList('description', 'Description'),
@@ -252,7 +258,7 @@ const servicePackage = () => [
 ];
 const serviceFields = [
   str('title', 'Service name', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /services/<slug>/' }),
-  statusField(), str('category', 'Category', { required: true }), icon('icon', 'Icon', { required: true }), seo(),
+  statusField(), paymentsOff('service'), str('category', 'Category', { required: true }), icon('icon', 'Icon', { required: true }), seo(),
   str('packagesTitle', 'Packages heading'), str('priceLabel', 'Price label', { hint: 'e.g. Starting from' }),
   list('packages', 'Packages', servicePackage(), { summary: '{{name}}', min: 1 }), images('images', 'Images', 'services'),
   txt('summary', 'Short summary', { required: true }), txt('about', 'About'), txtList('description', 'Description'),
