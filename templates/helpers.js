@@ -4,7 +4,9 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// The project folder. Astro bundles this file into dist/server/ while building, so then the folder it is run from is used.
+const here = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export const ROOT = fs.existsSync(path.join(here, 'data')) ? here : process.cwd();
 const DATA = path.join(ROOT, 'data');
 
 // The CMS saves empty fields as "" or null (and empty objects like a link with no text). Treat them as not filled in,

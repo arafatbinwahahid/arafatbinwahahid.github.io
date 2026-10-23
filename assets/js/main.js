@@ -14,6 +14,18 @@ window.sendToWeb3Forms = async (data) => {
   if (!res.ok || !json.success) throw new Error(json.message || 'Send failed');
 };
 
+// Save an order for tracking (/track/) in the Cloudflare database. Gives the tracking link, or '' where there is no
+// order API (e.g. the copy on GitHub Pages); the order is still sent by email then.
+window.saveOrder = async (order) => {
+  try {
+    const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) });
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return '';
+    return new URL((await r.json()).track, location.origin).href;
+  } catch {
+    return '';
+  }
+};
+
 // 3. Contact + review forms
 document.querySelectorAll('form[data-form]').forEach((form) => {
   const status = form.querySelector('.status');

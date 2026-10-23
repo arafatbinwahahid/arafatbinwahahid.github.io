@@ -1,0 +1,39 @@
+{
+  "_help": "Texts of the order tracking page (/track/) and the order statuses. Orders themselves are kept in the Cloudflare database and changed on /admin/orders/.",
+  "seo": {
+    "title": "Track your order",
+    "titleSuffix": true,
+    "description": "Check the status of your order from Arafat Bin Wahahid with your order ID and the last 4 digits of your phone number or your email.",
+    "robots": {
+      "index": true,
+      "follow": true
+    }
+  },
+  "hero": {
+    "title": "Track your order",
+    "text": "Enter your order ID and the last 4 digits of your phone number (or your email) to see where your order is."
+  },
+  "idLabel": "Order ID",
+  "idHint": "Shown after you ordered and in your WhatsApp or email, e.g. AB-261023-K7Q2M",
+  "checkLabel": "Last 4 digits of your phone, or your email",
+  "submitLabel": "Track order",
+  "loading": "Looking up your order…",
+  "notFound": "No order matches this order ID and phone or email. Check both and try again, or message me on WhatsApp.",
+  "unavailable": "Order tracking is not available right now. Please message me on WhatsApp with your order ID.",
+  "tooMany": "Too many tries. Please wait a minute and try again.",
+  "statusLabel": "Status",
+  "itemsLabel": "Items",
+  "totalLabel": "Total",
+  "noteLabel": "Message from the seller",
+  "historyTitle": "Order history",
+  "updatedLabel": "Last update",
+  "helpText": "Questions about your order?",
+  "linkLabel": "Track your order",
+  "statuses": [
+    { "id": "received", "label": "Order received", "text": "We have your order and will check the payment.", "icon": "mail" },
+    { "id": "paid", "label": "Payment confirmed", "text": "Your payment is confirmed. Your order is in the queue.", "icon": "card" },
+    { "id": "in-progress", "label": "Working on it", "text": "Your order is being prepared.", "icon": "clock" },
+    { "id": "delivered", "label": "Delivered", "text": "Your order is delivered. Thank you!", "icon": "check" },
+    { "id": "cancelled", "label": "Cancelled", "text": "This order was cancelled. Message me on WhatsApp if this is a mistake.", "icon": "close" }
+  ]
+}

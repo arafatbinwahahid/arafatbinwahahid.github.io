@@ -222,6 +222,18 @@ const pages = [
     seo(), hero(), str('placeholder', 'Search box placeholder'), str('buttonLabel', 'Button'),
     str('resultsLabel', 'Results text', { hint: '{n} = count, {q} = search words' }), str('noResults', 'No results text', { hint: '{q} = search words' }), str('loading', 'Loading text'), str('unavailable', 'Error text'),
   ] },
+  { name: 'track', label: 'Order tracking page', icon: 'local_shipping', preview_path: 'track/', fields: [
+    hidden('_help'), seo(), hero(),
+    str('idLabel', 'Order ID label'), str('idHint', 'Order ID hint'), str('checkLabel', 'Phone or email label'), str('submitLabel', 'Button'),
+    str('loading', 'Loading text'), str('notFound', 'Not found text'), str('unavailable', 'Tracking not available text'), str('tooMany', 'Too many tries text'),
+    str('statusLabel', '"Status" label'), str('itemsLabel', '"Items" label'), str('totalLabel', '"Total" label'), str('noteLabel', '"Message from the seller" label'),
+    str('historyTitle', 'History heading'), str('updatedLabel', '"Last update" label'), str('helpText', 'Help text above the WhatsApp link'),
+    str('linkLabel', '"Track your order" link text', { hint: 'Shown after an order is sent, and in the order email.' }),
+    list('statuses', 'Order statuses', [
+      str('id', 'Status ID', { required: true, pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and dashes'], hint: 'Do not change the ID of a status that orders already use. "received" is the first status of every new order; "cancelled" is left out of the progress bar.' }),
+      str('label', 'Name', { required: true }), str('text', 'What it means for the buyer'), icon('icon', 'Icon'),
+    ], { summary: '{{label}} ({{id}})', min: 2, hint: 'In the order of the progress bar. You change the status of an order on arafatbin.com/admin/orders/.' }),
+  ] },
   { name: 'terms', label: 'Terms and conditions', icon: 'gavel', preview_path: 'terms-and-conditions/', fields: legal() },
   { name: 'privacy', label: 'Privacy policy', icon: 'privacy_tip', preview_path: 'privacy-policy/', fields: legal() },
   { name: 'refund', label: 'Refund policy', icon: 'currency_exchange', preview_path: 'refund-policy/', fields: legal() },

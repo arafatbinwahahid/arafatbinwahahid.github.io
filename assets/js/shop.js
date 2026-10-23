@@ -298,8 +298,12 @@ async function submitOrder(form, paypal) {
   if (button) button.disabled = true;
   say(F.sending, true);
   try {
+    const track = await window.saveOrder({ id, name: data.name, phone: v('mobile'), email: data.email, method: `${form.dataset.method} (${currency})`, total: money(paypal ? round(sum + feeNow()) : sum), items: items.map((l) => `${name(l.p)} × ${l.qty}`).join(', ') });
+    if (track) data['Tracking link'] = track;
     await window.sendToWeb3Forms(data);
     store.set('sentOrders', [...sent, id].slice(-20));
+    const link = $('[data-track-link]');
+    if (track && link) { link.href = track; link.parentElement.hidden = false; }
     $('[data-pay-done]').hidden = false;
     cart = [];
     save();

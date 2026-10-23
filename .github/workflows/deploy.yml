@@ -1,9 +1,9 @@
 name: Build and publish
 
 # Pull requests: build and check only.
-# main: build, check, then publish dist/ to the gh-pages branch.
-# GitHub Pages serves the gh-pages branch (Settings -> Pages -> Deploy from a branch -> gh-pages / root),
-# so there is only one thing publishing the site.
+# main: build, check, then publish the static pages (dist/client/) to the gh-pages branch.
+# Cloudflare (Workers Builds, connected to this repo) builds and publishes the full site, with order tracking, by itself.
+# The gh-pages copy keeps arafatbin.com working until the domain points to Cloudflare; then this publish step can go.
 
 on:
   push:
@@ -29,15 +29,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Build also checks every JSON file against schemas/ (ajv)
-      - run: node build.js
+      # The build also checks every JSON file against schemas/ (ajv)
+      - run: npm run build
+        env:
+          ASTRO_TELEMETRY_DISABLED: 1
       # HTML errors (html-validate) and broken internal links (linkinator)
       - run: npm test
       # Replace the gh-pages branch with the freshly built site (one commit, no old history)
       - name: Publish to gh-pages
         if: github.event_name != 'pull_request'
-        working-directory: dist
+        working-directory: dist/client
         run: |
+          rm -f wrangler.json .assetsignore
           git init -q -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -3,18 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.js",
-    "serve": "node build.js --serve",
-    "test": "html-validate \"dist/**/*.html\" && linkinator dist",
-    "check": "node build.js && npm test"
+    "build": "astro build",
+    "preview": "wrangler dev -c dist/server/wrangler.json",
+    "deploy": "wrangler deploy",
+    "test": "html-validate \"dist/client/**/*.html\" && linkinator dist/client",
+    "check": "astro build && npm test"
   },
   "dependencies": {
     "sharp": "0.35.5"
   },
   "devDependencies": {
+    "@astrojs/cloudflare": "14.3.4",
     "ajv": "8.20.0",
+    "astro": "7.3.8",
     "html-validate": "11.16.2",
     "linkinator": "8.1.0",
-    "pagefind": "1.5.2"
+    "pagefind": "1.5.2",
+    "wrangler": "4.149.0"
   }
 }
