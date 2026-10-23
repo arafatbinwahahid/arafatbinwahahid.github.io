@@ -248,7 +248,7 @@ ${curs.flatMap((c) => enabledMethods(c).map((m) => methodPanel(m, c, d))).join('
     // .pay-area keeps the footer below the screen while the script decides what to show, so nothing jumps
     body: pageHero(d.hero, crumbs) + section(`<div class="pay-area"><noscript><p class="notice">${esc(d.noscript)}</p></noscript>
 <div class="card card-pad narrow center" data-pay-empty hidden><h2 class="h3">${esc(e.title)}</h2><p>${esc(e.text)}</p>${btns([e.button])}</div>
-<div class="card card-pad narrow center" data-pay-done hidden><h2 class="h3">${esc(d.done.title)}</h2><p data-done-text></p>${btns([d.done.button])}</div>
+<div class="card card-pad narrow center" data-pay-done hidden><h2 class="h3">${esc(d.done.title)}</h2><p data-done-text></p><p hidden><a class="btn btn-primary" data-track-link href="/track/">${icon('search')}${esc(trackText.linkLabel)}</a></p>${btns([d.done.button])}</div>
 <div class="pay" data-pay-main>${summary}<div class="pay-steps">${choose}</div></div></div>`),
   };
 }
@@ -280,7 +280,7 @@ function servicePage(s) {
 <div class="paypal-box" hidden${feeAttrs(paypalMethod()?.fees, P.feeLabel)} data-package="${esc(pk.name)}" data-sku="${esc(`${s.slug}-${s.packages.indexOf(pk) + 1}`)}" data-price="${pk.prices.USD}"><p class="muted">${esc(P.note)}</p>
 <div data-paypal="${esc(payId)}" data-currency="USD"></div><p class="notice" data-paypal-fallback hidden>${esc(P.fallback)}</p><p class="status" role="status"></p></div>`
     : `<a class="btn btn-primary btn-sm" href="${esc(order(pk))}" target="_blank" rel="noopener">${icon('wa')}${esc(T.orderLabel)}</a>`);
-  const payText = payId ? ` data-service="${esc(s.title)}" data-order-prefix="${esc(payments.orderPrefix || 'AB')}" data-wa="${esc(contact.whatsapp)}"${['payLabelFee', 'doneTitle', 'doneText', 'doneWhatsapp', 'error', 'sendError'].map((k) => ` data-${k.toLowerCase()}="${esc(P[k])}"`).join('')}` : '';
+  const payText = payId ? ` data-service="${esc(s.title)}" data-order-prefix="${esc(payments.orderPrefix || 'AB')}" data-wa="${esc(contact.whatsapp)}" data-tracklabel="${esc(trackText.linkLabel)}"${['payLabelFee', 'doneTitle', 'doneText', 'doneWhatsapp', 'error', 'sendError'].map((k) => ` data-${k.toLowerCase()}="${esc(P[k])}"`).join('')}` : '';
   const packages = `<h2 class="h3">${esc(s.packagesTitle)}</h2><ul class="packages"${payText}>${s.packages.map((pk) => `<li><div><b>${esc(pk.name)}</b><span class="muted">${esc(s.priceLabel)} <b class="plan-price">${price(pk)}</b></span></div>
 ${payBox(pk)}</li>`).join('')}</ul>`;
   const box = `<div class="buy"><p class="kicker">${esc(s.category)}</p><p class="price price-lg"><span class="from">${esc(T.fromLabel)}</span> <b>${serviceFrom(s)}</b></p>${packages}${btns(s.buttons)}${policyLinks()}</div>`;
@@ -526,7 +526,7 @@ function toolPage(t, pair) {
 
 const toolPages = () => tools.flatMap((t) => [toolPage(t), ...(t.type === 'currency' ? t.converter.pairs.filter((p) => !isStartPair(t, p)).map((p) => toolPage(t, p)) : [])]);
 
-// ---- Search (Pagefind index made by build.js) ----
+// ---- Search (Pagefind index made by templates/build-steps.js) ----
 function searchPage() {
   const d = page('search');
   const crumbs = crumbsOf({ label: d.hero.title, href: '/search/' });
@@ -563,6 +563,56 @@ function notFoundPage() {
   return { path: '/404.html', file: '404.html', noindex: true, seo: d.seo, body: `<section class="sec notfound"><div class="wrap"><p class="code">${esc(d.code)}</p><h1>${esc(d.title)}</h1><p class="lead">${esc(d.text)}</p>${btns(d.buttons)}</div></section>` };
 }
 
+// ---- Order tracking: /track/ for buyers, /admin/orders/ for the owner (orders are kept on Cloudflare, see src/pages/api/) ----
+const trackText = page('track');
+const statusData = () => trackText.statuses.map((x) => ({ id: x.id, label: x.label, text: x.text, icon: icon(x.icon) }));
+const jsonData = (id, data) => `<script type="application/json" id="${id}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+
+function trackPage() {
+  const d = trackText;
+  const crumbs = crumbsOf({ label: d.hero.title, href: '/track/' });
+  const L = Object.fromEntries(['loading', 'notFound', 'unavailable', 'tooMany', 'statusLabel', 'itemsLabel', 'totalLabel', 'noteLabel', 'historyTitle', 'updatedLabel'].map((k) => [k, d[k]]));
+  const form = `<form class="card card-pad form track-form" data-track>
+<label>${esc(d.idLabel)}<input type="text" name="id" required maxlength="30" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AB-261023-K7Q2M"><small class="muted">${esc(d.idHint)}</small></label>
+<label>${esc(d.checkLabel)}<input type="text" name="check" required maxlength="120" autocomplete="off"></label>
+<button class="btn btn-primary" type="submit">${icon('search')}${esc(d.submitLabel)}</button><p class="status" role="status" data-track-status></p></form>
+<div class="card card-pad track-result" data-track-result hidden aria-live="polite"></div>
+<p class="center muted">${esc(d.helpText)} <a href="${whatsapp()}" target="_blank" rel="noopener">WhatsApp</a></p>
+${jsonData('track-data', { labels: L, statuses: statusData(), locale: site.locale })}`;
+  return { path: '/track/', seo: d.seo, crumbs, scripts: ['track'], body: pageHero(d.hero, crumbs) + section(`<div class="narrow">${form}</div>`) };
+}
+
+// The owner's page: list, search and change orders. It is useless without the ADMIN_PASSWORD secret, and hidden from Google.
+function ordersAdminPage() {
+  const opts = trackText.statuses.map((x) => `<option value="${esc(x.id)}">${esc(x.label)}</option>`).join('');
+  const body = `<section class="sec"><div class="wrap admin-orders" data-orders>
+<h1 class="h2">Orders</h1>
+<form class="card card-pad form narrow" data-login><label>Admin password<input type="password" name="password" required autocomplete="current-password"></label>
+<button class="btn btn-primary" type="submit">${icon('lock')}Open orders</button><p class="status" role="status" data-login-status></p>
+<p class="muted">The password is the ADMIN_PASSWORD secret you set in Cloudflare. It is kept only in this browser tab.</p></form>
+<div data-app hidden>
+<div class="admin-bar"><input type="search" placeholder="Search ID, name, phone, email, item" data-q aria-label="Search orders">
+<select data-filter aria-label="Filter by status"><option value="">All statuses</option>${opts}</select>
+<button class="btn btn-primary btn-sm" type="button" data-new>${icon('plus')}New order</button><button class="btn btn-outline btn-sm" type="button" data-logout>Log out</button></div>
+<p class="status" role="status" data-app-status></p>
+<ul class="order-list" data-list></ul></div>
+<dialog class="drawer order-edit" data-edit aria-labelledby="edit-title"><form class="form" method="dialog" data-edit-form>
+<div class="drawer-head"><h2 class="h3" id="edit-title" data-edit-title>Order</h2><button class="icon-btn" type="button" data-close aria-label="Close">${icon('close')}</button></div>
+<label>Order ID<input type="text" name="id" maxlength="30" placeholder="Empty = make a new ID" autocapitalize="characters"></label>
+<label>Status<select name="status">${opts}</select></label>
+<label>Note in the history (optional)<input type="text" name="historyNote" maxlength="300" placeholder="e.g. Sent by email"></label>
+<label>Message for the buyer (shown on the tracking page)<textarea name="note" rows="2" maxlength="1000"></textarea></label>
+<div class="row2"><label>Name<input type="text" name="name" maxlength="100"></label><label>Phone (with country code)<input type="tel" name="phone" maxlength="25"></label></div>
+<label>Email<input type="email" name="email" maxlength="120"></label>
+<label>Items<textarea name="items" rows="2" maxlength="1500"></textarea></label>
+<div class="row2"><label>Total<input type="text" name="total" maxlength="40" placeholder="OMR 3.500"></label><label>Payment method<input type="text" name="method" maxlength="80"></label></div>
+<div class="btns"><button class="btn btn-primary" type="submit" value="save">Save</button><button class="btn btn-outline" type="button" data-delete>${icon('trash')}Delete</button></div>
+<ol class="history" data-edit-history></ol></form></dialog>
+${jsonData('orders-data', { statuses: statusData(), site: site.url, whatsapp: whatsapp(), linkLabel: trackText.linkLabel, locale: site.locale })}
+</div></section>`;
+  return { path: '/admin/orders/', noindex: true, seo: { title: 'Orders' }, scripts: ['orders-admin'], body };
+}
+
 export function allPages() {
   return [
     homePage(),
@@ -573,6 +623,6 @@ export function allPages() {
     reviewsPageFn(), contactPage(),
     blogPage(), ...posts.map(postPage),
     legalPage('terms', '/terms-and-conditions/'), legalPage('privacy', '/privacy-policy/'), legalPage('refund', '/refund-policy/'),
-    faqPage(), searchPage(), notFoundPage(),
+    faqPage(), searchPage(), trackPage(), ordersAdminPage(), notFoundPage(),
   ];
 }

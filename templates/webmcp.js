@@ -166,6 +166,6 @@ function client(D) {
   else if (mc.provideContext) mc.provideContext({ tools });
 }
 
-export const webmcpScript = (pages) => `// WebMCP tools for AI agents. Made automatically from data/*.json by build.js, do not edit.
+export const webmcpScript = (pages) => `// WebMCP tools for AI agents. Made automatically from data/*.json by the build, do not edit.
 (${client.toString()})(${JSON.stringify(siteData(pages)).replace(/</g, '\\u003c')});
 `;

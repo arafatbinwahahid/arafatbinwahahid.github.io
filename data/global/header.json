@@ -1,7 +1,8 @@
 {
   "logo": {
     "text": "Arafat Bin Wahahid",
-    "image": "/assets/images/brand/arafatbin-logo.png",
+    "image": "/assets/images/brand/arafatbin-logo-full.png",
+    "showText": false,
     "href": "/"
   },
   "links": [
@@ -30,7 +31,8 @@
           { "label": "Work", "href": "/work/", "icon": "image" },
           { "label": "Credentials", "href": "/credentials/", "icon": "award" },
           { "label": "Reviews", "href": "/reviews/", "icon": "star" },
-          { "label": "Search", "href": "/search/", "icon": "search" }
+          { "label": "Search", "href": "/search/", "icon": "search" },
+          { "label": "Track order", "href": "/track/", "icon": "box" }
         ]
       },
       {

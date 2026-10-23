@@ -1,0 +1,8 @@
+---
+// 404.html: Cloudflare shows it for every address that does not exist (wrangler.jsonc → not_found_handling)
+import { allPages } from '../../templates/pages.js';
+import { layout } from '../../templates/layout.js';
+
+const html = layout(allPages().find((p) => p.file === '404.html'));
+---
+<Fragment set:html={html} />

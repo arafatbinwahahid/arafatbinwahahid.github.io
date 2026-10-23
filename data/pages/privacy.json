@@ -40,12 +40,12 @@
   },
   "hero": { "title": "Privacy policy", "text": "What data this website collects and how it is used." },
   "updatedLabel": "Last updated",
-  "lastUpdated": "2026-10-20",
+  "lastUpdated": "2026-10-23",
   "sections": [
-    { "heading": "1. Data I collect", "paragraphs": ["When you use the contact or review form I receive the details you type in, such as your name, email and message."] },
-    { "heading": "2. Analytics", "paragraphs": ["This website uses Google Analytics and, when it is turned on, Microsoft Clarity to understand how visitors use it. Both use cookies and collect anonymous usage data such as pages viewed, clicks and scrolling. Clarity can record how a page is used, but text typed into forms is hidden and never recorded."] },
+    { "heading": "1. Data I collect", "paragraphs": ["When you use the contact or review form I receive the details you type in, such as your name, email and message.", "When you place an order I keep the order ID, your name, phone number, email, the items, the total and the payment method in a private order database on Cloudflare, so you can follow the order on the Track order page. Only I can see these details; the tracking page shows only the status, items and total, and only to someone who has the order ID and your phone number or email."] },
+    { "heading": "2. Analytics", "paragraphs": ["This website uses Google Analytics and, when it is turned on, Microsoft Clarity to understand how visitors use it. Both use cookies and collect anonymous usage data such as pages viewed, clicks and scrolling. Clarity can record how a page is used, but text typed into forms is hidden and never recorded.", "When it is turned on, Cloudflare Web Analytics counts page visits without cookies and without following you to other websites."] },
     { "heading": "3. How I use your data", "list": ["To reply to your message or order", "To deliver services and products you ordered", "To show your review, only if you allow it"] },
-    { "heading": "4. Third-party services", "paragraphs": ["Forms are delivered by Web3Forms. Links to WhatsApp, LinkedIn and Fiverr follow those services' own privacy policies."] },
+    { "heading": "4. Third-party services", "paragraphs": ["Forms are delivered by Web3Forms. Links to WhatsApp, LinkedIn and Fiverr follow those services' own privacy policies.", "The website and the order database are hosted by Cloudflare. When it is turned on, live chat is provided by tawk.to; what you write in the chat is kept by tawk.to so I can answer you."] },
     { "heading": "5. Data sharing", "paragraphs": ["I do not sell or rent your personal data to anyone."] },
     { "heading": "6. Your rights", "paragraphs": ["You can ask me to show, correct or delete the data I hold about you by emailing contact@arafatbin.com."] },
     { "heading": "7. Changes", "paragraphs": ["This policy may be updated. The date at the top shows the latest version."] }

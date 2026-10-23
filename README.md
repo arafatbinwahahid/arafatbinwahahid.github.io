@@ -1,10 +1,10 @@
 # arafatbin.com — JAMstack static website
 
-- **J**avaScript → `build.js` + `templates/*.js` (build করার সময় JSON থেকে HTML বানায়), `assets/js/main.js` (মেনু, ফর্ম), `assets/js/shop.js` (কার্ট, পেমেন্ট)
+- **J**avaScript → **Astro** + `templates/*.js` (build করার সময় JSON থেকে HTML বানায়), `src/pages/api/` (Cloudflare-এ order tracking-এর ছোট server অংশ), `assets/js/main.js` (মেনু, ফর্ম), `assets/js/shop.js` (কার্ট, পেমেন্ট)
 - **A**PI → `data/` ফোল্ডারের JSON ফাইল (সব লেখা, ছবি, আইকন, লিংক)
 - **M**arkup → `dist/`-এ তৈরি হওয়া আসল HTML + `assets/css/style.css`
 
-**SSG (Static Site Generation):** `node build.js` চালালে প্রতিটি পেইজ আগে থেকেই পুরো লেখাসহ HTML ফাইল হয়ে যায়।
+**SSG (Static Site Generation):** `npm run build` (Astro) চালালে প্রতিটি পেইজ আগে থেকেই পুরো লেখাসহ HTML ফাইল হয়ে যায়।
 তাই Google বা অন্য search engine পেইজ খুললেই সব লেখা সরাসরি পায়, JavaScript চালাতে হয় না।
 প্রতিটি পেইজে title, description, canonical, Open Graph, breadcrumb আর Schema.org (JSON-LD) ডাটা থাকে।
 ছবির width/height নিজে থেকে বসে যায়, আর build প্রতিটি ছবির ছোট WebP কপি (400/800/1200/1600px) আর link preview-এর জন্য 1200px JPG বানায় (`sharp` package দিয়ে, GitHub-এ নিজে থেকে install হয়)। সাইটে শুধু এই ছোট কপিগুলো যায়, আসল বড় ছবি নয়। কোনো framework বা animation নেই, তাই সাইট খুব দ্রুত লোড হয়।
@@ -12,8 +12,16 @@
 ## File structure
 
 ```
-├── build.js                 ← SSG: data/ পড়ে dist/-এ HTML, sitemap.xml, robots.txt বানায়
+├── astro.config.mjs         ← Astro: সাইট build করে (static পেইজ dist/client/-এ, API dist/server/-এ)
+├── wrangler.jsonc           ← Cloudflare-এর সেটিং: database (D1), rate limit, 404 পেইজ
+├── src/
+│   ├── pages/[...path].astro ← সব পেইজ (templates/pages.js থেকে)
+│   ├── pages/404.astro      ← 404 পেইজ
+│   ├── pages/api/           ← Order tracking API: orders.js (নতুন অর্ডার), track.js (ক্রেতা দেখে), admin/orders.js (আপনি বদলান)
+│   └── lib/orders.js        ← database, password আর যাচাইয়ের কোড
 ├── templates/
+│   ├── astro-site.js        ← build-এর আগে JSON যাচাই, পরে sitemap, CMS, ছবি, search index
+│   ├── build-steps.js       ← উপরের কাজগুলোর আসল কোড
 │   ├── helpers.js           ← JSON লোড + ছোট HTML helper
 │   ├── layout.js            ← <head> (SEO), header, 3-dot মেনু, footer
 │   ├── pages.js             ← প্রতিটি পেইজের HTML
@@ -31,6 +39,8 @@
 │   ├── js/search.js         ← /search/ পেইজে খোঁজা (Pagefind)
 │   ├── js/paypal.js         ← PayPal / কার্ডের বোতাম (Payment ও সার্ভিস পেইজ)
 │   ├── js/service-pay.js    ← সার্ভিস প্যাকেজে PayPal পেমেন্ট
+│   ├── js/track.js          ← /track/ পেইজে অর্ডারের অবস্থা দেখানো
+│   ├── js/orders-admin.js   ← /admin/orders/ পেইজ (আপনার অর্ডার তালিকা)
 │   ├── images/              ← সব ছবি, ফোল্ডারে ভাগ করা:
 │   │   ├── brand/           ← লোগো
 │   │   ├── products/        ← Shop-এর প্রোডাক্টের ছবি
@@ -73,6 +83,7 @@
     │   ├── privacy.json     → /privacy-policy/
     │   ├── refund.json      → /refund-policy/
     │   ├── faq.json         → /faq/
+    │   ├── track.json       → /track/  (Order tracking পেইজের লেখা আর অর্ডারের status)
     │   └── 404.json         → 404 error page
     │
     └── collections/         ← প্রতিটি আইটেমের নিজের পেইজ তৈরি হয়
@@ -157,7 +168,7 @@
 
 ## CMS: arafatbin.com/admin/ (Sveltia CMS)
 
-JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Free tools, Blog posts**, **Pages** (প্রতিটি পেইজ আলাদা) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Exchange rates, Sitemap, Icons)। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
+JSON হাতে না লিখে ফর্মে লিখুন। বাম মেনুতে **Products, Services, Free tools**, **Blog posts**, পেইজগুলো তিন ভাগে (**Shop pages**, **About me pages**, **Help & legal pages**) আর **Settings** (Site, Header, Footer, Contact details, Social links, Payment methods, Exchange rates, Sitemap, Icons)। প্রোডাক্ট আর সার্ভিসের তালিকায় ছবি দেখায়, **Drafts** filter আর category অনুযায়ী ভাগ আছে। প্রতিটি ফর্মের উপরে **🔍 SEO** অংশ। Save করলে main ব্রাঞ্চে commit হয়, ৩–৫ মিনিটে সাইট আপডেট হয় (আগের মতো সব পরীক্ষা চলে, ভুল থাকলে পুরোনো সাইট থাকে)।
 
 **প্রথমবার লগইন (Access Token):**
 1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token
@@ -168,6 +179,7 @@ JSON হাতে না লিখে ফর্মে লিখুন। বা�
 6. Token কাউকে দেবেন না, repo-তে রাখবেন না। মেয়াদ শেষ হলে নতুন বানান। ফাঁস হলে GitHub থেকে সাথে সাথে মুছুন।
 
 **জানা দরকার:**
+- প্রতিটি ছবির ঘরে **📐 Best size** লেখা থাকে: কত px আর কোন অনুপাতে (যেমন প্রোডাক্ট 1200 × 900, share image 1200 × 630), আর সাইটের কোথায় দেখাবে।
 - ছবি আপলোড করলে নিজে WebP হয় (সর্বোচ্চ 2000px), নাম ছোট হাতের হয়, আর ঠিক ফোল্ডারে যায় (products, services, blog …)।
 - **Status → Draft** দিলে প্রোডাক্ট/সার্ভিস/টুল সাইট, sitemap আর search থেকে লুকায়।
 - "Saved for later" লেখা ঘরগুলো এখন সাইটে দেখায় না, পরে কাজে লাগানোর জন্য রাখা।
@@ -239,6 +251,34 @@ AI agent এই tool-গুলো ব্যবহার করতে পার�
 
 কোডটা আছে `templates/webmcp.js`-এ।
 
+## Order tracking (`/track/`)
+
+- ক্রেতা checkout করলে (ফর্ম বা PayPal) অর্ডার নিজে থেকে Cloudflare-এর database-এ save হয়, status **Order received**। Thank-you বক্সে "Track your order" বোতাম আসে, আর অর্ডারের ইমেইলেও tracking লিংক থাকে।
+- ক্রেতা `/track/`-এ Order ID আর ফোনের শেষ ৪ সংখ্যা (বা ইমেইল) দিয়ে অবস্থা দেখেন: status, progress bar, items, total, আপনার message আর পুরো history। নাম, ফোন, ইমেইল কখনো দেখায় না। এক মিনিটে ১৫ বারের বেশি চেষ্টা করলে আটকে দেয়, তাই অন্যের অর্ডার আন্দাজে খোঁজা যায় না।
+- **আপনি:** `arafatbin.com/admin/orders/` → `ADMIN_PASSWORD` দিয়ে খুলুন। সব অর্ডার দেখুন, খুঁজুন, status বদলান (Payment confirmed, Working on it, Delivered, Cancelled), history-তে নোট আর ক্রেতার জন্য message লিখুন, অর্ডার মুছুন। WhatsApp-এ আসা অর্ডারের জন্য **New order** দিয়ে নিজে অর্ডার বানান, তারপর "Send the link on WhatsApp" দিয়ে ক্রেতাকে tracking লিংক পাঠান।
+- লেখা আর status-এর নাম: CMS → **Shop pages → Order tracking page**। নতুন status যোগ করা যায়; যে status-এর ID অর্ডারে ব্যবহার হচ্ছে তার ID বদলাবেন না।
+- মেনু আর ফুটারে "Track order" লিংক আছে।
+
+## Live chat (tawk.to, ফ্রি)
+
+1. tawk.to-তে ফ্রি account খুলুন, website হিসেবে arafatbin.com দিন।
+2. **Administration → Chat Widget** → "Direct Chat Link" কপি করুন: `https://tawk.to/chat/PROPERTY_ID/WIDGET_ID`।
+3. CMS → **Settings → Contact details → Live chat**: Property ID আর Widget ID বসান। খালি = বন্ধ।
+4. ফোনে tawk.to অ্যাপ নামিয়ে login করুন, নতুন মেসেজ এলে notification আসবে।
+
+সবুজ WhatsApp বোতামের উপরে নীল chat বোতাম আসে। Chat-এর script শুধু বোতাম চাপলে লোড হয়, তাই সাইট ধীর হয় না। একবার chat করলে পরের পেইজগুলোতে conversation খোলা থাকে।
+
+## Cloudflare-এর ফ্রি সুবিধা
+
+| সুবিধা | কী করে | কীভাবে চালু |
+| --- | --- | --- |
+| **Web Analytics** | কত ভিজিটর, কোন পেইজ, কোন দেশ, কোন ডিভাইস; cookie ছাড়া | Cloudflare → Analytics & Logs → **Web Analytics → Add a site** → snippet থেকে `token` কপি করুন → CMS → Settings → Site → **Cloudflare Web Analytics token** |
+| **Cache আর security header** | ছবি আর JS ব্রাউজারে ১ বছর থাকে (নাম বদলালে নতুনটা আসে), পেইজ সবসময় নতুন; clickjacking ও অন্য আক্রমণ থেকে সুরক্ষা | নিজে থেকেই (`dist/client/_headers`, `templates/build-steps.js`) |
+| **ছবি ছোট করা** | build প্রতিটি ছবির ছোট WebP কপি বানায়, তাই Cloudflare-এর টাকার Polish/Images লাগে না | নিজে থেকেই |
+| **Order database (D1)** আর **rate limit** | order tracking, আন্দাজে খোঁজা আর spam আটকানো | প্রথম deploy-এ নিজে থেকেই |
+| **Email Routing** | `contact@arafatbin.com`-এ আসা ইমেইল আপনার Gmail-এ পাঠায় | domain Cloudflare-এ আসার পর → Email → Email Routing → Enable (ঐচ্ছিক) |
+| **Always HTTPS, DDoS সুরক্ষা, CDN** | সাইট দ্রুত আর নিরাপদ | domain Cloudflare-এ এলেই |
+
 ## দ্রুত লোডের জন্য যা নিজে হয়
 
 - CSS প্রতিটি পেইজের `<head>`-এ ছোট করে বসানো থাকে, আলাদা ফাইল লোড করতে হয় না
@@ -258,15 +298,28 @@ AI agent এই tool-গুলো ব্যবহার করতে পার�
 
 Pull Request-এ লাল ❌ দেখালে **Details**-এ গিয়ে লগ দেখুন। লম্বা title (৭০ অক্ষরের বেশি) শুধু সতর্কবার্তা দেয়, deploy আটকায় না। বাইরের সাইটের লিংক (WhatsApp, Fiverr ইত্যাদি) পরীক্ষা করা হয় না, কারণ ওই সাইটগুলো প্রায়ই স্বয়ংক্রিয় পরীক্ষা আটকে দেয়।
 
-## চালানো ও publish
+## চালানো ও publish (Cloudflare)
 
 ```bash
-npm install              # একবার (sharp, ছবি WebP করার জন্য)
-node build.js            # dist/ ফোল্ডারে সাইট তৈরি
-node build.js --serve    # তৈরি করে http://localhost:8080 এ দেখুন
+npm install              # একবার
+npm run build            # dist/ তৈরি: dist/client/ = static পেইজ, dist/server/ = API
+npm run preview          # Cloudflare-এর মতো করে http://localhost:8787 এ দেখুন (order tracking-সহ)
 npm run check            # build + HTML যাচাই + ভাঙা লিংক খোঁজা
 ```
 
-**Publish:** `main`-এ push করলে GitHub Actions সাইট build করে, সব পরীক্ষা চালায়, পাস করলে তৈরি সাইটটা `gh-pages` ব্রাঞ্চে রাখে। GitHub Pages এই ব্রাঞ্চ থেকেই সাইট দেখায়:
-**Settings → Pages → Build and deployment → Source = Deploy from a branch → Branch = `gh-pages` / `(root)`**।
-`gh-pages` ব্রাঞ্চ নিজে এডিট করবেন না, প্রতিটি publish-এ এটা নতুন করে লেখা হয়। সব পরিবর্তন `main`-এ করুন।
+লোকালি order admin পরীক্ষা করতে প্রজেক্টের ফোল্ডারে `.dev.vars` ফাইল বানান, ভেতরে `ADMIN_PASSWORD=যেকোনো-পাসওয়ার্ড` (এই ফাইল git-এ যায় না)।
+
+**Cloudflare-এ প্রথমবার সেট করা (একবারই, সব ফ্রি):**
+1. dash.cloudflare.com-এ ফ্রি account খুলুন।
+2. **Workers & Pages → Create → Import a repository** → GitHub connect করুন → `arafatbinwahahid.github.io` বাছুন।
+3. Build settings: **Build command** = `npm run build`, **Deploy command** = `npx wrangler deploy` (সাধারণত নিজে থেকেই থাকে)। Save and Deploy।
+   প্রথম deploy-এ Cloudflare নিজে order database (D1) বানিয়ে নেয়, কোনো ID লিখতে হয় না।
+4. **Settings → Variables and Secrets → Add → Type: Secret**, নাম `ADMIN_PASSWORD`, মান একটা শক্ত পাসওয়ার্ড। এটা দিয়ে `/admin/orders/` খোলে। এই পাসওয়ার্ড কোথাও লিখবেন না, কাউকে দেবেন না।
+5. **Settings → Domains & Routes → Add → Custom domain** → `arafatbin.com` (domain Cloudflare-এ যোগ করতে বলবে: Cloudflare যে দুটো nameserver দেয়, domain যেখানে কিনেছেন সেখানে বসান)। চাইলে `www.arafatbin.com`-ও যোগ করুন।
+6. Domain Cloudflare-এ চলে এলে GitHub-এ **Settings → Pages**-এ GitHub Pages বন্ধ করতে পারেন, আর `.github/workflows/deploy.yml`-এর "Publish to gh-pages" ধাপ মুছে দিতে পারেন (তখন GitHub শুধু পরীক্ষা চালাবে)।
+
+এরপর `main`-এ প্রতিটি push বা CMS save-এ Cloudflare নিজে build করে publish করে (৩–৫ মিনিট)। build বা পরীক্ষা ব্যর্থ হলে পুরোনো সাইট থাকে। প্রতিটি Pull Request-এর জন্য Cloudflare একটা আলাদা preview লিংকও দেয়।
+
+**খরচ:** Free প্ল্যানে static পেইজ সীমাহীন; API (order tracking) দিনে ১ লাখ request পর্যন্ত, database ৫ GB পর্যন্ত। এই সাইটের জন্য ০ টাকা।
+
+**Cloudflare পর্যন্ত:** domain সরানো না পর্যন্ত GitHub Actions আগের মতো static পেইজগুলো `gh-pages` ব্রাঞ্চে publish করে, তাই arafatbin.com চলতে থাকে (শুধু order tracking তখন কাজ করে না, ক্রেতাকে WhatsApp-এ যোগাযোগ করতে বলে)।

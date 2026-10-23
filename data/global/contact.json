@@ -2,6 +2,11 @@
   "whatsapp": "96892130528",
   "whatsappDisplay": "+968 9213 0528",
   "showFloatingWhatsapp": true,
+  "liveChat": {
+    "tawkPropertyId": "",
+    "tawkWidgetId": "",
+    "buttonLabel": "Live chat"
+  },
   "phones": [
     {
       "label": "Phone, Oman",

@@ -1,4 +1,4 @@
-// Site search on /search/. The index in /pagefind/ is made by build.js from every page (Pagefind).
+// Site search on /search/. The index in /pagefind/ is made by the build (templates/build-steps.js) from every page (Pagefind).
 const form = document.querySelector('[data-search]');
 const input = form.elements.q;
 const status = document.querySelector('[data-search-status]');

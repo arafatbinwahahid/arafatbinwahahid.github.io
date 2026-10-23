@@ -1,0 +1,13 @@
+---
+// Every page of the site, made from data/*.json by templates/pages.js and templates/layout.js
+import { allPages } from '../../templates/pages.js';
+import { layout } from '../../templates/layout.js';
+
+export function getStaticPaths() {
+  return allPages()
+    .filter((p) => !p.file)
+    .map((p) => ({ params: { path: p.path.replace(/^\/|\/$/g, '') || undefined }, props: { page: p } }));
+}
+const html = layout(Astro.props.page);
+---
+<Fragment set:html={html} />

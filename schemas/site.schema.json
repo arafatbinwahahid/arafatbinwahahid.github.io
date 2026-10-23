@@ -6,6 +6,7 @@
     "url": { "type": "string", "pattern": "^https://[^/]+$", "description": "No slash at the end, e.g. https://arafatbin.com" },
     "clarityId": { "type": "string", "pattern": "^$|^[a-z0-9]+$", "description": "Microsoft Clarity project ID (clarity.microsoft.com → Settings → Overview). Empty = off" },
     "googleAnalyticsId": { "type": "string", "pattern": "^$|^G-[A-Z0-9]+$" },
+    "cloudflareAnalyticsToken": { "type": "string", "pattern": "^$|^[a-f0-9]{32}$", "description": "Cloudflare Web Analytics token (32 letters and digits). Empty = off" },
     "verification": {
       "type": "object",
       "description": "Codes from Google Search Console, Bing Webmaster Tools, Yandex, Pinterest, Facebook and Baidu (HTML meta tag method). The code alone or the whole <meta> tag both work.",

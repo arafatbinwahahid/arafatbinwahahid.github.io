@@ -48,15 +48,20 @@ list.querySelectorAll('[data-pay-open]').forEach((button) => button.addEventList
       };
       if (Math.abs(info.amount - (price + fee)) > 0.001) data['Amount check'] = `PayPal amount differs from the price USD ${(price + fee).toFixed(2)}`;
       try {
+        const track = await window.saveOrder({ id, name: info.name, email: info.email, method: 'PayPal (USD)', total: `USD ${(price + fee).toFixed(2)}`, items: `${D.service}: ${pk.package}` });
+        if (track) data['Tracking link'] = track;
         await window.sendToWeb3Forms(data);
+        box.dataset.track = track;
       } catch {
         return say(fill(D.senderror, { id }));
       }
       const wa = `https://wa.me/${D.wa}?text=${encodeURIComponent(fill(D.donewhatsapp, { service: D.service, package: pk.package, id }))}`;
-      box.innerHTML = '<h4></h4><p></p><p><a class="btn btn-primary btn-sm" target="_blank" rel="noopener">WhatsApp</a></p>';
+      const track = box.dataset.track;
+      box.innerHTML = `<h4></h4><p></p><p class="btns"><a class="btn btn-primary btn-sm" target="_blank" rel="noopener">WhatsApp</a>${track ? '<a class="btn btn-outline btn-sm"></a>' : ''}</p>`;
       box.querySelector('h4').textContent = D.donetitle;
       box.querySelector('p').textContent = fill(D.donetext, { id });
       box.querySelector('a').href = wa;
+      if (track) Object.assign(box.querySelectorAll('a')[1], { href: track, textContent: D.tracklabel });
       button.hidden = true;
     },
     error: () => say(D.error),

@@ -234,6 +234,9 @@ a.card:hover { border-color: var(--primary); }
 
 /* Floating WhatsApp */
 .wa-float { position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; font-size: 1.5rem; box-shadow: 0 8px 20px -6px rgba(0, 0, 0, .35); }
+.chat-float { position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 54px; height: 54px; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: #fff; font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 20px -6px rgba(0, 0, 0, .35); }
+.wa-float + .chat-float { bottom: 80px; }
+.chat-float:disabled { opacity: .6; cursor: wait; }
 .card-img-fit img { object-fit: contain; padding: .5rem; }
 
 /* ---- Shop: cart button + drawer ---- */
@@ -335,6 +338,8 @@ a.card:hover { border-color: var(--primary); }
 
 /* Logo, product plans */
 .logo img { height: 32px; width: auto; }
+.logo-full img { height: 44px; }
+@media (max-width: 480px) { .logo-full img { height: 36px; } }
 .from { font-size: .85em; color: var(--muted); font-weight: 500; }
 .plans { margin-top: 1rem; }
 .buy .cur { margin-top: 1.25rem; }
@@ -396,3 +401,33 @@ a.card:hover { border-color: var(--primary); }
 .pair-links a { display: inline-block; padding: .5rem .9rem; border-radius: 999px; background: var(--soft); border: 1px solid var(--border); color: var(--text); text-decoration: none; }
 .pair-links a:hover { border-color: var(--primary); }
 @media (max-width: 480px) { .conv-grid { grid-template-columns: 1fr auto; } .conv-grid > label:last-child { grid-column: 1 / -1; } .conv-swap { grid-row: 2; grid-column: 2; } .conv-table th, .conv-table td { padding: .5rem .4rem; } }
+
+/* ---- Order tracking (/track/) and the owner's orders page (/admin/orders/) ---- */
+.track-form small { font-weight: 400; }
+.track-result { margin-top: 1rem; }
+.track-now { display: flex; gap: .8rem; align-items: flex-start; padding: 1rem; border-radius: 12px; background: var(--soft); border: 1px solid var(--border); }
+.track-now .i { flex: none; width: 2.2rem; height: 2.2rem; padding: .45rem; border-radius: 50%; background: var(--primary); color: #fff; }
+.track-now b { display: block; font-size: 1.15rem; color: var(--dark); }
+.track-now.is-cancelled .i { background: #c62828; }
+.track-now.is-delivered .i { background: #2e7d32; }
+.steps-bar { display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); gap: .35rem; margin: 1rem 0 .3rem; list-style: none; padding: 0; }
+.steps-bar li { height: .4rem; border-radius: 99px; background: var(--border); }
+.steps-bar li.on { background: var(--primary); }
+.track-facts { display: grid; gap: .5rem; margin: 1rem 0; }
+.track-facts div { display: grid; grid-template-columns: 9rem 1fr; gap: .6rem; }
+.track-facts dt { color: var(--muted); }
+.track-facts dd { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.history { list-style: none; padding: 0; margin: .6rem 0 0; display: grid; gap: .6rem; }
+.history li { position: relative; padding-left: 1.2rem; }
+.history li::before { content: ""; position: absolute; left: 0; top: .45rem; width: .55rem; height: .55rem; border-radius: 50%; background: var(--primary); }
+.history time { display: block; color: var(--muted); font-size: .85rem; }
+@media (max-width: 480px) { .track-facts div { grid-template-columns: 1fr; gap: .1rem; } }
+.admin-bar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.admin-bar input, .admin-bar select { flex: 1 1 12rem; padding: .6rem .8rem; border: 1px solid var(--border); border-radius: 10px; font: inherit; background: #fff; color: var(--text); }
+.order-list { list-style: none; padding: 0; display: grid; gap: .6rem; }
+.order-list button { width: 100%; text-align: left; display: grid; gap: .2rem; padding: .9rem 1rem; border: 1px solid var(--border); border-radius: 12px; background: #fff; font: inherit; color: var(--text); cursor: pointer; }
+.order-list button:hover { border-color: var(--primary); }
+.order-list .top { display: flex; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
+.badge-status { padding: .1rem .55rem; border-radius: 99px; background: var(--soft); border: 1px solid var(--border); font-size: .82rem; font-weight: 600; }
+.order-edit { width: min(560px, 100%); overflow-y: auto; }
+.order-edit select { width: 100%; padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 10px; font: inherit; background: #fff; color: var(--text); }

@@ -33,6 +33,21 @@ ${currencySelect()}
 <button class="btn btn-outline" type="button" data-cart-close>${esc(c.continueLabel)}</button>${policyLinks()}</div>
 </dialog>`;
 
+// Live chat button (contact.json "liveChat", tawk.to). The chat script loads only after it is pressed (assets/js/main.js).
+function chatButton() {
+  const c = contact.liveChat || {};
+  if (!c.tawkPropertyId || !c.tawkWidgetId) return '';
+  const label = esc(c.buttonLabel || 'Live chat');
+  return `<button class="chat-float" type="button" data-chat="${esc(c.tawkPropertyId)}/${esc(c.tawkWidgetId)}" aria-label="${label}" title="${label}">${icon('chat')}</button>`;
+}
+
+// Logo link. With "showText": false the logo image already has the name in it, so the image's alt text names the link instead.
+function logoLink(href, dark = false) {
+  const { text, showText } = header.logo;
+  const full = showText === false && header.logo.image;
+  return `<a class="logo${full ? ' logo-full' : ''}" href="${esc(href)}">${logoImg({ dark, alt: full ? text : '' })}${full ? '' : esc(text)}</a>`;
+}
+
 const isActive = (href, path) => (href === '/' ? path === '/' : path.startsWith(href));
 
 function siteHeader(path, cart) {
@@ -42,7 +57,7 @@ function siteHeader(path, cart) {
     .map((c) => `<div><p class="menu-title">${esc(c.title)}</p>${c.links.map((l) => `<a href="${esc(l.href)}"${target(l.href)}${path === l.href ? ' aria-current="page"' : ''}>${icon(l.icon)}${esc(l.label)}</a>`).join('')}</div>`)
     .join('');
   return `<header class="hdr"><div class="wrap hdr-in">
-<a class="logo" href="${esc(logo.href)}">${logoImg()}${esc(logo.text)}</a>
+${logoLink(logo.href)}
 <nav class="nav" aria-label="Main">${navLinks}</nav>
 <div class="hdr-end">${header.search ? `<a class="icon-btn hdr-search" href="${esc(header.search.href)}" aria-label="${esc(header.search.label)}" title="${esc(header.search.label)}"${path === header.search.href ? ' aria-current="page"' : ''}>${icon('search')}</a>` : ''}${cart ? cartButton() : ''}${button ? `<a class="btn btn-${esc(button.style || 'primary')} btn-sm" href="${esc(button.href)}"${target(button.href)} aria-label="${esc(button.label)}">${icon(button.icon)}<span>${esc(button.label)}</span></a>` : ''}
 <details class="menu"><summary aria-label="${esc(menu.buttonLabel)}" title="${esc(menu.buttonLabel)}">${icon('dots')}</summary><nav class="menu-panel" aria-label="${esc(menu.buttonLabel)}">${menuCols}</nav></details></div>
@@ -64,7 +79,7 @@ function siteFooter() {
 <div class="pm-track"><ul class="pm-list">${tiles}</ul><ul class="pm-list" aria-hidden="true">${tiles}</ul></div>
 ${pm.more?.label ? `<a class="pm-more" href="${esc(pm.more.href || '/payments/')}"${target(pm.more.href)}>${esc(pm.more.label)}${icon('arrow')}</a>` : ''}</section>` : '';
   return `<footer class="ftr"><div class="wrap ftr-grid">
-<div><a class="logo" href="/">${logoImg()}${esc(header.logo.text)}</a><p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
+<div>${logoLink('/', true)}<p>${esc(footer.about)}</p>${socials}</div>${cols}${contactCol}</div>${pay}
 <div class="wrap ftr-bottom"><span>${esc(footer.copyright.replace('{year}', new Date().getFullYear()))}</span><nav aria-label="Legal">${footer.bottomLinks.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</nav></div></footer>`;
 }
 
@@ -124,6 +139,9 @@ export function layout({ path, seo: rawSeo = {}, body, schema = [], crumbs, type
 function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/gtag/js?id=${gaId}');` : ''}${clarityId ? `add('https://www.clarity.ms/tag/${clarityId}');` : ''}}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})});addEventListener('load',function(){setTimeout(go,3500)})})();</script>`
     : '';
+  // Cloudflare Web Analytics (site.json "cloudflareAnalyticsToken"): a small script, no cookies
+  const cfToken = site.cloudflareAnalyticsToken;
+  const cfBeacon = cfToken ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="${esc(JSON.stringify({ token: cfToken }))}"></script>` : '';
   const head = [
     `<title>${esc(title)}</title>`,
     meta('name', 'description', description),
@@ -175,7 +193,7 @@ function go(){if(on)return;on=1;${gaId ? `add('https://www.googletagmanager.com/
 ${head.trim()}
 <style>:root{--primary:${t.primary};--accent:${t.accent};--dark:${t.dark};--text:${t.text};--muted:${t.muted};--bg:${t.background};--soft:${t.soft};--border:${t.border};--radius:${t.radius}}${css}</style>
 ${schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s).replace(/</g, '\\u003c')}</script>`).join('\n')}
-${analytics}
+${analytics}${cfBeacon}
 </head>
 <body data-forms-key="${esc(site.web3formsAccessKey)}">
 <a class="skip" href="#main">Skip to content</a>
@@ -184,7 +202,7 @@ ${siteHeader(path, cart)}
 ${body}
 </main>
 ${siteFooter()}
-${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
+${contact.showFloatingWhatsapp ? `<a class="wa-float" href="https://wa.me/${esc(contact.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('wa')}</a>` : ''}${chatButton()}
 ${cart ? cartDrawer() + catalog() : ''}
 <script src="${assetUrl('assets/js/main.js')}" defer></script>
 <script>if(document.modelContext||navigator.modelContext){var w=document.createElement('script');w.src='/webmcp.js';document.body.appendChild(w)}</script>${scripts.map((s) => `\n<script src="${assetUrl(`assets/js/${s}.js`)}" defer></script>`).join('')}${cart ? `\n<script src="${assetUrl('assets/js/shop.js')}" defer></script>` : ''}

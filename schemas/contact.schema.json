@@ -21,6 +21,15 @@
     "showFloatingWhatsapp": {
       "type": "boolean"
     },
+    "liveChat": {
+      "type": "object",
+      "properties": {
+        "tawkPropertyId": { "type": "string", "pattern": "^$|^[a-f0-9]{24}$", "description": "tawk.to Property ID (24 letters and digits)" },
+        "tawkWidgetId": { "type": "string", "pattern": "^$|^[a-z0-9]{6,12}$", "description": "tawk.to Widget ID, e.g. 1abcd2efg or default" },
+        "buttonLabel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "phones": {
       "type": "array",
       "items": {
