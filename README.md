@@ -102,6 +102,7 @@
 | নতুন ছবি | ঠিক ফোল্ডারে রাখুন (যেমন `assets/images/products/`), JSON-এ লিখুন `"/assets/images/products/নাম.jpg"`। নাম ছোট হাতের ইংরেজি অক্ষরে, স্পেসের বদলে `-` দিন (যেমন `netflix-shared-account-01.jpg`); ছবি 2000px-এর চেয়ে বড় না হলেই ভালো |
 | sitemap-এ বাড়তি লিংক (যেমন PDF) | `data/global/sitemap.json` → `urls` |
 | নতুন আইকন | `data/global/icons.json`-এ SVG কোড যোগ করুন |
+| কোনো পেমেন্ট মেথড বন্ধ | সব জায়গা থেকে: `data/global/payments.json` → মেথডের `"enabled": false` (CMS: Settings → Payment methods → Show this method)। শুধু একটা প্রোডাক্ট বা সার্ভিসের জন্য: তার `"paymentsOff"`-এ মেথডের id, যেমন `["usd-paypal"]` (CMS: Payment methods turned off)। কার্টে এমন প্রোডাক্ট থাকলে Payment পেইজে সেই মেথড আসে না, কোনো currency-র সব মেথড বন্ধ হলে currency-টাই লুকায়; সার্ভিসে PayPal বন্ধ করলে PayPal বোতাম আসে না |
 | পেমেন্ট মেথডের চলমান লোগো সারি আর "+200 more" বোতাম | `data/global/footer.json` → `paymentMethods` (CMS: Settings → Footer → Payment methods row): প্রতিটি লোগোর নাম আর ছবি (ছবি না দিলে টাইলে নাম দেখায়), বোতামের লেখা আর লিংক। সব পেইজের ফুটারে, ধীরে ডান থেকে বামে সরে; "Reduce motion" চালু থাকলে থেমে থাকে |
 | লোগো | `data/global/header.json` → `logo.image` (হেডার ও ফুটার), `data/global/site.json` → `favicon`। build নিজে চারপাশের সাদা অংশ কেটে ছোট কপি বানায় |
 

@@ -44,6 +44,7 @@
   "orderIdLabel": "Order ID",
   "editCartLabel": "Edit cart",
   "stockNotice": "Some quantities were changed to match the stock that is available now.",
+  "noMethods": "These items cannot be paid for together with one payment method. Please pay for them in separate orders, or message me on WhatsApp.",
   "empty": {
     "title": "Your cart is empty",
     "text": "Add products from the shop first.",

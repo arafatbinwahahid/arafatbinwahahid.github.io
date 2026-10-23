@@ -51,3 +51,9 @@ document.querySelectorAll('form[data-form]').forEach((form) => {
     window.open(`https://wa.me/${e.currentTarget.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
   });
 });
+
+// Product and service galleries: a thumbnail shows its picture
+document.querySelectorAll('.gallery').forEach((g) => g.querySelectorAll('[data-thumb]').forEach((t) => t.addEventListener('click', () => {
+  g.querySelectorAll('[data-slide]').forEach((s) => { s.hidden = s.dataset.slide !== t.dataset.thumb; });
+  g.querySelectorAll('[data-thumb]').forEach((x) => x.toggleAttribute('aria-current', x === t));
+})));

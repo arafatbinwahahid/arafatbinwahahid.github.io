@@ -62,6 +62,9 @@ for (const t of tools) {
     if (twice(pairs)) throw new Error(`${where}: the pair ${twice(pairs)} is listed twice`);
   }
 }
+// "paymentsOff" on a product or service must name a method in payments.json (a removed method is only warned about)
+const methodIds = new Set(payments.currencies.flatMap((c) => c.methods.map((m) => m.id)));
+for (const x of [...products, ...services]) for (const id of x.paymentsOff || []) if (!methodIds.has(id)) console.warn(`  ! ${x.slug}: "paymentsOff" names ${id}, which is not a payment method any more`);
 if (!codes.includes(payments.defaultCurrency)) throw new Error(`data/global/payments.json: "defaultCurrency" must be one of ${codes.join(', ')}`);
 for (const c of payments.currencies) for (const m of c.methods) {
   if (m.enabled === false) continue;
