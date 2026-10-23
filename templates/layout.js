@@ -38,7 +38,7 @@ function chatButton() {
   const c = contact.liveChat || {};
   if (!c.tawkPropertyId || !c.tawkWidgetId) return '';
   const label = esc(c.buttonLabel || 'Live chat');
-  return `<button class="chat-float" type="button" data-chat="${esc(c.tawkPropertyId)}/${esc(c.tawkWidgetId)}" aria-label="${label}" title="${label}">${icon('chat')}</button>`;
+  return `<button class="chat-float" type="button" data-chat="${esc(c.tawkPropertyId)}/${esc(c.tawkWidgetId)}" aria-label="${label}" title="${label}">${icon('chat')}<span class="chat-count" data-chat-count hidden></span></button>`;
 }
 
 // Logo link. With "showText": false the logo image already has the name in it, so the image's alt text names the link instead.
