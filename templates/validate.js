@@ -43,6 +43,10 @@ function where(data, instancePath) {
   return parts.join(' › ');
 }
 
+// The schema name for a data file, e.g. "collections/products.json" -> "products" (used by the CMS too)
+export const schemaFor = (file) => rules.find(([f]) => f === file)?.[1] || (file.startsWith('pages/') ? 'page' : file.startsWith('collections/blog/') ? 'post' : null);
+export const readSchema = loadSchema;
+
 export async function validateData() {
   let Ajv;
   try { Ajv = (await import('ajv')).default; } catch {
