@@ -47,6 +47,11 @@ export function checkCms(config) {
       for (const f of fs.readdirSync(path.join(ROOT, c.folder)).filter((x) => x.endsWith('.json'))) walk(json(`${c.folder}/${f}`), c.fields, `${c.folder}/${f}`, missing);
     }
   }
+  // Every page and settings file needs a form somewhere in the CMS
+  const listed = new Set(config.collections.flatMap((c) => (c.files || []).map((f) => f.file)));
+  for (const dir of ['data/pages', 'data/global']) {
+    for (const f of fs.readdirSync(path.join(ROOT, dir)).filter((x) => x.endsWith('.json'))) if (!listed.has(`${dir}/${f}`)) missing.push(`${dir}/${f} (the whole file has no CMS form)`);
+  }
   if (missing.length) {
     throw new Error(`These data fields have no CMS field in templates/cms.js, so the CMS would delete them on save:\n  - ${missing.join('\n  - ')}`);
   }

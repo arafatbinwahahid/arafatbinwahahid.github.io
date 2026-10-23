@@ -1,7 +1,7 @@
 // Sveltia CMS (arafatbin.com/admin/): one form per JSON file in data/.
 // build.js writes dist/admin/config.yml from this file, so the icon lists and folders always match the site.
 // Every key of every JSON file must have a field here, or the CMS drops it when saving: `npm test` checks that (cms-check.js).
-import { icons, header, payments } from './helpers.js';
+import { icons, header, payments, site } from './helpers.js';
 
 export const CMS_VERSION = '0.227.4';
 const REPO = process.env.GITHUB_REPOSITORY || 'arafatbinwahahid/arafatbinwahahid.github.io';
@@ -34,13 +34,34 @@ const URL_HINT = 'A page on this site like /shop/, or a full link like https://�
 const href = (name = 'href', label = 'Link', o) => str(name, label, { hint: URL_HINT, pattern: ['^$|^(/|https?://|mailto:|tel:|#)', 'Start with /, https://, mailto:, tel: or #'], ...o });
 const iconNames = Object.keys(icons).filter((k) => !k.startsWith('_'));
 const icon = (name = 'icon', label = 'Icon', o) => sel(name, label, iconNames, { hint: 'Icons come from Settings → Icons (data/global/icons.json).', dropdown_threshold: 0, ...o });
-const imgPath = (name, label, folder, o) => F('image', name, label, { media_folder: `/assets/images/${folder}`, public_folder: `/assets/images/${folder}`, hint: 'Upload or pick an image. It is resized and converted automatically.', ...o });
+// Best upload size for each place an image is shown (measured from the site's layout, about 2× the shown size for sharp phones)
+const SIZES = {
+  product: '1200 × 900 px (4:3, landscape). The first image is the shop card (cut to 4:3) and the big picture on the product page; the others show as thumbnails under it.',
+  service: '1200 × 900 px (4:3, landscape). The first image is the service card (cut to 4:3) and the big picture on the service page; the others show as thumbnails under it.',
+  blogCover: '1200 × 900 px (4:3, landscape). Shown on blog cards (cut to 4:3) and at the top of the post, and used when the post is shared unless SEO → Share image is set.',
+  blogImage: '1200 px wide, any height. Shown inside the post at the text width (up to about 720 px).',
+  about: '1200 × 800 px (3:2, landscape). Shown next to the text, up to 556 px wide; also the photo of the home page "About" section.',
+  experience: '1200 × 900 px (4:3, landscape). Shown under the job, up to 600 px wide.',
+  work: '1200 × 825 px (16:11, landscape). Home page "Recent work" cards cut it to 16:11; the Work page shows the whole image.',
+  credential: '1600 × 1200 px (4:3) scan or photo of the certificate. Shown whole (never cut) in a 4:3 box; tapping it opens the full image, so keep the text sharp.',
+  poster: '1000 × 1000 px (square). For a QR code: square, at least 600 px, with a white border around the code.',
+  payLogo: '256 × 256 px (square) or a wide logo, PNG or SVG with a transparent or light background. Shown in a 64 × 64 px tile.',
+  logo: 'PNG with a white or transparent background, at least 300 px tall. White space around it is cut off automatically; shown 32 px tall in the header and footer.',
+  favicon: '512 × 512 px (square) PNG. Becomes the browser tab icon (48 px) and the phone home-screen icon (180 px).',
+  share: '1200 × 630 px (1.91:1), JPG or PNG. Shown when the page is shared on Facebook, WhatsApp, X or LinkedIn and in Google Discover.',
+  avatar: '400 × 400 px (square) photo of the person.',
+  signature: '600 × 200 px, PNG with a transparent background.',
+  companyLogo: '256 × 256 px (square) PNG.',
+  wide: '1200 px wide, any height.',
+};
+const imageHint = (size) => `📐 Best size: ${SIZES[size] || SIZES.wide} Upload JPG, PNG or WebP; it is resized and turned into small WebP copies automatically.`;
+const imgPath = (name, label, folder, { size, ...o } = {}) => F('image', name, label, { media_folder: `/assets/images/${folder}`, public_folder: `/assets/images/${folder}`, hint: imageHint(size), ...o });
 const image = (name, label, folder, o = {}) => obj(name, label, [
-  imgPath('src', 'Image', folder),
+  imgPath('src', 'Image', folder, { size: o.size }),
   str('alt', 'Alt text', { hint: 'Describe the image for Google and screen readers, e.g. "Netflix shared account poster".' }),
   ...(o.caption ? [str('caption', 'Caption', { hint: 'Short text shown under the image.' })] : []),
 ], { summary: '{{alt}}', ...o.field });
-const images = (name, label, folder) => list(name, label, [imgPath('src', 'Image', folder), str('alt', 'Alt text')], { summary: '{{alt}}', thumbnail: 'src', hint: 'The first image is the main one.' });
+const images = (name, label, folder, size) => list(name, label, [imgPath('src', 'Image', folder, { size }), str('alt', 'Alt text', { hint: 'Describe the image for Google and screen readers.' })], { summary: '{{alt}}', thumbnail: 'src', hint: `The first image is the main one. ${imageHint(size)}` });
 const buttonFields = () => [
   str('label', 'Button text', { required: true }),
   href('href', 'Link', { required: true }),
@@ -65,7 +86,7 @@ const seo = ({ article = false } = {}) => obj('seo', '🔍 SEO', [
   txt('description', 'Meta description', { hint: 'The grey text under the title in Google. 70–155 characters.', maxlength: 170 }),
   strList('keywords', 'Keywords', { hint: 'Optional. Google ignores this, Bing uses it a little.' }),
   str('canonical', 'Canonical URL', { hint: 'Only when this page copies another URL. Empty = this page.' }),
-  F('image', 'image', 'Share image', { media_folder: '/assets/images/social', public_folder: '/assets/images/social', hint: 'Image for Facebook, WhatsApp and X previews. Empty = the main image of the page.' }),
+  F('image', 'image', 'Share image', { media_folder: '/assets/images/social', public_folder: '/assets/images/social', hint: `Image for Facebook, WhatsApp and X previews. Empty = the main image of the page. ${imageHint('share')}` }),
   str('imageAlt', 'Share image alt text'),
   str('author', 'Author', { hint: 'Empty = Settings → Site → SEO defaults → Author.' }),
   obj('robots', 'Search engine rules (robots)', [
@@ -110,7 +131,7 @@ const legal = () => [
 const reviewFields = () => [
   str('name', 'Customer name', { required: true }), str('role', 'Role or country'), str('date', 'Date', { hint: 'Free text, e.g. "March 2026".' }),
   int('rating', 'Stars (1–5)', { min: 1, max: 5, default: 5 }), txt('text', 'Review', { required: true }), link('link', 'Link to the review'),
-  later(imgPath('avatar', 'Photo', 'reviews')), later(sel('source', 'Where it was posted', ['', 'Fiverr', 'Google', 'Facebook', 'WhatsApp', 'Website'])), later(bool('verified', 'Verified buyer')),
+  later(imgPath('avatar', 'Photo', 'reviews', { size: 'avatar' })), later(sel('source', 'Where it was posted', ['', 'Fiverr', 'Google', 'Facebook', 'WhatsApp', 'Website'])), later(bool('verified', 'Verified buyer')),
 ];
 const homeSection = (name, label, fields) => ({ name, label, widget: 'object', fields: [bool('show', 'Show this section', { default: true }), ...fields] });
 const sectionHead = () => [str('title', 'Title'), str('text', 'Text'), link('link', '"See all" link'), sel('background', 'Background', ['', 'soft'])];
@@ -126,7 +147,7 @@ const pages = [
       homeSection('products', 'Products', [...sectionHead(), int('limit', 'How many', { default: 4 })]),
       homeSection('services', 'Services', [...sectionHead(), int('limit', 'How many', { default: 2 })]),
       homeSection('tools', 'Free tools', [...sectionHead(), int('limit', 'How many', { default: 4 })]),
-      homeSection('about', 'About', [str('title', 'Title'), txtList('text', 'Paragraphs'), image('image', 'Photo', 'about'), buttons(), sel('background', 'Background', ['', 'soft'])]),
+      homeSection('about', 'About', [str('title', 'Title'), txtList('text', 'Paragraphs'), image('image', 'Photo', 'about', { size: 'about' }), buttons(), sel('background', 'Background', ['', 'soft'])]),
       homeSection('work', 'Recent work', [...sectionHead(), int('limit', 'How many', { default: 2 })]),
       homeSection('reviews', 'Reviews', [...sectionHead(), int('limit', 'How many', { default: 3 })]),
       homeSection('blog', 'Blog', [...sectionHead(), int('limit', 'How many', { default: 3 })]),
@@ -165,18 +186,18 @@ const pages = [
     seo(), hero(), str('openLabel', '"Open tool" link'), str('freeLabel', '"Free" label'), str('howTitle', '"How to use it" heading'), str('faqTitle', 'Questions heading'),
   ] },
   { name: 'about', label: 'About', icon: 'person', preview_path: 'about/', fields: [
-    seo(), hero(), image('image', 'Photo', 'about'), txtList('paragraphs', 'Paragraphs'), str('factsTitle', 'Facts heading'),
+    seo(), hero(), image('image', 'Photo', 'about', { size: 'about' }), txtList('paragraphs', 'Paragraphs'), str('factsTitle', 'Facts heading'),
     list('facts', 'Quick facts', [str('label', 'Label'), str('value', 'Value')], { summary: '{{label}}: {{value}}' }), buttons(),
     later(txt('mission', 'Mission')), later(txt('vision', 'Vision')),
     later(list('values', 'Values', [icon(), str('title', 'Title'), txt('text', 'Text')], { summary: '{{title}}' })),
-    later(imgPath('signature', 'Signature image', 'about')),
+    later(imgPath('signature', 'Signature image', 'about', { size: 'signature' })),
   ] },
   { name: 'experience', label: 'Experience', icon: 'badge', preview_path: 'experience/', fields: [
     seo(), hero(), str('currentLabel', '"Current" badge'),
     list('roles', 'Jobs', [
       str('title', 'Job title', { required: true }), str('company', 'Company'), str('period', 'Period', { hint: 'e.g. Jan 2024 – Present' }), str('type', 'Type', { hint: 'e.g. Full-time' }),
-      bool('current', 'Current job'), strList('points', 'What you did'), image('image', 'Photo', 'about', { caption: true }),
-      later(str('location', 'Location')), later(imgPath('logo', 'Company logo', 'about')), later(strList('skills', 'Skills used')),
+      bool('current', 'Current job'), strList('points', 'What you did'), image('image', 'Photo', 'about', { caption: true, size: 'experience' }),
+      later(str('location', 'Location')), later(imgPath('logo', 'Company logo', 'about', { size: 'companyLogo' })), later(strList('skills', 'Skills used')),
     ], { summary: '{{title}} – {{company}}' }),
   ] },
   { name: 'skills', label: 'Skills', icon: 'build', preview_path: 'skills/', fields: [
@@ -188,14 +209,14 @@ const pages = [
   { name: 'work', label: 'Work', icon: 'photo_library', preview_path: 'work/', fields: [
     seo(), hero(),
     list('projects', 'Projects', [
-      str('title', 'Title', { required: true }), image('image', 'Image', 'work'), txt('summary', 'Summary'), strList('points', 'Highlights'), buttons(),
-      later(str('client', 'Client')), later(date('date', 'Date')), later(strList('tags', 'Tags')), later(images('gallery', 'More images', 'work')), later(href('url', 'Live link')),
+      str('title', 'Title', { required: true }), image('image', 'Image', 'work', { size: 'work' }), txt('summary', 'Summary'), strList('points', 'Highlights'), buttons(),
+      later(str('client', 'Client')), later(date('date', 'Date')), later(strList('tags', 'Tags')), later(images('gallery', 'More images', 'work', 'wide')), later(href('url', 'Live link')),
     ], { summary: '{{title}}', thumbnail: 'image.src' }),
   ] },
   { name: 'credentials', label: 'Credentials', icon: 'workspace_premium', preview_path: 'credentials/', fields: [
     seo(), hero(), str('certificatesTitle', 'Certificates heading'),
     list('certificates', 'Certificates', [
-      str('title', 'Title', { required: true }), str('detail', 'Details', { hint: 'Issuer and date' }), image('image', 'Certificate image', 'credentials'),
+      str('title', 'Title', { required: true }), str('detail', 'Details', { hint: 'Issuer and date' }), image('image', 'Certificate image', 'credentials', { size: 'credential' }),
       later(str('issuer', 'Issuer')), later(date('issueDate', 'Issue date')), later(str('credentialId', 'Credential ID')), later(href('credentialUrl', 'Verify link')),
     ], { summary: '{{title}}' }),
     str('educationTitle', 'Education heading'),
@@ -253,7 +274,7 @@ const productFields = [
   str('title', 'Product name', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /shop/<slug>/. Changing it breaks old links.' }),
   str('id', 'Product ID', { required: true, hint: 'Unique, e.g. P006.' }), statusField(), paymentsOff('product'), str('category', 'Category', { required: true }), seo(),
   list('variants', 'Plans', variant(), { summary: '{{name}} ({{stock}} in stock)', hint: 'One plan = one price. Add more plans for options like 1 or 3 months.' }),
-  images('images', 'Images', 'products'),
+  images('images', 'Images', 'products', 'product'),
   txt('summary', 'Short summary', { required: true, hint: 'Shown on cards and under the title.' }), txt('about', 'About'), txtList('description', 'Description'),
   str('usageTitle', 'Usage heading'), txt('usageIntro', 'Usage intro'), strList('usage', 'Usage steps / rules'),
   list('features', 'Features', [icon(), str('text', 'Text')], { summary: '{{text}}' }),
@@ -272,12 +293,12 @@ const serviceFields = [
   str('title', 'Service name', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /services/<slug>/' }),
   statusField(), paymentsOff('service'), str('category', 'Category', { required: true }), icon('icon', 'Icon', { required: true }), seo(),
   str('packagesTitle', 'Packages heading'), str('priceLabel', 'Price label', { hint: 'e.g. Starting from' }),
-  list('packages', 'Packages', servicePackage(), { summary: '{{name}}', min: 1 }), images('images', 'Images', 'services'),
+  list('packages', 'Packages', servicePackage(), { summary: '{{name}}', min: 1 }), images('images', 'Images', 'services', 'service'),
   txt('summary', 'Short summary', { required: true }), txt('about', 'About'), txtList('description', 'Description'),
   str('usageTitle', 'Steps heading'), txt('usageIntro', 'Steps intro'), strList('usage', 'Steps'),
   list('features', 'Features', [icon(), str('text', 'Text')], { summary: '{{text}}' }), faq(), buttons(),
   later(str('deliveryTime', 'Delivery time')), later(int('revisions', 'Revisions', { min: 0 })), later(bool('featured', 'Featured')), later(strList('highlights', 'Highlights')),
-  later(str('videoUrl', 'Video link')), later(strList('tags', 'Tags')), later(images('portfolio', 'Portfolio samples', 'services')),
+  later(str('videoUrl', 'Video link')), later(strList('tags', 'Tags')), later(images('portfolio', 'Portfolio samples', 'services', 'service')),
   later(F('relation', 'related', 'Related services', { collection: 'services', value_field: 'slug', display_fields: ['title'], multiple: true })),
 ];
 const block = (name, label, fields) => ({ name, label, widget: 'object', fields });
@@ -285,11 +306,11 @@ const postFields = [
   str('title', 'Title', { required: true }), str('slug', 'URL slug', { required: true, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and dashes'], hint: 'Page address: /blog/<slug>/' }),
   date('date', 'Date', { required: true, default: '{{now}}' }), str('author', 'Author', { default: 'Arafat Bin Wahahid' }), str('category', 'Category'), strList('tags', 'Tags'),
   txt('excerpt', 'Excerpt', { required: true, hint: 'One or two sentences for the blog list and Google.' }), seo({ article: true }),
-  image('image', 'Cover image', 'blog'), bool('draft', 'Draft (hidden from the site)'),
+  image('image', 'Cover image', 'blog', { size: 'blogCover' }), bool('draft', 'Draft (hidden from the site)'),
   F('list', 'content', 'Content', { types: [
     block('p', 'Paragraph', [txt('text', 'Text')]), block('h2', 'Heading', [str('text', 'Text')]), block('h3', 'Subheading', [str('text', 'Text')]),
     block('quote', 'Quote', [txt('text', 'Text')]), block('list', 'List', [bool('ordered', 'Numbered'), strList('items', 'Items')]),
-    block('image', 'Image', [imgPath('src', 'Image', 'blog'), str('alt', 'Alt text'), str('caption', 'Caption')]),
+    block('image', 'Image', [imgPath('src', 'Image', 'blog', { size: 'blogImage' }), str('alt', 'Alt text'), str('caption', 'Caption')]),
   ], hint: 'Add blocks and drag them into order.' }),
   later(date('updated', 'Updated on')), later(bool('featured', 'Featured')), later(txt('authorBio', 'Author bio')),
   later(F('relation', 'related', 'Related posts', { collection: 'blog', value_field: 'slug', display_fields: ['title'], multiple: true })),
@@ -337,7 +358,7 @@ const method = () => [
     num('conversionPercent', 'Currency conversion % when you withdraw', { min: 0, max: 50, step: 0.01, hint: 'If PayPal converts USD to OMR when you withdraw to your bank. 0 = no conversion.' }),
   ], { hint: 'Only for PayPal. All 0 = no fee is added. The buyer pays price + fee, so after PayPal takes its fees you get the full USD price.' }),
   list('details', 'Payment details', [str('label', 'Label'), str('value', 'Value', { hint: 'Empty = hidden, customers are told to ask on WhatsApp.' })], { summary: '{{label}}: {{value}}' }),
-  link('link', 'Pay button'), image('poster', 'Poster / QR code', 'payments'),
+  link('link', 'Pay button'), image('poster', 'Poster / QR code', 'payments', { size: 'poster' }),
   obj('location', 'Meeting place (appointments)', [str('name', 'Name'), str('address', 'Address'), str('mapQuery', 'Map location', { hint: 'Coordinates like 16.81,53.47 or a place name' })]),
   list('hours', 'Opening hours', [str('days', 'Days'), str('time', 'Time')], { summary: '{{days}} {{time}}' }),
   obj('timeRange', 'Allowed appointment times', [time('start', 'From'), time('end', 'To')]),
@@ -348,7 +369,7 @@ const globals = [
     str('name', 'Site name', { required: true }), str('title', 'Home page title', { required: true, hint: 'About 60 characters.' }), str('titleSeparator', 'Title separator'),
     txt('description', 'Default description', { required: true }), str('url', 'Site URL', { required: true, hint: 'No slash at the end' }),
     str('language', 'Language code', { hint: 'e.g. en' }), str('locale', 'Locale', { hint: 'e.g. en-US' }), str('currency', 'Default currency'),
-    imgPath('defaultImage', 'Default share image', 'about'), imgPath('favicon', 'Favicon', 'brand'), str('homeLabel', '"Home" in breadcrumbs'),
+    imgPath('defaultImage', 'Default share image', 'about', { size: 'share', hint: `Used when a page has no image of its own. ${imageHint('share')}` }), imgPath('favicon', 'Favicon', 'brand', { size: 'favicon' }), str('homeLabel', '"Home" in breadcrumbs'),
     obj('verification', 'Site verification codes', ['google', 'bing', 'yandex', 'pinterest', 'facebook', 'baidu'].map((k) => str(k, k, { hint: 'The code, or the whole <meta> tag' }))),
     obj('seo', 'SEO defaults', [str('author', 'Author'), str('twitterSite', 'X (Twitter) @username'), str('twitterCreator', 'X creator @username'), str('facebookAppId', 'Facebook App ID')]),
     str('clarityId', 'Microsoft Clarity project ID', { hint: 'Empty = off' }), str('googleAnalyticsId', 'Google Analytics ID', { hint: 'G-XXXXXXX. Empty = off' }),
@@ -358,7 +379,7 @@ const globals = [
     obj('robots', 'robots.txt', [strList('allow', 'Allow'), strList('disallow', 'Disallow')]),
   ] },
   { name: 'header', label: 'Header', icon: 'top_panel_open', fields: [
-    obj('logo', 'Logo', [str('text', 'Text', { required: true }), imgPath('image', 'Logo image', 'brand'), href('href', 'Link')], { collapsed: false }),
+    obj('logo', 'Logo', [str('text', 'Text', { required: true }), imgPath('image', 'Logo image', 'brand', { size: 'logo' }), href('href', 'Link')], { collapsed: false }),
     links('links', 'Top links (desktop)'), obj('search', 'Search icon', [str('label', 'Label'), href()], { hint: 'Clear both to hide the icon.' }), button('button', 'Header button'),
     obj('menu', '3-dot menu', [str('buttonLabel', 'Button label'), list('columns', 'Columns', [str('title', 'Title'), links('links', 'Links', true)], { summary: '{{title}}' })]),
   ] },
@@ -371,7 +392,7 @@ const globals = [
       str('label', 'Name for screen readers', { hint: 'e.g. Payment methods we accept' }),
       list('logos', 'Logos', [
         str('name', 'Name', { required: true, hint: 'e.g. PayPal. Shown in the tile until a logo is uploaded.' }),
-        imgPath('image', 'Logo', 'payments', { hint: 'A square or wide logo on a light background. Small files are best.' }),
+        imgPath('image', 'Logo', 'payments', { size: 'payLogo' }),
       ], { summary: '{{name}}', thumbnail: 'image', hint: 'The tiles move slowly from right to left in the footer of every page. Drag to reorder.' }),
       obj('more', '"+200 more" button', [str('label', 'Text', { hint: 'e.g. +200 more' }), href('href', 'Link', { hint: 'e.g. /payments/ or /faq/' })]),
     ], { hint: 'Shown in the footer of every page, above the copyright line.' }),
@@ -414,6 +435,13 @@ const globals = [
   ] },
 ];
 
+const draftFilter = [{ name: 'drafts', label: 'Drafts', field: 'status', pattern: 'draft' }];
+// Page files in the order given; every page in data/pages/ must be in one of the groups (checked when the CMS is built)
+const pagesIn = (names) => names.map((n) => {
+  const p = pages.find((x) => x.name === n);
+  if (!p) throw new Error(`templates/cms.js: no page "${n}"`);
+  return file('pages')(p);
+});
 const file = (dir) => (p) => ({ ...p, file: `data/${dir}/${p.name}.json`, format: 'json', ...(p.preview_path !== undefined ? { preview_path: p.preview_path } : {}) });
 
 export function cmsConfig() {
@@ -423,18 +451,28 @@ export function cmsConfig() {
       commit_messages: { create: 'Create {{collection}} “{{slug}}”', update: 'Update {{collection}} “{{slug}}”', delete: 'Delete {{collection}} “{{slug}}”', uploadMedia: 'Upload “{{path}}”', deleteMedia: 'Delete “{{path}}”' },
     },
     app_title: `${header.logo.text} CMS`,
+    logo: { src: site.favicon },
+    site_url: site.url,
+    display_url: site.url.replace(/^https?:\/\//, ''),
     media_folder: 'assets/images', public_folder: '/assets/images',
     media_libraries: { default: { config: { slugify_filename: true, max_file_size: 15000000, transformations: { raster_image: { format: 'webp', quality: 85, width: 2000, height: 2000 } } } } },
     slug: { encoding: 'ascii', clean_accents: true },
     output: { omit_empty_optional_fields: false, json: { indent_size: 2 } },
+    // Clean full-width forms: the preview pane only showed the raw data, "View on site" links stay
+    editor: { preview: false },
+    show_preview_links: true,
     collections: [
-      { name: 'products', label: 'Products', label_singular: 'product', icon: 'shopping_bag', file: 'data/collections/products.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'shop/{{fields.slug}}/', fields: productFields },
-      { name: 'services', label: 'Services', label_singular: 'service', icon: 'design_services', file: 'data/collections/services.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'services/{{fields.slug}}/', fields: serviceFields },
-      { name: 'tools', label: 'Free tools', label_singular: 'tool', icon: 'handyman', file: 'data/collections/tools.json', format: 'json', identifier_field: 'title', summary: '{{title}}', preview_path: 'tools/{{fields.slug}}/', fields: toolFields },
-      { name: 'blog', label: 'Blog posts', label_singular: 'post', icon: 'edit_note', folder: 'data/collections/blog', extension: 'json', format: 'json', identifier_field: 'title', slug: '{{fields.slug}}', summary: '{{title}} ({{date}})', sortable_fields: ['date', 'title'], preview_path: 'blog/{{fields.slug}}/', fields: postFields },
+      { name: 'products', label: 'Products', label_singular: 'product', icon: 'shopping_bag', description: 'Things people buy in the shop. Prices, stock, plans, images and SEO for each product.', file: 'data/collections/products.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, view_groups: [{ label: 'Category', field: 'category' }], preview_path: 'shop/{{fields.slug}}/', fields: productFields },
+      { name: 'services', label: 'Services', label_singular: 'service', icon: 'design_services', description: 'Work people order on WhatsApp or pay for with PayPal: packages, prices, images and SEO.', file: 'data/collections/services.json', format: 'json', identifier_field: 'title', summary: '{{title}} · {{category}}', thumbnail: 'images.0.src', view_filters: draftFilter, preview_path: 'services/{{fields.slug}}/', fields: serviceFields },
+      { name: 'tools', label: 'Free tools', label_singular: 'tool', icon: 'handyman', description: 'Website cost calculator and currency converter. Exchange rates are in Settings → Exchange rates.', file: 'data/collections/tools.json', format: 'json', identifier_field: 'title', summary: '{{title}}', thumbnail: false, view_filters: draftFilter, preview_path: 'tools/{{fields.slug}}/', fields: toolFields },
       { divider: true },
-      { name: 'pages', label: 'Pages', icon: 'description', files: pages.map(file('pages')) },
-      { name: 'settings', label: 'Settings', icon: 'tune', files: globals.map(file('global')) },
+      { name: 'blog', label: 'Blog posts', label_singular: 'post', icon: 'edit_note', description: 'One file per post. Newest first.', folder: 'data/collections/blog', extension: 'json', format: 'json', identifier_field: 'title', slug: '{{fields.slug}}', summary: '{{title}} ({{date}})', thumbnail: 'image.src', sortable_fields: { fields: ['date', 'title'], default: { field: 'date', direction: 'descending' } }, view_filters: [{ name: 'drafts', label: 'Drafts', field: 'draft', pattern: true }], view_groups: [{ name: 'year', label: 'Year', field: 'date', pattern: '\\d{4}' }], preview_path: 'blog/{{fields.slug}}/', fields: postFields },
+      { divider: true },
+      { name: 'pages', label: 'Shop pages', icon: 'storefront', description: 'Home page and the shop, payment, services, tools and order tracking pages.', files: pagesIn(['home', 'shop', 'payments', 'services', 'tools', 'track']) },
+      { name: 'about-pages', label: 'About me pages', icon: 'person', description: 'About, experience, skills, work, credentials and reviews.', files: pagesIn(['about', 'experience', 'skills', 'work', 'credentials', 'reviews']) },
+      { name: 'help-pages', label: 'Help & legal pages', icon: 'help', description: 'Contact, FAQ, blog page, search, policies and the 404 page.', files: pagesIn(['contact', 'faq', 'blog', 'search', 'terms', 'privacy', 'refund', '404']) },
+      { divider: true },
+      { name: 'settings', label: 'Settings', icon: 'tune', description: 'Things on every page: site name and SEO, header, footer, contact details, payment methods, exchange rates, icons.', files: globals.map(file('global')) },
     ],
   };
 }
