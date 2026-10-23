@@ -66,12 +66,30 @@ document.querySelectorAll('form[data-form]').forEach((form) => {
 
 // Live chat (tawk.to, contact.json "liveChat"): the chat script loads only when the button is pressed, so pages stay fast.
 // After the first chat it loads by itself on the next pages, so the conversation stays open.
+// tawk.to's own round button is never shown: the site's blue chat button opens the chat window, and comes back
+// (with the number of new messages) when the window is closed, so the buttons never move or double up.
 const chatBtn = document.querySelector('[data-chat]');
+const chatCount = chatBtn?.querySelector('[data-chat-count]');
+const tawk = () => window.Tawk_API;
+function openChat() {
+  tawk().showWidget();
+  tawk().maximize();
+  chatBtn.hidden = true;
+}
 function loadChat(open) {
-  if (window.Tawk_API?.maximize) return open && window.Tawk_API.maximize();
+  if (tawk()?.maximize) return open && openChat();
   chatBtn.disabled = true;
-  const place = { position: 'br', xOffset: 16, yOffset: document.querySelector('.wa-float') ? 80 : 16 };
-  window.Tawk_API = { customStyle: { visibility: { desktop: place, mobile: place } }, onLoad() { chatBtn.hidden = true; if (open) window.Tawk_API.maximize(); } };
+  window.Tawk_API = {
+    onLoad() {
+      chatBtn.disabled = false;
+      if (open) openChat();
+      else tawk().hideWidget();
+    },
+    onChatMaximized() { chatBtn.hidden = true; },
+    onChatMinimized() { tawk().hideWidget(); chatBtn.hidden = false; },
+    onChatHidden() { chatBtn.hidden = false; },
+    onUnreadCountChanged(n) { chatCount.textContent = n; chatCount.hidden = !n; },
+  };
   window.Tawk_LoadStart = new Date();
   const s = Object.assign(document.createElement('script'), { async: true, src: `https://embed.tawk.to/${chatBtn.dataset.chat}`, charset: 'UTF-8' });
   s.setAttribute('crossorigin', '*');
