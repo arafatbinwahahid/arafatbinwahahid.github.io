@@ -433,3 +433,10 @@ a.card:hover { border-color: var(--primary); }
 .badge-status { padding: .1rem .55rem; border-radius: 99px; background: var(--soft); border: 1px solid var(--border); font-size: .82rem; font-weight: 600; }
 .order-edit { width: min(560px, 100%); overflow-y: auto; }
 .order-edit select { width: 100%; padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 10px; font: inherit; background: #fff; color: var(--text); }
+
+/* ---- Publish page (/admin/publish/) ---- */
+.publish-check.is-ok { border-color: #2e7d32; }
+.publish-check.is-bad { border-color: #c62828; }
+.publish-problems { padding-left: 1.1rem; color: #c62828; overflow-wrap: anywhere; }
+.publish-list li { padding: .7rem 1rem; border: 1px solid var(--border); border-radius: 12px; display: grid; gap: .15rem; }
+.publish-files { font-size: .88rem; color: var(--muted); overflow-wrap: anywhere; }
