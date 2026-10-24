@@ -447,7 +447,8 @@ const globals = [
       bool('lakh', 'Use lakh and crore', { hint: 'For Taka: 1,00,000 and "one lakh"' }),
     ], { summary: '{{code}} – {{name}} ({{rate}})', required: true, min: 1, hint: 'Used by the currency converter and the website cost calculator. Each code once, USD always with rate 1. These are not the shop prices (those are in Payment methods).' }),
   ] },
-  { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' })] },
+  { name: 'sitemap', label: 'Sitemap', icon: 'account_tree', fields: [hidden('_help'), strList('urls', 'Links listed first in sitemap.xml', { hint: 'Every page is added automatically. Add extra links here, like the CV PDF.' }),
+    list('redirects', 'Moved pages', [str('from', 'Old address', { required: true, hint: 'e.g. /shop/old-product/' }), str('to', 'New address', { required: true, hint: 'e.g. /shop/new-product/' })], { summary: '{{from}} → {{to}}', hint: 'Visitors and Google opening an old address go to the new one (after a slug change or a removed page).' })] },
   { name: 'icons', label: 'Icons', icon: 'interests', fields: [
     F('keyvalue', 'icons', 'Icons', { root: true, key_label: 'Name', value_label: 'SVG code (inside a 24×24 stroke icon)', hint: 'Add your own: paste the inner SVG code, e.g. <path d="…"/>. The name can then be chosen in every Icon field.' }),
   ] },

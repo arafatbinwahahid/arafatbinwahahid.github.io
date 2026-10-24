@@ -1,7 +1,42 @@
 {
   "title": "data/global/sitemap.json",
   "type": "object",
-  "required": ["urls"],
-  "properties": { "_help": { "type": "string" }, "urls": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^https://" } } },
+  "required": [
+    "urls"
+  ],
+  "properties": {
+    "_help": {
+      "type": "string"
+    },
+    "urls": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^https://"
+      }
+    },
+    "redirects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^(/|https://)"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
   "additionalProperties": false
 }
