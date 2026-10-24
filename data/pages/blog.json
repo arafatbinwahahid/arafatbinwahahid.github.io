@@ -2,7 +2,7 @@
   "seo": {
     "title": "Blog",
     "titleSuffix": true,
-    "description": "What to watch on Netflix and Amazon Prime Video: best movies, series and streaming guides for Oman and worldwide, by Arafat Bin Wahahid.",
+    "description": "What to watch on Netflix and Prime Video, plus Avast, VPN and online safety guides for Oman and worldwide, by Arafat Bin Wahahid.",
     "keywords": [],
     "canonical": "",
     "image": "",
@@ -38,7 +38,7 @@
     "schema": [],
     "meta": []
   },
-  "hero": { "title": "Blog", "text": "What to watch on Netflix and Prime Video, plus streaming guides for Oman and worldwide." },
+  "hero": { "title": "Blog", "text": "What to watch on Netflix and Prime Video, plus Avast, VPN and online safety guides for Oman and worldwide." },
   "readMoreLabel": "Read more",
   "backLabel": "Back to blog",
   "byLabel": "By"
