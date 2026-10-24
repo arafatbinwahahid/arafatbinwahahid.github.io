@@ -26,6 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history, so the last step can tell whether the drafts have unpublished saves
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -53,3 +56,14 @@ jobs:
           git commit -q -m "Publish ${GITHUB_SHA::7}"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
 
+      # The CMS reads and saves in cms-drafts. When it has no unpublished saves, move it up to main so the CMS
+      # shows what a pull request added. With unpublished saves the Publish page brings main in when it opens.
+      - name: Bring the drafts up to date
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          git fetch -q origin cms-drafts || exit 0
+          if git merge-base --is-ancestor FETCH_HEAD HEAD; then
+            git push -q origin HEAD:cms-drafts
+          else
+            echo "cms-drafts has unpublished saves; the Publish page brings main in."
+          fi

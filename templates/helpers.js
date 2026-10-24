@@ -227,6 +227,8 @@ export function iconLinks() {
   addJob(site.favicon, 'icon');
   return `<link rel="icon" type="image/png" sizes="48x48" href="${optPath(site.favicon, 48, 'png')}">\n<link rel="apple-touch-icon" href="${optPath(site.favicon, 180, 'png')}">`;
 }
+// The 180 px icon (made by iconLinks above) for places outside the pages, like the CMS login screen
+export const appIcon = () => (!sharp || isHttp(site.favicon) ? url(site.favicon) : optPath(site.favicon, 180, 'png'));
 
 export async function buildImages(outDir) {
   for (const [src, widths] of imageJobs) {
