@@ -92,6 +92,8 @@ export async function finish(OUT, pages) {
 
   // robots.txt
   const { allow = [], disallow = [] } = site.robots;
+  // Moved pages: Cloudflare sends old addresses to the new ones with a permanent (301) redirect
+  if (sitemap.redirects?.length) write('_redirects', sitemap.redirects.map((r) => `${r.from} ${r.to} 301`).join('\n') + '\n');
   write('robots.txt', ['User-agent: *', ...allow.map((r) => `Allow: ${r}`), ...disallow.map((r) => `Disallow: ${r}`), '', `Sitemap: ${absUrl('/sitemap.xml')}`, ''].join('\n'));
 
   // Static files. With sharp, pages use the small copies in assets/opt/, so the original uploads in assets/images/ are left out.
