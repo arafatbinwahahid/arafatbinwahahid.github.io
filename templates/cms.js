@@ -1,7 +1,7 @@
 // Sveltia CMS (arafatbin.com/admin/): one form per JSON file in data/.
 // The build (templates/build-steps.js) writes /admin/config.yml from this file, so the icon lists and folders always match the site.
 // Every key of every JSON file must have a field here, or the CMS drops it when saving: `npm test` checks that (cms-check.js).
-import { icons, header, payments, site } from './helpers.js';
+import { icons, header, payments, site, appIcon } from './helpers.js';
 import { schemaFor, readSchema } from './validate.js';
 
 export const CMS_VERSION = '0.227.4';
@@ -171,6 +171,7 @@ const pages = [
     obj('cart', 'Cart texts', ['title', 'openLabel', 'closeLabel', 'empty', 'totalLabel', 'checkoutLabel', 'continueLabel', 'removeLabel', 'increaseLabel', 'decreaseLabel'].map((k) => str(k, k))),
     obj('sections', 'Product page headings', ['about', 'description', 'usage', 'features', 'faq', 'reviews'].map((k) => str(k, k))),
     obj('queue', '"Get in the product queue" box', [str('title', 'Title'), txtList('lines', 'Lines'), buttons()]),
+    obj('googleShopping', 'Delivery and returns for Google', [hidden('_help'), txtList('countries', 'Countries you sell to', { hint: '2-letter country codes, e.g. OM, AE, SA, US' }), int('deliveryDays', 'Delivery takes at most (days)'), int('returnDays', 'Refund window (days)', { hint: 'Same as the refund policy page' })]),
   ] },
   { name: 'payments', label: 'Payment page', icon: 'payments', fields: [
     hidden('_help'), seo(), hero(),
@@ -538,7 +539,7 @@ export function cmsConfig() {
       commit_messages: { create: 'Create {{collection}} “{{slug}}”', update: 'Update {{collection}} “{{slug}}”', delete: 'Delete {{collection}} “{{slug}}”', uploadMedia: 'Upload “{{path}}”', deleteMedia: 'Delete “{{path}}”' },
     },
     app_title: `${header.logo.text} CMS`,
-    logo: { src: site.favicon },
+    logo: { src: appIcon() },
     site_url: site.url,
     display_url: site.url.replace(/^https?:\/\//, ''),
     media_folder: 'assets/images', public_folder: '/assets/images',

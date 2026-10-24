@@ -81,6 +81,31 @@ const stars = (n) => {
   const r = Math.max(0, Math.min(5, Math.round(n || 0)));
   return r ? `<p class="stars"><span aria-hidden="true">${'★'.repeat(r)}${'☆'.repeat(5 - r)}</span><span class="sr">${r} out of 5 stars</span></p>` : '';
 };
+// Delivery and refund details Google asks for on every offer (digital delivery, so shipping is free)
+const offerTerms = (currency) => {
+  const g = shopText.googleShopping;
+  return {
+    shippingDetails: {
+      '@type': 'OfferShippingDetails',
+      shippingRate: { '@type': 'MonetaryAmount', value: 0, currency },
+      shippingDestination: g.countries.map((addressCountry) => ({ '@type': 'DefinedRegion', addressCountry })),
+      deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: g.deliveryDays, unitCode: 'DAY' }, transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' } },
+    },
+    hasMerchantReturnPolicy: {
+      '@type': 'MerchantReturnPolicy', applicableCountry: g.countries, returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+      merchantReturnDays: g.returnDays, returnFees: 'https://schema.org/FreeReturn', merchantReturnLink: absUrl('/refund-policy/'),
+    },
+  };
+};
+// Star rating for Google, only from real reviews added to the product in the CMS
+const ratingOf = (reviews = []) => {
+  const rated = reviews.filter((r) => r.rating > 0);
+  if (!rated.length) return {};
+  return {
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: +(rated.reduce((n, r) => n + r.rating, 0) / rated.length).toFixed(1), reviewCount: rated.length, bestRating: 5 },
+    review: rated.map((r) => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 }, reviewBody: r.text })),
+  };
+};
 const reviewCard = (r) => `<figure class="card card-pad review">${stars(r.rating)}<blockquote>“${esc(r.text)}”</blockquote>
 <figcaption><b>${esc(r.name)}</b><span>${esc([r.role, r.date].filter(Boolean).join(', '))}</span>
 ${r.link ? `<a class="more" href="${esc(r.link.href)}"${target(r.link.href)}>${esc(r.link.label)}${icon('arrow')}</a>` : ''}</figcaption></figure>`;
@@ -169,11 +194,11 @@ ${p.externalLink ? btns([{ style: 'outline', icon: 'globe', ...p.externalLink }]
   const reviews = p.reviews?.length ? section(grid(p.reviews.map(reviewCard)), { title: S.reviews, background: 'soft' }) : '';
   const availability = `https://schema.org/${stockOf(p) > 0 ? 'InStock' : 'OutOfStock'}`;
   const offers = payments.currencies.map((c) => (hasPlans(p)
-    ? { '@type': 'AggregateOffer', priceCurrency: c.code, lowPrice: Math.min(...opts.map((o) => o.prices[c.code])), highPrice: Math.max(...opts.map((o) => o.prices[c.code])), offerCount: opts.length, url: absUrl(url), availability }
-    : { '@type': 'Offer', price: first.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability }));
+    ? { '@type': 'AggregateOffer', priceCurrency: c.code, lowPrice: Math.min(...opts.map((o) => o.prices[c.code])), highPrice: Math.max(...opts.map((o) => o.prices[c.code])), offerCount: opts.length, url: absUrl(url), availability, ...offerTerms(c.code) }
+    : { '@type': 'Offer', price: first.prices[c.code], priceCurrency: c.code, url: absUrl(url), availability, ...offerTerms(c.code) }));
   const schema = {
     '@context': 'https://schema.org', '@type': 'Product', name: p.title, description: p.seo?.description || p.summary, sku: p.id, category: p.category,
-    image: p.images.map((im) => shareUrl(im.src)), brand: { '@type': 'Brand', name: site.name }, offers,
+    image: p.images.map((im) => shareUrl(im.src)), brand: { '@type': 'Brand', name: site.name }, offers, ...ratingOf(p.reviews),
   };
   return {
     path: url, seo: { title: p.title, description: p.summary, image: p.images[0]?.src, ...filled(p.seo) }, crumbs, schema: [schema], cart: true,
