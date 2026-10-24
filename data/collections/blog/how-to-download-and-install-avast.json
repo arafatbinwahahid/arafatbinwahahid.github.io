@@ -1,0 +1,193 @@
+{
+  "slug": "how-to-download-and-install-avast",
+  "title": "How to Download and Install Avast on Windows 11, 10, 7, Mac, Android and iPhone",
+  "date": "2026-10-24",
+  "author": "Arafat Bin Wahahid",
+  "category": "Avast & VPN",
+  "tags": [
+    "Avast",
+    "Download",
+    "Windows",
+    "Guide"
+  ],
+  "excerpt": "A safe, step-by-step guide to download and install Avast Antivirus and the Avast VPN on Windows 11, Windows 10, Windows 7, Mac, Android and iPhone, plus how to activate a paid code and fix common install problems.",
+  "seo": {
+    "title": "How to Download and Install Avast on Any Device",
+    "titleSuffix": true,
+    "description": "Download and install Avast antivirus and Avast VPN safely on Windows 11, 10 and 7, Mac, Android and iPhone, activate your code and fix common install problems.",
+    "keywords": [
+      "Avast download",
+      "install Avast",
+      "Avast antivirus download",
+      "download Avast antivirus for Windows 10",
+      "Avast for Windows 11",
+      "Avast antivirus for PC",
+      "Avast for Mac",
+      "Avast mobile security",
+      "Avast free antivirus setup",
+      "Avast antivirus for Windows 7",
+      "Avast 64 bit",
+      "Avast secure browser download"
+    ],
+    "canonical": "",
+    "image": "",
+    "imageAlt": "How to download and install Avast on Windows 11, 10, 7, Mac, Android and iPhone",
+    "author": "",
+    "robots": {
+      "index": true,
+      "follow": true,
+      "nosnippet": false,
+      "noimageindex": false,
+      "notranslate": false,
+      "indexifembedded": false,
+      "maxSnippet": -1,
+      "maxImagePreview": "large",
+      "maxVideoPreview": -1,
+      "unavailableAfter": ""
+    },
+    "googlebot": "",
+    "bingbot": "",
+    "openGraph": {
+      "type": "",
+      "title": "",
+      "description": "",
+      "localeAlternate": []
+    },
+    "twitter": {
+      "card": "",
+      "title": "",
+      "description": "",
+      "creator": ""
+    },
+    "article": {
+      "publishedTime": "",
+      "modifiedTime": "",
+      "section": "Avast & VPN",
+      "tags": [
+        "Avast",
+        "Download",
+        "Windows",
+        "Guide"
+      ]
+    },
+    "alternates": [],
+    "schema": [],
+    "meta": []
+  },
+  "image": {
+    "src": "/assets/images/blog/download-install-avast-windows-mac-android-iphone.webp",
+    "alt": "How to download and install Avast on Windows 11, 10, 7, Mac, Android and iPhone"
+  },
+  "draft": false,
+  "content": [
+    {
+      "type": "p",
+      "text": "Avast is one of the most downloaded security brands in the world, and that is exactly why fake download sites copy its name. This guide shows how to download and install Avast safely on every device, how to activate a paid code, and what to do when the installation does not work."
+    },
+    {
+      "type": "h2",
+      "text": "First rule: download only from official places"
+    },
+    {
+      "type": "p",
+      "text": "Get Avast only from avast.com, the Microsoft Store, the Mac App Store, Google Play or the Apple App Store. Avoid \"cracked\", \"full version\" or torrent downloads and sites like get-into-PC copies: they are a common way to spread the very malware you want to stop, and a cracked security app cannot protect you."
+    },
+    {
+      "type": "h2",
+      "text": "Windows 11 and Windows 10"
+    },
+    {
+      "type": "list",
+      "items": [
+        "1. Go to avast.com and choose the product you want, for example Avast Free Antivirus or the Avast VPN.",
+        "2. The download is a small installer, such as avast_free_antivirus_setup_online.exe. Open it from your Downloads folder.",
+        "3. Click Yes when Windows asks for permission, then Install. The installer picks the right 32-bit, 64-bit or ARM64 version by itself.",
+        "4. Wait a few minutes, then open Avast and run the first Smart Scan.",
+        "Note: Windows in S mode only runs apps from the Microsoft Store, so switch out of S mode first or use the Store version."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Windows 8.1, 8 and Windows 7"
+    },
+    {
+      "type": "p",
+      "text": "Avast still supports Windows 8 and 8.1, and Windows 7 with Service Pack 1 (32-bit and 64-bit). Install Windows updates first, especially Service Pack 1 on Windows 7, then use the same installer from avast.com. Because Microsoft no longer updates Windows 7, a good antivirus and a VPN matter even more on these PCs."
+    },
+    {
+      "type": "h2",
+      "text": "Mac (macOS)"
+    },
+    {
+      "type": "p",
+      "text": "Download Avast Security or the Avast VPN for Mac from avast.com or the Mac App Store, open the .dmg file and follow the installer. macOS will ask you to allow a system extension or VPN configuration: open System Settings > Privacy & Security and click Allow. Avast supports the current and two previous versions of macOS, including Macs with Apple M chips."
+    },
+    {
+      "type": "h2",
+      "text": "Android phones and tablets"
+    },
+    {
+      "type": "p",
+      "text": "Open Google Play, search for Avast and install the app published by Avast Software, such as Avast Antivirus & Security or the Avast VPN app. You need Android 10 or later and the Google Play app. On first start, allow the permissions it asks for so it can scan apps and Wi‑Fi."
+    },
+    {
+      "type": "h2",
+      "text": "iPhone and iPad"
+    },
+    {
+      "type": "p",
+      "text": "Open the App Store, search for Avast and install the app by Avast Software. When you first turn on the VPN, iOS asks to add a VPN configuration: tap Allow and confirm with Face ID, Touch ID or your passcode. Avast supports the current and two previous versions of iOS and iPadOS."
+    },
+    {
+      "type": "h2",
+      "text": "How to activate a paid Avast code"
+    },
+    {
+      "type": "p",
+      "text": "Open the app, go to the menu and choose \"Enter activation code\" (on Windows: Menu > My subscriptions > Enter a valid activation code). Paste the code including the dashes. Your subscription then shows as Active with its end date."
+    },
+    {
+      "type": "h2",
+      "text": "Common install problems and fixes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Another antivirus is installed: uninstall it first, two antivirus programs fight each other.",
+        "The installer stops or fails: restart the PC, check your internet connection and run the installer again as administrator.",
+        "Old Avast left behind: use Avast's official uninstall tool (Avast Clear) from avast.com, restart and install again.",
+        "Not enough space: free at least 2 GB on your system drive.",
+        "The VPN does not connect: switch the protocol in Advanced settings or try another server location."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Get Avast Premium VPN for 1 year in Oman and worldwide"
+    },
+    {
+      "type": "p",
+      "text": "Want Avast's VPN without a monthly bill? Get an official Avast Premium VPN (formerly SecureLine VPN) 1-year activation code from arafatbin.com. It is delivered by email, works on Windows, Mac, Android and iPhone, and you can pay in OMR, USD or BDT. If a code ever fails to activate, we fix it, replace it or refund you."
+    },
+    {
+      "type": "buttons",
+      "buttons": [
+        {
+          "label": "Get Avast Premium VPN",
+          "href": "/shop/avast-premium-vpn-activation-code/",
+          "style": "primary",
+          "icon": "lock"
+        },
+        {
+          "label": "Ask on WhatsApp",
+          "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20an%20Avast%20Premium%20VPN%20activation%20code.",
+          "style": "outline",
+          "icon": "wa"
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "text": "Avast, SecureLine and the product names in this article are trademarks of their owners. arafatbin.com is an independent seller, not Avast itself."
+    }
+  ]
+}
