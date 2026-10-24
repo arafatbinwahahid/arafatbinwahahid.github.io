@@ -234,13 +234,25 @@
         "a": "Contact us in the live chat or on WhatsApp with your order ID. We send you the login email again and reset your profile PIN."
       }
     ],
-    "reviews": [],
+    "reviews": [
+      {
+        "name": "Haitam Bin Rashed",
+        "role": "Oman",
+        "date": "October 2026",
+        "rating": 5,
+        "text": "I first try test account then all work properly netflix are good",
+        "link": null,
+        "avatar": "",
+        "source": "Website",
+        "verified": false
+      }
+    ],
     "externalLink": {
       "label": "Ask for a Netflix test account on WhatsApp",
       "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20Netflix%20test%20account.",
       "icon": "wa"
     },
-    "brand": "",
+    "brand": "Netflix",
     "sku": "",
     "deliveryTime": "",
     "warranty": "",
