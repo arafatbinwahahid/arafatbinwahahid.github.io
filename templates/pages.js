@@ -407,6 +407,8 @@ const blocks = {
   quote: (b) => `<blockquote>${esc(b.text)}</blockquote>`,
   list: (b) => `<${b.ordered ? 'ol' : 'ul'}>${b.items.map((i) => `<li>${esc(i)}</li>`).join('')}</${b.ordered ? 'ol' : 'ul'}>`,
   image: (b) => figure(b),
+  // Buttons inside a post, e.g. a link to a product or to WhatsApp
+  buttons: (b) => btns(b.buttons),
 };
 
 function postPage(p) {

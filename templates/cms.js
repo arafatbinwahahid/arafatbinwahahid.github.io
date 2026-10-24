@@ -316,7 +316,8 @@ const postFields = [
     block('p', 'Paragraph', [txt('text', 'Text')]), block('h2', 'Heading', [str('text', 'Text')]), block('h3', 'Subheading', [str('text', 'Text')]),
     block('quote', 'Quote', [txt('text', 'Text')]), block('list', 'List', [bool('ordered', 'Numbered'), strList('items', 'Items')]),
     block('image', 'Image', [imgPath('src', 'Image', 'blog', { size: 'blogImage' }), str('alt', 'Alt text'), str('caption', 'Caption')]),
-  ], hint: 'Add blocks and drag them into order.' }),
+    block('buttons', 'Buttons', [buttons()]),
+  ], hint: 'Add blocks and drag them into order. Buttons link to a product, service or WhatsApp.' }),
   later(date('updated', 'Updated on')), later(bool('featured', 'Featured')), later(txt('authorBio', 'Author bio')),
   later(F('relation', 'related', 'Related posts', { collection: 'blog', value_field: 'slug', display_fields: ['title'], multiple: true })),
 ];
