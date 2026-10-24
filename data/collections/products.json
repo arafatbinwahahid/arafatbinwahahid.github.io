@@ -253,9 +253,11 @@
     "related": []
   },
   {
-    "id": "P002",
-    "slug": "custom-vector-portrait",
     "title": "Custom vector portrait",
+    "slug": "custom-vector-portrait",
+    "id": "P002",
+    "status": "draft",
+    "paymentsOff": [],
     "category": "Design",
     "seo": {
       "title": "Custom Vector Portrait from Your Photo | Unlimited Revisions",
@@ -376,7 +378,18 @@
       "label": "Order on Fiverr",
       "href": "https://www.fiverr.com/arafatwahahid",
       "icon": "globe"
-    }
+    },
+    "brand": "",
+    "sku": "",
+    "deliveryTime": "",
+    "warranty": "",
+    "badge": "",
+    "featured": false,
+    "highlights": [],
+    "videoUrl": "",
+    "tags": [],
+    "rating": null,
+    "related": []
   },
   {
     "title": "Social media post pack (10 posts)",
