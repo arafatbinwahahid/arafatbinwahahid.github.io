@@ -1,6 +1,6 @@
 {
-  "slug": "best-horror-movies-on-netflix",
   "title": "Best Horror Movies and Series on Netflix to Watch Tonight",
+  "slug": "best-horror-movies-on-netflix",
   "date": "2026-10-24",
   "author": "Arafat Bin Wahahid",
   "category": "Netflix",
@@ -92,7 +92,7 @@
     },
     {
       "type": "p",
-      "text": "Kids on bikes, a secret government lab and a monster from the Upside Down. Stranger Things mixes horror, adventure and 1980s nostalgia, and it became one of the biggest Netflix series ever. All five seasons are out; the story ended in 2025, so you can watch Stranger Things from season 1 to the final episode without waiting."
+      "text": "Kids on bikes, a secret government lab and a monster from the Upside Down. Stranger Things mixes horror, adventure and 1980s nostalgia, and it became one of the biggest Netflix series ever. All five seasons are out; the story ended in 2025, so you can watch Stranger Things from season 1 to the final episode without waiting"
     },
     {
       "type": "h3",
@@ -168,6 +168,7 @@
     },
     {
       "type": "list",
+      "ordered": false,
       "items": [
         "Stranger Things (series)",
         "The Haunting of Hill House (series)",
@@ -196,13 +197,15 @@
           "label": "Get a Netflix subscription",
           "href": "/shop/netflix-shared-account/",
           "style": "primary",
-          "icon": "tv"
+          "icon": "tv",
+          "download": false
         },
         {
           "label": "Ask on WhatsApp",
           "href": "https://wa.me/96892130528?text=Hello%20Arafat%2C%20I%20want%20a%20Netflix%20subscription.",
           "style": "outline",
-          "icon": "wa"
+          "icon": "wa",
+          "download": false
         }
       ]
     },
@@ -210,5 +213,9 @@
       "type": "p",
       "text": "Note: the Netflix library is different in each country and changes over time, so a title in this list may not be available everywhere."
     }
-  ]
+  ],
+  "updated": "",
+  "featured": false,
+  "authorBio": "",
+  "related": []
 }
