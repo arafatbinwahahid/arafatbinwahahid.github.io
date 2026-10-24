@@ -257,7 +257,9 @@
     "slug": "custom-vector-portrait",
     "id": "P002",
     "status": "draft",
-    "paymentsOff": [],
+    "paymentsOff": [
+      "usd-paypal"
+    ],
     "category": "Design",
     "seo": {
       "title": "Custom Vector Portrait from Your Photo | Unlimited Revisions",
