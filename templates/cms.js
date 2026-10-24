@@ -171,6 +171,7 @@ const pages = [
     obj('cart', 'Cart texts', ['title', 'openLabel', 'closeLabel', 'empty', 'totalLabel', 'checkoutLabel', 'continueLabel', 'removeLabel', 'increaseLabel', 'decreaseLabel'].map((k) => str(k, k))),
     obj('sections', 'Product page headings', ['about', 'description', 'usage', 'features', 'faq', 'reviews'].map((k) => str(k, k))),
     obj('queue', '"Get in the product queue" box', [str('title', 'Title'), txtList('lines', 'Lines'), buttons()]),
+    obj('googleShopping', 'Delivery and returns for Google', [hidden('_help'), txtList('countries', 'Countries you sell to', { hint: '2-letter country codes, e.g. OM, AE, SA, US' }), int('deliveryDays', 'Delivery takes at most (days)'), int('returnDays', 'Refund window (days)', { hint: 'Same as the refund policy page' })]),
   ] },
   { name: 'payments', label: 'Payment page', icon: 'payments', fields: [
     hidden('_help'), seo(), hero(),

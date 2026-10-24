@@ -94,5 +94,11 @@
       { "label": "Contact Oman", "href": "tel:+96892130528", "style": "light", "icon": "phone" },
       { "label": "Contact Bangladesh", "href": "tel:+8801752427601", "style": "light", "icon": "phone" }
     ]
+  },
+  "googleShopping": {
+    "_help": "Delivery and return details Google shows for every product. Codes are 2-letter country codes (OM = Oman).",
+    "countries": ["OM", "AE", "SA", "QA", "KW", "BH", "BD", "IN", "PK", "US", "GB"],
+    "deliveryDays": 1,
+    "returnDays": 7
   }
 }
