@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Arafat Bin Wahahid CMS</title>
+<style>body{margin:0;font-family:system-ui,sans-serif}.drafts-missing{max-width:520px;margin:15vh auto;padding:24px;line-height:1.5}.drafts-missing a{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:10px;background:#0b63c4;color:#fff;text-decoration:none;font-weight:600}</style>
+</head>
+<body>
+<script>
+// The CMS saves into the "cms-drafts" branch. If it does not exist yet, the Publish page makes it (one click), then the CMS opens.
+fetch('https://api.github.com/repos/arafatbinwahahid/arafatbinwahahid.github.io/branches/cms-drafts').then(function (r) {
+  if (r.status === 404) document.body.innerHTML = '<div class="drafts-missing"><h1>One step first</h1><p>The CMS keeps your changes as drafts in the "cms-drafts" branch, which does not exist yet. Open the Publish page, sign in with your GitHub token and press "Create the drafts branch". Then come back here.</p><a href="/admin/publish/">Open the Publish page</a></div>';
+  else load();
+}, load);
+function load() { var s = document.createElement('script'); s.src = 'https://unpkg.com/@sveltia/cms@0.227.4/dist/sveltia-cms.js'; document.body.appendChild(s); }
+</script>
+</body>
+</html>
